@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+	<html lang="de" class="">
+		<head>
+			<title>WhatIuse.com</title>
+
+			<meta charset="utf-8">
+			<meta name="description" content="">
+			<meta name="author" content="">
+
+			<!-- Webapp - Configuration -->
+			<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+			<meta name="mobile-web-app-capable" content="yes">
+			<meta name="apple-mobile-web-app-capable" content="yes">
+			<meta name="apple-mobile-web-app-status-bar-style" content="black">
+			<meta name="apple-mobile-web-app-title" content="">
+			<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+			<link href="css/main.css" rel="stylesheet">
+		</head>
+
+		<body>
+
+			<header class="section header light-on-dark">
+				<div class="section_content">
+					<div class="header_title">
+						<i class="fa fa-cloud"></i>
+						<span>Optimus</span><span>Code</span>
+					</div>
+					<nav class="header_menu">
+						<ul class="header_menu_list">
+							<li class="header_menu_list_item"><a href="home.html"><i class="fa fa-tachometer"></i><span>Dashboard</span></a></li>
+							<li class="header_menu_list_item"><a href="users.html"><i class="fa fa-users"></i><span>Users</span></a></li>
+							<li class="header_menu_list_item active"><a href="pages.html"><i class="fa fa-file-text-o"></i><span>Pages</span></a></li>
+						</ul>
+					</nav>
+				</div>
+			</header>
+
+			<div class="section overview">
+				<div class="section_content">
+
+					<ul class="page-slider">
+						<li class="page all active">
+							<div class="page-thumb">
+								<div class="mini-overlay">
+									<div id="canvas-holder" class="preview">
+										<canvas id="chart-page3" width="75" height="75"/>
+									</div>
+									<strong class="preview-value">77%</strong>
+								</div>
+							</div>
+							<div class="page-meta">
+								<h3>All</h3>
+							</div>
+						</li>
+						<li class="page">
+							<div class="page-thumb">
+								<iframe src="http://stefanschwartze.com" height="680" width="1200"></iframe>
+								<div class="mini-overlay">
+									<div id="canvas-holder" class="preview">
+										<canvas id="chart-page" width="75" height="75"/>
+									</div>
+										<strong class="preview-value">85%</strong>
+								</div>
+							</div>
+							<div class="page-meta">
+								<h3>Start</h3>
+							</div>
+						</li>
+						<li class="page">
+							<div class="page-thumb">
+								<iframe src="http://stefanschwartze.com/imprint.html" height="680" width="1200"></iframe>
+								<div class="mini-overlay">
+									<div id="canvas-holder" class="preview">
+										<canvas id="chart-page2" width="75" height="75"/>
+									</div>
+										<strong class="preview-value">72%</strong>
+								</div>
+							</div>
+							<div class="page-meta">
+								<h3>Imprint</h3>
+							</div>
+						</li>
+						<li class="page add">
+							<div class="page-thumb">
+								<span>+</span>
+							</div>
+							<div class="page-meta">
+								<h3>Add page</h3>
+							</div>
+						</li>
+					</ul>
+
+				</div>
+			</div>
+
+			<div class="section support">
+
+				<div class="section_content">
+					<div class="row">
+						<div class="col2 col">
+							<h2 class="section_content_heading_small heading_right"><i class="fa fa-file-text-o"></i>Statistics for whole site</h2>
+							<p>85 percent of your users can display your website without any problems.
+							On 15 percent, the site may crash.
+							</p>
+							<a href="#" class="button">About your users</a>
+						</div>
+						<div class="col2 col">
+							<h2 class="section_content_heading_small heading_right"><i class="fa fa-question-circle"></i>What if I use … ?</h2>
+							<p>Which effects has the implementation of a new feature?
+							</p>
+							<a href="#" class="button">Learn more</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="section statistic">
+
+				<div class="section_content">
+					<div class="row">
+						
+						<div class="row chartcol">
+							<div class="col2 col">
+								<h2 class="section_content_heading_small heading_left"><i class="fa fa-code"></i>HTML Code</h2>
+								<div id="canvas-holder" class="chart elements">
+									<canvas id="chart-elements" width="200" height="80"/>
+								</div>
+							</div>
+						</div>
+						<div class="row chartcol">
+							<div class="col2 col">
+								<h2 class="section_content_heading_small heading_left"><i class="fa fa-code"></i>CSS Code</h2>
+								<div id="canvas-holder" class="chart elements">
+									<canvas id="chart-css" width="200" height="80"/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+			<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+			<script src="js/Chart.min.js"></script>
+			<script type="text/javascript">
+				$(document).ready(function(){
+					$('a[href^="#"]').on('click',function (e) {
+						e.preventDefault();
+
+						var target = this.hash;
+						var $target = $(target);
+
+						$('html, body').stop().animate({
+							'scrollTop': $target.offset().top+ 1
+						}, 900, 'swing', function () {
+							//window.location.hash = target;
+						});
+					});
+					var dataSite = [
+						{
+							value: 15,
+							color:"#F7464A",
+							highlight: "#FF5A5E",
+							label: "Not supported"
+						},
+						{
+							value: 85,
+							color: "#0ab15a",
+							highlight: "#0ab15a",
+							label: "Supported"
+						}
+					];
+					var dataSite2 = [
+						{
+							value: 28,
+							color:"#F7464A",
+							highlight: "#FF5A5E",
+							label: "Not supported"
+						},
+						{
+							value: 72,
+							color: "#0ab15a",
+							highlight: "#0ab15a",
+							label: "Supported"
+						}
+					];
+					var dataSite3 = [
+						{
+							value: 23,
+							color:"#F7464A",
+							highlight: "#FF5A5E",
+							label: "Not supported"
+						},
+						{
+							value: 77,
+							color: "#0ab15a",
+							highlight: "#0ab15a",
+							label: "Supported"
+						}
+					];
+					var dataElements = {
+					    labels: ["div", "p", "section", "article", "h1", "h2", "h3", "span", "aside", "header"],
+					    datasets: [
+					        {
+					            label: "My First dataset",
+					            fillColor: "rgba(57, 170, 222,0.5)",
+					            strokeColor: "rgba(220,220,220,0.8)",
+					            highlightFill: "rgba(57, 170, 222,0.75)",
+					            highlightStroke: "rgba(220,220,220,1)",
+					            data: [150, 121, 80, 77, 56, 22, 11, 5, 5, 2]
+					        }
+					    ]
+					};
+					var dataCSS = {
+					    labels: ["padding", "margin", "font-size", "font-weight", "color", "background"],
+					    datasets: [
+					        {
+					            label: "My First dataset",
+					            fillColor: "rgba(90, 211, 209,0.5)",
+					            strokeColor: "rgba(220,220,220,0.8)",
+					            highlightFill: "rgba(57, 170, 222,0.75)",
+					            highlightStroke: "rgba(220,220,220,1)",
+					            data: [16, 15, 10, 4, 2, 1]
+					        }
+					    ]
+					};
+					var dataUsers = {
+					    labels: ["Chrome", "Firefox", "Internet Explorer", "Safari", "Opera"],
+					    datasets: [
+					        {
+					            label: "My First dataset",
+					            fillColor: "rgba(90, 211, 209,0.5)",
+					            strokeColor: "rgba(220,220,220,0.8)",
+					            highlightFill: "rgba(219, 64, 56,0.75)",
+					            highlightStroke: "rgba(220,220,220,1)",
+					            data: [188, 167, 111, 35, 12]
+					        }
+					    ]
+					};
+					window.onload = function(){
+						var ctxPage = document.getElementById("chart-page").getContext("2d");
+						window.myDoughnut = new Chart(ctxPage).Doughnut(
+							dataSite2, 
+							{
+								responsive : true,
+								segmentShowStroke : false,
+								percentageInnerCutout : 75
+							});
+						var ctxPage2 = document.getElementById("chart-page2").getContext("2d");
+						window.myDoughnut = new Chart(ctxPage2).Doughnut(
+							dataSite, 
+							{
+								responsive : true,
+								segmentShowStroke : false,
+								percentageInnerCutout : 75
+							});
+						var ctxPage3 = document.getElementById("chart-page3").getContext("2d");
+						window.myDoughnut = new Chart(ctxPage3).Doughnut(
+							dataSite, 
+							{
+								responsive : true,
+								segmentShowStroke : false,
+								percentageInnerCutout : 75
+							});
+
+
+						//var ctx = document.getElementById("chart-site").getContext("2d");
+						/*window.myDoughnut = new Chart(ctx).Doughnut(
+							dataSite, 
+							{
+								responsive : true,
+								segmentShowStroke : false,
+								percentageInnerCutout : 75
+							});*/
+						var ctx2 = document.getElementById("chart-elements").getContext("2d");
+						window.myBarChart = new Chart(ctx2).Bar(
+							dataElements,
+							{
+								scaleGridLineColor : "rgba(255,255,255,.15)",
+								responsive : true
+							});
+						var ctx4 = document.getElementById("chart-css").getContext("2d");
+						window.myBarChart = new Chart(ctx4).Bar(
+							dataCSS,
+							{
+								scaleGridLineColor : "rgba(255,255,255,.15)",
+								responsive : true
+							});
+						var ctx3 = document.getElementById("chart-users").getContext("2d");
+						window.myBarChart = new Chart(ctx3).Bar(
+							dataUsers,
+							{
+								scaleGridLineColor : "rgba(255,255,255,.15)",
+								responsive : true
+							});
+
+					};
+				});
+			</script>
+			<!--<script src="js/main.js" type="text/javascript"></script>-->
+		</body>
+	</html>

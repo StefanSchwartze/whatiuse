@@ -1,0 +1,58 @@
+/*
+ * Sass Component: Section-Elements
+ *
+ * @author Stefan Schwartze
+ */
+.section
+	position: relative
+	width: 100%
+	&:nth-child(2n)
+.section_content
+	position: relative
+	margin: auto
+	max-width: 1280px
+	padding: 0 2rem
+	width: 100%
+	display: flex
+	align-items: center
+	justify-content: space-between
+	.section_content_heading
+	.section_content_heading_small
+		.fa
+			margin-right: 1rem
+	.section_content_description
+.row
+	width: 100%
+	.col
+		width: 100%
+		float: left
+		> img
+			float: left
+			position: relative
+	.col2
+		width: 50%
+		&:first-child
+			padding-right: .5rem
+		&:last-child
+			padding-left: .5rem
+	.col34
+		width: 75%
+	.col14
+		width: 25%
+.chart
+	margin: 1rem
+
+@media only screen and (max-width : 1600px)
+	.section .section_content
+@media only screen and (max-width : 1024px)
+	.section.contact .section_content .row .col2
+@media only screen and (max-width : 740px)
+	.section .section_content .row .col img
+@media only screen and (max-width : 640px)
+@media only screen and (max-width : 560px)
+	.section_content
+		padding: .5rem
+	.row
+		.col2
+			width: 100%
+			padding: 0 !important
