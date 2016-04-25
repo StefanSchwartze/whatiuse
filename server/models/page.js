@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const ExampleSchema = new mongoose.Schema({
+const PageSchema = new mongoose.Schema({
 	title: 			String,
 	description: 	String,
 	user: {
@@ -9,4 +9,4 @@ const ExampleSchema = new mongoose.Schema({
 	}
 });
 
-export default mongoose.model('example', ExampleSchema);
+export default mongoose.model('page', PageSchema);

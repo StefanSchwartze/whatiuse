@@ -90,15 +90,20 @@ else {
 // Parse body
 app.use(bodyParser());
 
-import Example from "./models/example";
-import User from "./models/user";
 import bcrypt from "bcrypt";
 import uuid from "node-uuid";
+
+import User from "./models/user";
+import Page from "./models/page";
+import Example from "./models/example";
 
 	const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0.1:27017/webpackexample";
 	const mongoose = require("mongoose");
 
 	mongoose.connect(mongoUrl);
+
+	var PagesController = generateApi(app, Page, "/api");
+	PagesController.mount();
 
 	var ExamplesController = generateApi(app, Example, "/api");
 	ExamplesController.mount();

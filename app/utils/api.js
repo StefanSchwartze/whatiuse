@@ -4,7 +4,7 @@ const server = restful().fullUrl('/api');
 const api = {};
 
 api.server = server;
-const endpoints = ['examples'];
+const endpoints = ['examples', 'pages'];
 
 endpoints.forEach((endpoint)=> {
   api[endpoint] = server.all(endpoint);

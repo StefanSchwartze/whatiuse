@@ -16,6 +16,9 @@ export default function(app) {
 	var ExamplesController = generateApi(app, Example, "/api");
 	ExamplesController.mount();
 
+	var PagesController = generateApi(app, Page, "/api");
+	PagesController.mount();
+
 	var authRouter = koaRouter();
 
 	authRouter.post("/auth/register", function*(next) {
