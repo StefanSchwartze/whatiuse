@@ -1,0 +1,14 @@
+$font-size-basic: 16px;
+$font-size-small: calc($font-size-basic * 0.75);
+$font-size-medium: $font-size-basic;
+$font-size-plus: calc($font-size-basic * 1.25);
+$font-size-large: calc($font-size-basic * 1.5);
+
+$border-radius-small: 3px;
+$border-radius-large: 5px;
+$border-radius-rounded: 50px;
+
+$spacing-extra-small: .25rem;
+$spacing-small: .5rem;
+$spacing-medium: 1rem;
+$spacing-large: 2rem;

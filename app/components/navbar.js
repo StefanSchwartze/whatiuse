@@ -31,7 +31,7 @@ export default class Navbar extends React.Component {
 		let busyComponent;
 		if (this.props.error) {
 			if (this.props.retryData) {
-				retryComponent = <button onClick={this.retry} className="">Retry</button>;
+				retryComponent = <li className="nav-list-item"><button onClick={this.retry} className="">Retry</button></li>;
 			}
 			errorComponent = (
 				<p><strong>Network Error!</strong>{retryComponent}</p>);
@@ -51,9 +51,7 @@ export default class Navbar extends React.Component {
 							<li className="nav-list-item" onClick={this.logout.bind(this)}>
 								<a href="#" className="link">Logout</a>
 							</li>
-							<li className="nav-list-item">
-								{busyComponent}
-							</li>
+							{busyComponent}
 						</ul>
 					</nav>
 				</div>
