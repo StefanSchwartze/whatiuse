@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+
+    <link rel="icon" type="image/ico" href="/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
+    {{#each assets.style}}
+      <link rel="stylesheet" href="{{this}}">
+    {{/each}}
+    <title>Flux boilerplate</title>
+    <!--script src="/socket.io/socket.io.js"></script-->
+  </head>
+  <body>
+    {{{body}}}
+    {{#each assets.script}}
+      <script src="{{this}}"></script>
+    {{/each}}
+  </body>
+</html>

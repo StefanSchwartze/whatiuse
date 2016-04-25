@@ -1,0 +1,11 @@
+.header {
+	width: 100%;
+}
+.nav-list {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	.nav-list-item {
+		display: inline-block;
+	}
+}

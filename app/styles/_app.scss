@@ -1,0 +1,22 @@
+html {
+	padding: 0;
+    margin: 0;
+    min-height: 100%;
+}
+body {
+	margin: 0;
+	padding: 0;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+a {
+	text-decoration: none;
+}
+.link {
+	&:hover {
+		text-decoration: underline;
+	}
+}
+.content-container {
+	max-width: 1280px;
+	padding: .5rem;
+}
