@@ -16,10 +16,12 @@ export default class Page extends React.Component {
 			<div className="page">
 				<div className="page-overlay">
 					<div className="percentage">
-						<span>75%</span>
+						<span>
+							75%
+						</span>
 					</div>
 					<div className="open">
-						<button className="button button--wide button--yellow" >Open</button>
+						<button className="button button--wide button--strong button--yellow" >Open</button>
 					</div>
 					<div className="title">
 						<span>{this.props.page.title}</span>

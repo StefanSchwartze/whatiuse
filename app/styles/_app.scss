@@ -56,7 +56,14 @@ a {
 	cursor: pointer;
 	transition: all .15s;
 	&--wide {
+		padding: $spacing-small $spacing-large;
+	}
+	&--full {
 		width: 100%;
+	}
+	&--strong {
+		text-transform: uppercase;
+		font-weight: bold;
 	}
 	&--yellow {
 		background-color: $yellow;
@@ -71,10 +78,18 @@ a {
 		}
 	}
 }
+.icon {
+	display: inline-block;
+	color: white;
+	font-size: 1.25rem;
+}
 .content-container {
 	max-width: 1280px;
-	padding: .5rem;
 	margin: auto;
+	padding: $spacing-small;
+	&.edged {
+		padding: 0;
+	}
 	&--small {
 		max-width: 320px;
 	}
@@ -101,7 +116,10 @@ a {
 	-webkit-transform: translate3d(0, 0, 0);
 	width: 100%;
 	position: relative;
-	margin-bottom: 0;	
+	margin: $spacing-medium 0;
+	> *:first-child {
+		margin-left: $spacing-medium;
+	}
 }
 /*
 *	Component: Page
@@ -113,6 +131,7 @@ a {
 	width: 240px;
 	height: 140px;
 	margin: 0 $spacing-medium $spacing-medium 0;
+	box-shadow: 0 0 14px 0px $grey-dark;
     &-overlay {
 		position: absolute;
 		display: flex;
@@ -122,9 +141,9 @@ a {
 		z-index: 1;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.33);
+		background-color: rgba(0, 0, 0, 0.6);
 		color: white;
-		padding: 3rem 0;
+		padding: 1.5rem 0 3rem 0;
 		transition: all .2s;
 		.percentage {
 			transition: all .2s;
@@ -136,6 +155,8 @@ a {
 			flex-direction: column;
 			justify-content: center;
 			transform: translate3d(0, 0, 0);
+			font-size: $font-size-xlarge;
+			font-weight: bold;
 		}
 		.title {
 			transition: all .2s;
@@ -155,12 +176,12 @@ a {
 			align-items: center;
 		}
 		&:hover {
-			background-color: rgba(0, 0, 0, 0);
+			background-color: rgba(0, 0, 0, .1);
 			padding: 0;
 			.percentage, .title {
 				height: 30px;
 				width: 100%;
-				padding: 0 .5rem
+				padding: 0 .5rem;
 			}
 			.open {
 				transition: all .2s .2s;

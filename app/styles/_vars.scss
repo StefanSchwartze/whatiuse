@@ -1,8 +1,9 @@
 $font-size-basic: 16px;
-$font-size-small: calc($font-size-basic * 0.75);
-$font-size-medium: $font-size-basic;
-$font-size-plus: calc($font-size-basic * 1.25);
-$font-size-large: calc($font-size-basic * 1.5);
+$font-size-small: calc(#{$font-size-basic} * 0.75);
+$font-size-medium: #{$font-size-basic};
+$font-size-plus: calc(#{$font-size-basic} * 1.25);
+$font-size-large: calc(#{$font-size-basic} * 1.5);
+$font-size-xlarge: calc(#{$font-size-basic} * 2);
 
 $border-radius-small: 3px;
 $border-radius-large: 5px;

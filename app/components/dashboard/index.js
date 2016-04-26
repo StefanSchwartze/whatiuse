@@ -41,7 +41,7 @@ export default class Dashboard extends React.Component {
 				stores={{
 					PagesStore: PagesStore
 				}}>
-				<div className="content-container content">
+				<div className="content-container edged content">
 					<PagesList pages={this.props.pages} />
 				</div>
 			</AltContainer>
