@@ -20,15 +20,6 @@ export default class PagesList extends React.Component {
 	}
 	componentWillMount() {
 	}
-	submit(model) {
-		console.log(model);
-		//TasksActions.add(model);
-	}
-	send(e) {
-		e.preventDefault();
-		console.log(e);
-		this.refs.pageform.submit();
-	}
 	render() {
 		return (
 			<div>

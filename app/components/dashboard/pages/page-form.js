@@ -28,14 +28,24 @@ export default class PageForm extends React.Component {
 		});
 	}
 	submit(model) {
-		console.log(model);
+		model.title = model.title || 'Home';
+		model.url = model.url || 'http://sevenval.com';
+		model.elementsCollections = model.elementsCollections || [
+			{
+				elementCollection: [
+					{
+						name: 'flexbox',
+						share: 0.1
+					}
+				]
+			}
+		];
+		PagesActions.add(model);
 	}
-	send(e) {
-		console.log(e);
+	send() {
 		this.refs.pageForm.submit();
 	}
 	render() {
-		var textError = 'Must be a valid URL';
 		return (
 			<div>
 				<Form ref="pageForm" 
@@ -43,12 +53,21 @@ export default class PageForm extends React.Component {
 					onValid={this.enableButton.bind(this)}
 					onInvalid={this.disableButton.bind(this)}>
 					<TextInput
+						placeholder="Title"
 						classes=""
-						name="page"
+						name="title"
+						title=""
+						type="text"
+						validations="minLength:3"
+						validationError={'Must be longer than 3 characters'} />
+					<TextInput
+						placeholder="URL"
+						classes=""
+						name="url"
 						title=""
 						type="text"
 						validations="isUrl"
-						validationError={textError} />
+						validationError={'Must be a valid URL'} />
 				</Form>
 				<button disabled={!this.state.canSubmit} className="button button--wide button--yellow" onClick={this.send.bind(this)}>Add page</button>
 			</div>

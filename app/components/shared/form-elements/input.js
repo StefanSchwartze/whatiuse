@@ -8,7 +8,8 @@ export default class TextInput extends React.Component {
 		name: React.PropTypes.string.isRequired,
 		title: React.PropTypes.string.isRequired,
 		type: React.PropTypes.string.isRequired,
-		classes: React.PropTypes.string
+		classes: React.PropTypes.string,
+		placeholder: React.PropTypes.string
 	}
 	render() {
 
@@ -27,6 +28,7 @@ export default class TextInput extends React.Component {
 			<div className={className + ' form-group'}>
 				<label htmlFor={this.props.name}>{this.props.title}</label>
 				<input className={classNames('input', this.props.classes)}
+						placeholder={this.props.placeholder}
 						type="text" 
 						onChange={(e) => this.props.setValue(e.target.value)} 
 						value={this.props.getValue()}/>
