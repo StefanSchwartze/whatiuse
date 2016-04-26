@@ -11,7 +11,7 @@ export default {
   authDecorator: function(target) {
     target.willTransitionTo = function(transition) {
       if (process.env.BROWSER) {
-        if (!localStorage.filmdbUser) {
+        if (!localStorage.appUser) {
           transition.redirect('/login');
         }
       }

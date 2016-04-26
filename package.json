@@ -33,6 +33,7 @@
     "del": "^1.2.0",
     "esprima-fb": "^15001.1.0-dev-harmony-fb",
     "extract-text-webpack-plugin": "^0.8.2",
+    "formsy-react": "^0.18.0",
     "glob": "^5.0.13",
     "image-webpack-loader": "^1.6.1",
     "imagemin": "^3.2.0",

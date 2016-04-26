@@ -97,7 +97,7 @@ import User from "./models/user";
 import Page from "./models/page";
 import Example from "./models/example";
 
-	const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0.1:27017/webpackexample";
+	const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0.1:27017/whatiuse";
 	const mongoose = require("mongoose");
 
 	mongoose.connect(mongoUrl);

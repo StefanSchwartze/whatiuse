@@ -5,12 +5,11 @@ import {authDecorator} from 'utils/component-utils';
 
 import PagesActions from 'actions/pages-actions';
 
+import PageForm from './page-form';
+
 export default class PagesList extends React.Component {
 	static contextTypes = {
 		router: React.PropTypes.func
-	}
-	static willTransitionTo(transition) {
-		console.log(transition);
 	}
 	static propTypes = {
 		pages: React.PropTypes.array
@@ -25,9 +24,10 @@ export default class PagesList extends React.Component {
 		console.log(model);
 		//TasksActions.add(model);
 	}
-	send(test) {
-		console.log(test);
-		this.refs.taskForm.submit();
+	send(e) {
+		e.preventDefault();
+		console.log(e);
+		this.refs.pageform.submit();
 	}
 	render() {
 		return (
@@ -40,6 +40,9 @@ export default class PagesList extends React.Component {
 					)}
 					<li className="">
 						<h2>Title</h2>
+					</li>
+					<li>
+						<PageForm />
 					</li>
 				</ul>
 			</div>

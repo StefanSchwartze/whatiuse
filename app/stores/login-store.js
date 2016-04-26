@@ -7,7 +7,7 @@ import LoginActions from "actions/login-actions";
 // var router = require("router");
 import router from "router";
 
-const USER_STORAGE_KEY = "filmdbUser";
+const USER_STORAGE_KEY = "appUser";
 
 class LoginStore {
 	constructor() {
