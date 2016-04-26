@@ -17,9 +17,6 @@ export default class Dashboard extends React.Component {
 	static contextTypes = {
 		router: React.PropTypes.func
 	}
-	static willTransitionTo(transition) {
-		console.log(transition);
-	}
 	static propTypes = {
 		item: React.PropTypes.object,
 		pages: React.PropTypes.array,

@@ -6,11 +6,9 @@ import {authDecorator} from 'utils/component-utils';
 import PagesActions from 'actions/pages-actions';
 
 import PageForm from './page-form';
+import Page from './page';
 
 export default class PagesList extends React.Component {
-	static contextTypes = {
-		router: React.PropTypes.func
-	}
 	static propTypes = {
 		pages: React.PropTypes.array
 	}
@@ -22,20 +20,13 @@ export default class PagesList extends React.Component {
 	}
 	render() {
 		return (
-			<div>
-				<ul className="">
-					{this.props.pages && this.props.pages.map((item, index) =>
-						<li key={index} className="">
-							<h2>{item.title}</h2>
-						</li>
-					)}
-					<li className="">
-						<h2>Title</h2>
-					</li>
-					<li>
-						<PageForm />
-					</li>
-				</ul>
+			<div className="page-slider">
+				{this.props.pages && this.props.pages.map((item, index) =>
+					<Page key={index} page={item} />
+				)}
+				<div>
+					<PageForm />
+				</div>
 			</div>
 		);
 	}
