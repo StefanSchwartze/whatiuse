@@ -1,7 +1,10 @@
 .header {
 	width: 100%;
-	box-shadow: 0 0 10px 0 $grey-dark;
-	background-color: white;
+	box-shadow: 0 0 14px -3px $grey-dark;
+	background-color: $black-ninety;
+	color: white;
+	z-index: 1;
+	position: relative;
 }
 .nav-list {
 	padding: 0;

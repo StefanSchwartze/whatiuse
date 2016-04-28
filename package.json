@@ -71,6 +71,7 @@
     "react-router": "^0.13.3",
     "restful.js": "git://github.com/tomaash/restful.js.git",
     "sass-loader": "^1.0.2",
+    "simple-react-modal": "^0.4.9",
     "style-loader": "^0.12.3",
     "url-loader": "^0.5.6",
     "webpack": "^1.10.1",
