@@ -5,6 +5,8 @@ import PagesList from './pages/pages-list';
 import PagesStore from 'stores/pages-store';
 import PagesActions from 'actions/pages-actions';
 
+import StatisticsContainer from './statistics/statistics-container';
+
 import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt/utils/connectToStores';
 
@@ -30,19 +32,35 @@ export default class Dashboard extends React.Component {
 	}
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			currentPageIndex: -1
+		};
 	}
 	componentWillMount() {
 		return PagesActions.fetch();
 	}
+	setCurrentPageIndex(index) {
+		console.log(index);
+		this.state = {
+			currentPageIndex: index
+		};
+	}
 	render() {
+		console.log(this);
 		return (
 			<AltContainer
 				stores={{
 					PagesStore: PagesStore
 				}}>
 				<div className="content-container edged content">
-					<PagesList pages={this.props.pages} />
+					<PagesList 
+						defaultCurrentPageIndex={-1} 
+						pages={this.props.pages}
+						currentPageIndex={this.state.currentPageIndex}
+						onCurrentPageIndexChange={this.setCurrentPageIndex} />
+				</div>
+				<div className="content-container content">
+					<StatisticsContainer page={this.props.pages[this.state.currentPageIndex]} />
 				</div>
 			</AltContainer>
 		);

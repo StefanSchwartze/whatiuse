@@ -1,9 +1,22 @@
-import { Component, PropTypes } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
-export default class StatisticsContainer extends Component {
+import connectToStores from 'alt/utils/connectToStores';
+import StatusStore from 'stores/status-store';
+import StatusActions from 'actions/status-actions';
+
+@connectToStores
+export default class StatisticsContainer extends React.Component {
 	static propTypes = {
-		page: PropTypes.object.isRequired
+		page: React.PropTypes.object
+	}
+	static getStores() {
+		return [
+			StatusStore
+		];
+	}
+	static getPropsFromStores() {
+		return StatusStore.getState();
 	}
 	constructor(props) {
 		super(props);
@@ -12,9 +25,16 @@ export default class StatisticsContainer extends Component {
 	componentWillMount() {
 	}
 	render() {
+		let page;
+
+		if(this.props.page && !this.props.busy) {
+			page = <span>Hi</span>;
+		} else {
+			page = <span>Loading...</span>;
+		}
 		return (
 			<div className="">
-			hihi
+				{page}
 			</div>
 		);
 	}

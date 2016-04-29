@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import classnames from 'classnames';
 
 export default class Page extends React.Component {
 	static propTypes = {
-		page: React.PropTypes.object.isRequired
+		page: React.PropTypes.object.isRequired,
+		isActive: React.PropTypes.bool
 	}
 	constructor(props) {
 		super(props);
@@ -13,7 +15,7 @@ export default class Page extends React.Component {
 	}
 	render() {
 		return (
-			<div className="page">
+			<div className={classnames('page', this.props.isActive ? 'active' : '')}>
 				<div className="page-overlay">
 					<div className="percentage">
 						<span>

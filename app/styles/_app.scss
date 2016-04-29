@@ -176,6 +176,7 @@ a {
 	.slider {
 		overflow-y: hidden;
 		overflow-x: scroll;
+		will-change: scroll-position;
 		white-space: nowrap;
 		-webkit-overflow-scrolling: touch;
 		-webkit-transform: translate3d(0, 0, 0);
@@ -208,10 +209,14 @@ a {
 	margin: 0 $spacing-medium 0 0;
 	box-shadow: 0 2px 14px -2px $grey-dark;
 	direction: ltr;
+	will-change: contents;
 	&.all {
 		.page-overlay {
 			background-color: $green;
 		}	
+	}
+	&.active {
+		border: solid 5px;
 	}
     &-overlay {
 		position: absolute;

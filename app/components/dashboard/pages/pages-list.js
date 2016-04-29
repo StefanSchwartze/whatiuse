@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal, {closeStyle} from 'simple-react-modal';
+import controllable from 'react-controllables';
 import classnames from 'classnames';
 
 import PagesActions from 'actions/pages-actions';
@@ -7,9 +8,12 @@ import PagesActions from 'actions/pages-actions';
 import PageForm from './page-form';
 import Page from './page';
 
+@controllable(['currentPageIndex'])
 export default class PagesList extends React.Component {
 	static propTypes = {
-		pages: React.PropTypes.array
+		pages: React.PropTypes.array,
+		currentPageIndex: React.PropTypes.number,
+		onCurrentPageIndexChange: React.PropTypes.func
 	}
 	constructor(props) {
 		super(props);
@@ -28,6 +32,12 @@ export default class PagesList extends React.Component {
 	}
 	close(){
 		this.setState({showModal: false})
+	}
+	setCurrentPageIndex(index) {
+		console.log(index);
+		if(this.props.onCurrentPageIndexChange) {
+			this.props.onCurrentPageIndexChange(index);
+		}
 	}
 	render() {
 		return (
@@ -54,7 +64,7 @@ export default class PagesList extends React.Component {
 					<button className="button button--yellow" onClick={this.showModal.bind(this)}><span className="icon-add"></span>Add page</button>
 				</div>
 				<div className={classnames('slider', this.state.rtl ? 'orderReverse' : '')}>
-					<div className="page all">
+					<div className={classnames('page', 'all', this.props.currentPageIndex === -1 ? 'active' : '')} >
 						<div className="page-overlay">
 							<div className="percentage">
 								<span>
@@ -70,7 +80,7 @@ export default class PagesList extends React.Component {
 						</div>
 					</div>
 					{this.props.pages && this.props.pages.map((item, index) =>
-						<Page key={index} page={item} />
+						<Page key={index} page={item} isActive={this.props.currentPageIndex === index} onClick={this.setCurrentPageIndex.bind(this, index)} />
 					)}
 				</div>
 			</div>
