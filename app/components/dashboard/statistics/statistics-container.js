@@ -6,6 +6,7 @@ import StatusStore from 'stores/status-store';
 import StatusActions from 'actions/status-actions';
 
 import ElementsList from '../../shared/elements-list';
+import BrowsersList from '../../shared/browsers-list';
 
 @connectToStores
 export default class StatisticsContainer extends React.Component {
@@ -61,6 +62,35 @@ export default class StatisticsContainer extends React.Component {
 
 		];
 
+		let browsers = [
+			{
+				title: 'Firefox',
+				slug: 'firefox',
+				version: 32
+			},
+			{
+				title: 'Chrome',
+				slug: 'chrome',
+				version: 42
+			},
+			{
+				title: 'IE',
+				slug: 'IE',
+				version: 10
+			},
+			{
+				title: 'Opera',
+				slug: 'opera',
+				version: 12
+			},
+			{
+				title: 'Safari',
+				slug: 'safari',
+				version: 4.5
+			}
+
+		];
+
 		if(this.props.pages && !this.props.busy) {
 			
 			if(this.props.currentPageId === 'all') {
@@ -73,6 +103,8 @@ export default class StatisticsContainer extends React.Component {
 						<ElementsList elements={elements} />
 						<p>Most crashing elements:</p>
 						<ElementsList elements={elements} />
+						<p>Your site works out of the box with:</p>
+						<BrowsersList browsers={browsers} />
 					</div>;
 
 		} else {

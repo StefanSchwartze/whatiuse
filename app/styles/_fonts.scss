@@ -45,6 +45,24 @@ $url-14: url('../fonts/icomoon.svg#icomoon');
     -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-safari:before {
+    content: "\f267";
+}
+.icon-chrome:before {
+    content: "\f268";
+}
+.icon-firefox:before {
+    content: "\f269";
+}
+.icon-opera:before {
+    content: "\f26a";
+}
+.icon-internet-explorer:before {
+    content: "\f26b";
+}
+.icon-add:before {
+    content: "\e145";
+}
 .icon-arrow_forward:before {
     content: "\e5c8";
 }
@@ -54,21 +72,18 @@ $url-14: url('../fonts/icomoon.svg#icomoon');
 .icon-navigate_next:before {
     content: "\e409";
 }
+.icon-close:before {
+    content: "\e5cd";
+}
+.icon-keyboard_arrow_down:before {
+    content: "\e313";
+}
+.icon-keyboard_arrow_up:before {
+    content: "\e316";
+}
 .icon-spinner2:before {
     content: "\e900";
 }
 .icon-spinner8:before {
     content: "\e901";
-}
-.icon-close:before {
-    content: "\e5cd";
-}
-.icon-add:before {
-    content: "\e145";
-}
-.icon-keyboard_arrow_up:before {
-    content: "\e316";
-}
-.icon-keyboard_arrow_down:before {
-    content: "\e313";
 }

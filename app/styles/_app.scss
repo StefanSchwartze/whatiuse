@@ -291,8 +291,7 @@ a {
 /*
 *	Component: ElementsList
 */
-
-.element {
+.pile {
 	display: inline-block;
 	padding: $spacing-extra-small $spacing-medium;
 	margin-right: $spacing-small;
@@ -300,4 +299,10 @@ a {
 	color: white;
 	background-color: $black-ninety;
 	border-radius: $border-radius-rounded;
+	display: inline-flex;
+	align-items: center;
+	vertical-align: middle;
+	> :first-child {
+		margin-right: $spacing-extra-small;
+	}
 }
