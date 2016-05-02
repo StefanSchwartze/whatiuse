@@ -1,6 +1,5 @@
 import React from 'react';
 import Modal, {closeStyle} from 'simple-react-modal';
-import controllable from 'react-controllables';
 import classnames from 'classnames';
 
 import PagesActions from 'actions/pages-actions';
@@ -8,12 +7,10 @@ import PagesActions from 'actions/pages-actions';
 import PageForm from './page-form';
 import Page from './page';
 
-@controllable(['currentPageIndex'])
 export default class PagesList extends React.Component {
 	static propTypes = {
 		pages: React.PropTypes.array,
-		currentPageIndex: React.PropTypes.number,
-		onCurrentPageIndexChange: React.PropTypes.func
+		currentPageId: React.PropTypes.string
 	}
 	constructor(props) {
 		super(props);
@@ -30,14 +27,11 @@ export default class PagesList extends React.Component {
 	showModal(){
 		this.setState({showModal: true})
 	}
-	close(){
+	closeModal(){
 		this.setState({showModal: false})
 	}
-	setCurrentPageIndex(index) {
-		console.log(index);
-		if(this.props.onCurrentPageIndexChange) {
-			this.props.onCurrentPageIndexChange(index);
-		}
+	setCurrentPageId() {
+		PagesActions.selectPage('all');
 	}
 	render() {
 		return (
@@ -48,12 +42,12 @@ export default class PagesList extends React.Component {
 					containerClassName="modal-container"
 					closeOnOuterClick={true}
 					show={this.state.showModal}
-					onClose={this.close.bind(this)} >
+					onClose={this.closeModal.bind(this)} >
 					<div className="modal-head">
 						<span>Add new page</span>
-						<button className="icon-close button button--close" onClick={this.close.bind(this)}></button>
+						<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 					</div>
-					<PageForm focues={true} onSend={this.close.bind(this)} />
+					<PageForm focues={true} onSend={this.closeModal.bind(this)} />
 				</Modal>
 				<div className="pages-head">
 					<div className="count">{this.props.pages.length} pages</div>
@@ -64,7 +58,7 @@ export default class PagesList extends React.Component {
 					<button className="button button--yellow" onClick={this.showModal.bind(this)}><span className="icon-add"></span>Add page</button>
 				</div>
 				<div className={classnames('slider', this.state.rtl ? 'orderReverse' : '')}>
-					<div className={classnames('page', 'all', this.props.currentPageIndex === -1 ? 'active' : '')} >
+					<div className={classnames('page', 'all', this.props.currentPageId === 'all' ? 'active' : '')} >
 						<div className="page-overlay">
 							<div className="percentage">
 								<span>
@@ -72,7 +66,7 @@ export default class PagesList extends React.Component {
 								</span>
 							</div>
 							<div className="open">
-								<button className="button button--wide button--strong button--yellow" >Open</button>
+								<button onClick={this.setCurrentPageId.bind(this)} className="button button--wide button--strong button--yellow">Open</button>
 							</div>
 							<div className="title">
 								<span>All</span>
@@ -80,7 +74,7 @@ export default class PagesList extends React.Component {
 						</div>
 					</div>
 					{this.props.pages && this.props.pages.map((item, index) =>
-						<Page key={index} page={item} isActive={this.props.currentPageIndex === index} onClick={this.setCurrentPageIndex.bind(this, index)} />
+						<Page key={index} page={item} isActive={this.props.currentPageId === item._id} />
 					)}
 				</div>
 			</div>

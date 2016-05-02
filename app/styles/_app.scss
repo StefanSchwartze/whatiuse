@@ -287,3 +287,17 @@ a {
 		z-index: 0;
 	}
 }
+
+/*
+*	Component: ElementsList
+*/
+
+.element {
+	display: inline-block;
+	padding: $spacing-extra-small $spacing-medium;
+	margin-right: $spacing-small;
+	margin-bottom: $spacing-small;
+	color: white;
+	background-color: $black-ninety;
+	border-radius: $border-radius-rounded;
+}

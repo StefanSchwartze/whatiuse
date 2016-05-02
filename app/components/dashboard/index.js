@@ -14,15 +14,12 @@ import connectToStores from 'alt/utils/connectToStores';
 @connectToStores
 export default class Dashboard extends React.Component {
 	static willTransitionTo(transition) {
-		console.log(transition);
-	}
-	static contextTypes = {
-		router: React.PropTypes.func
+		//console.log(transition);
 	}
 	static propTypes = {
 		item: React.PropTypes.object,
 		pages: React.PropTypes.array,
-		pagesHash: React.PropTypes.object
+		currentPageId: React.PropTypes.string
 	}
 	static getStores(props) {
 		return [PagesStore];
@@ -32,21 +29,11 @@ export default class Dashboard extends React.Component {
 	}
 	constructor(props) {
 		super(props);
-		this.state = {
-			currentPageIndex: -1
-		};
 	}
 	componentWillMount() {
 		return PagesActions.fetch();
 	}
-	setCurrentPageIndex(index) {
-		console.log(index);
-		this.state = {
-			currentPageIndex: index
-		};
-	}
 	render() {
-		console.log(this);
 		return (
 			<AltContainer
 				stores={{
@@ -54,13 +41,13 @@ export default class Dashboard extends React.Component {
 				}}>
 				<div className="content-container edged content">
 					<PagesList 
-						defaultCurrentPageIndex={-1} 
 						pages={this.props.pages}
-						currentPageIndex={this.state.currentPageIndex}
-						onCurrentPageIndexChange={this.setCurrentPageIndex} />
+						currentPageId={this.props.currentPageId} />
 				</div>
 				<div className="content-container content">
-					<StatisticsContainer page={this.props.pages[this.state.currentPageIndex]} />
+					<StatisticsContainer 
+						pages={this.props.pages}
+						currentPageId={this.props.currentPageId} />
 				</div>
 			</AltContainer>
 		);
