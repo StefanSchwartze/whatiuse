@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+
 import connectToStores from 'alt/utils/connectToStores';
 import StatusStore from 'stores/status-store';
 import StatusActions from 'actions/status-actions';
@@ -62,6 +64,34 @@ export default class StatisticsContainer extends React.Component {
 
 		];
 
+		let elementshtml = [
+			{
+				title: 'section',
+				used: 80
+			},
+			{
+				title: 'h2',
+				used: 60
+			},
+			{
+				title: 'audio',
+				used: 20
+			},
+			{
+				title: 'video',
+				used: 17
+			},
+			{
+				title: 'header',
+				used: 3
+			},
+			{
+				title: 'article',
+				used: 1
+			}
+
+		];
+
 		let browsers = [
 			{
 				title: 'Firefox',
@@ -105,6 +135,34 @@ export default class StatisticsContainer extends React.Component {
 						<ElementsList elements={elements} />
 						<p>Your site works out of the box with:</p>
 						<BrowsersList browsers={browsers} />
+						<div className="charts-container">
+							<div className="chart-container">
+								<ResponsiveContainer>
+									<BarChart
+										data={elements}>
+										<XAxis dataKey="title"/>
+										<YAxis/>
+										<CartesianGrid />
+										<Tooltip/>
+										<Legend />
+										<Bar dataKey="used" fill="#82ca9d" />
+									</BarChart>
+								</ResponsiveContainer>
+							</div>
+							<div className="chart-container">
+								<ResponsiveContainer>
+									<BarChart
+										data={elementshtml}>
+										<XAxis dataKey="title"/>
+										<YAxis/>
+										<CartesianGrid />
+										<Tooltip/>
+										<Legend />
+										<Bar dataKey="used" fill="#82ca9d" />
+									</BarChart>
+								</ResponsiveContainer>
+							</div>
+						</div>
 					</div>;
 
 		} else {

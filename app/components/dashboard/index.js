@@ -39,12 +39,12 @@ export default class Dashboard extends React.Component {
 				stores={{
 					PagesStore: PagesStore
 				}}>
-				<div className="content-container edged content">
+				<div className="content-container edged content slider-container">
 					<PagesList 
 						pages={this.props.pages}
 						currentPageId={this.props.currentPageId} />
 				</div>
-				<div className="content-container content">
+				<div className="content-container content statistics-container">
 					<StatisticsContainer 
 						pages={this.props.pages}
 						currentPageId={this.props.currentPageId} />

@@ -95,12 +95,18 @@ a {
 .content-container {
 	max-width: 1280px;
 	margin: auto;
-	padding: $spacing-small;
+	padding: $spacing-medium;
 	&.edged {
 		padding: 0;
 	}
 	&--small {
 		max-width: 320px;
+	}
+	&.slider-container {
+		background-color: $grey-medium;
+	}
+	&.statistics-container {
+		background-color: white;
 	}
 }
 
@@ -305,4 +311,21 @@ a {
 	> :first-child {
 		margin-right: $spacing-extra-small;
 	}
+}
+
+/*
+*	Component: Chartcontainer
+*/
+.charts-container {
+	@media only screen and (min-width: 960px) {
+		.chart-container {
+			width: 50%;
+		}
+	}
+}
+.chart-container {
+	height: 300px;
+	width: 100%;
+	margin: $spacing-large 0;
+	display: inline-block;
 }
