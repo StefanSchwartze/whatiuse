@@ -30,7 +30,7 @@ export default class StatisticsContainer extends React.Component {
 	componentWillMount() {
 	}
 	render() {
-		console.log(this.props);
+		//console.log(this.props);
 		let page;
 		let elements = [
 			{

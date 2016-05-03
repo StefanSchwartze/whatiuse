@@ -9,7 +9,7 @@ export default class ElementsList extends React.Component {
 		super(props);
 	}
 	render() {
-		console.log(this.props.elements);
+		//console.log(this.props.elements);
 		return (
 			<div className="elements-list">
 				{this.props.elements && this.props.elements.map((item, index) =>

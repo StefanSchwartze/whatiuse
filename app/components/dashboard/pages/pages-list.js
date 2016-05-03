@@ -61,9 +61,7 @@ export default class PagesList extends React.Component {
 					<div className={classnames('page', 'all', this.props.currentPageId === 'all' ? 'active' : '')} >
 						<div className="page-overlay">
 							<div className="percentage">
-								<span>
-									98%
-								</span>
+								<span>98%</span>
 							</div>
 							<div className="open">
 								<button onClick={this.setCurrentPageId.bind(this)} className="button button--wide button--strong button--yellow">Open</button>

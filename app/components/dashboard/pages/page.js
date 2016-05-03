@@ -11,13 +11,20 @@ export default class Page extends React.Component {
 	}
 	constructor(props) {
 		super(props);
+		this.state = { isLoading: true };
+	}
+	componentDidMount() {
+		this.refs.iframe.addEventListener('load', this.onLoad.bind(this));
+	}
+	onLoad() {
+		this.setState({ isLoading: false });
 	}
 	setActive() {
 		PagesActions.selectPage(this.props.page._id);
 	}
 	render() {
 		return (
-			<div className={classnames('page', this.props.isActive ? 'active' : '')}>
+			<div className={classnames('page', this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : '')}>
 				<div className="page-overlay">
 					<div className="percentage">
 						<span>
@@ -31,7 +38,7 @@ export default class Page extends React.Component {
 						<span>{this.props.page.title}</span>
 					</div>
 				</div>
-				<iframe className="page-thumb" src="https://www.sevenval.com" width="1200" height="700"></iframe>
+				<iframe ref="iframe" className="page-thumb" src={this.props.page.url} width="1200" height="700"></iframe>
 			</div>
 		);
 	}

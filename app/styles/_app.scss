@@ -188,7 +188,7 @@ a {
 		-webkit-transform: translate3d(0, 0, 0);
 		width: 100%;
 		position: relative;
-		padding: $spacing-small 0;
+		padding: $spacing-small 0 $spacing-medium 0;
 		&.orderReverse {
 			direction: rtl;
 			> *:first-child {
@@ -216,13 +216,39 @@ a {
 	box-shadow: 0 2px 14px -2px $grey-dark;
 	direction: ltr;
 	will-change: contents;
+	&.isLoading {
+		.page-overlay {
+			background: black;
+		}
+	}
 	&.all {
 		.page-overlay {
 			background-color: $green;
 		}	
 	}
+	&:after{
+		top: 100%;
+		left: 50%;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+		margin-top: 0px;
+		border-color: transparent;
+		border-bottom-color: #fff;
+		border-width: 20px;
+		margin-left: -20px;
+		transition: margin .25s;
+	}
 	&.active {
-		border: solid 5px;
+		&:after {
+			margin-top: -10px;
+		}
+		.page-overlay {
+			border: solid 5px;
+		}
 	}
     &-overlay {
 		position: absolute;
