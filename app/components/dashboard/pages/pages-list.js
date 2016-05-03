@@ -47,7 +47,7 @@ export default class PagesList extends React.Component {
 						<span>Add new page</span>
 						<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 					</div>
-					<PageForm focues={true} onSend={this.closeModal.bind(this)} />
+					<PageForm onSend={this.closeModal.bind(this)} />
 				</Modal>
 				<div className="pages-head">
 					<div className="count">{this.props.pages.length} pages</div>
