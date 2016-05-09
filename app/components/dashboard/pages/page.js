@@ -22,6 +22,13 @@ export default class Page extends React.Component {
 	setActive() {
 		PagesActions.selectPage(this.props.page._id);
 	}
+
+	checkUrl() {
+		console.log('click me!');
+		PagesActions.checkURL(this.props.page.url);
+	}
+
+
 	render() {
 		return (
 			<div className={classnames('page', this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : '')}>
@@ -33,6 +40,7 @@ export default class Page extends React.Component {
 					</div>
 					<div className="open">
 						<button onClick={this.setActive.bind(this)} className="button button--wide button--strong button--yellow" >Open</button>
+						<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >CHECK</button>
 					</div>
 					<div className="title">
 						<span>{this.props.page.title}</span>

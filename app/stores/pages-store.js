@@ -30,6 +30,9 @@ class PagesStore {
 	onSelectPage(id) {
 		this.currentPageId = id;
 	}
+	onCheckURL(data) {
+		console.log(data);
+	}
 }
 
 module.exports = (alt.createStore(PagesStore));

@@ -20,8 +20,11 @@ import config from "./config/init";
 import rest from "./rest";
 import {clone} from "lodash";
 
+import http from "http";
+
 const app = koa();
 const env = process.env.NODE_ENV || "development";
+
 
 app.use(responseTime());
 app.use(logger());
@@ -153,24 +156,105 @@ import Example from "./models/example";
 		.use(authRouter.routes())
 		.use(authRouter.allowedMethods());
 
+	var checkRouter = koaRouter();
+
+	checkRouter.post("/check", function*(next) {
+		yield next;
 
 
+		this.set({
+			'Content-Type' : 'application/json',
+			'Access-Control-Allow-Origin' : '*'
+		});
 
 
+var request = require('request');
+var cssFeatures = require('../app/utils/css-features');
+var limit = require('../app/utils/limit');
+
+var JSONStream = require('JSONStream');
+var pipe = require('mississippi').pipe;
+var through = require('mississippi').through;
+var fromString = require('from2-string');
+var styles = require('style-stream');
+var next = require('next-stream');
+var doiuse = require('doiuse/stream');
+var defaultBrowsers = require('doiuse').default;
+
+var prune = require('../app/utils/prune');
+var unique = require('../app/utils/unique');
+var limitstream = require('../app/utils/limit');
 
 
+		function run(args, res) {
+			return new Promise(function(resolve, reject) {
+
+				var url = args.url || '';
+  				var css = args.css || '';
+  				var browsers = args.browser || ''
+
+				var streams = [styles({ url: url })];
+
+				var errorsAndWarnings = [];
+				var uniq = unique();
+				var limit = limitstream(1e6);
+				var features = prune();
+				streams = streams.concat([
+					limit,
+					doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
+					.on('data', function(data) { console.log(data)})
+					.on('warning', function (warn) { errorsAndWarnings.push(warn) }),
+					uniq.features,
+					features
+				]);
+				var stringify = features.pipe(JSONStream.stringify());
+				var error = through();
+				pipe(streams, function (err) {
+					if (err) {
+						console.error('Error processing CSS', err)
+						console.trace()
+						if (!limit.ended) { limit.end() }
+						if (!uniq.ended) { uniq.features.end() }
+						stringify.end()
+						if (JSON.stringify(err) === '{}') { err = err.toString() }
+						errorsAndWarnings.push(err)
+					}
+					error.end(', "errors":' + JSON.stringify(errorsAndWarnings))
+				})
+
+				// construct JSON output stream
+				pipe(next(['{ "args":', JSON.stringify(args), ',',
+					'"usages": ', stringify.pipe(through()), ',',
+					'"counts": ', uniq.counts, ',',
+					'"size": ', limit.size,
+					error,
+					'}'
+					], { open: false }), res, function (err) {
+						if (err) { 
+							console.error(err) 
+						}
+						res.end();
+				})
+			});
+		}
+
+		yield run({ url : 'http://stefanschwartze.com' }, this.res);
+
+	});
 
 
-
-
+	app
+		.use(checkRouter.routes())
+		.use(checkRouter.allowedMethods());
+		
 
 
 
 
 app.use(router);
 var port = process.env.PORT || config.port || 3000;
-
-var server = require('http').Server(app.callback());
+console.log(app.callback);
+var server = http.createServer(app.callback());
 
 server.listen(port);
 
