@@ -158,9 +158,7 @@ import Example from "./models/example";
 
 	var checkRouter = koaRouter();
 
-	checkRouter.post("/check", function*(next) {
-		yield next;
-
+	checkRouter.post("/check", function*() {
 
 		this.set({
 			'Content-Type' : 'application/json',
@@ -168,30 +166,31 @@ import Example from "./models/example";
 		});
 
 
-var request = require('request');
-var cssFeatures = require('../app/utils/css-features');
-var limit = require('../app/utils/limit');
+		var request = require('request');
+		var cssFeatures = require('../app/utils/css-features');
+		var limit = require('../app/utils/limit');
 
-var JSONStream = require('JSONStream');
-var pipe = require('mississippi').pipe;
-var through = require('mississippi').through;
-var fromString = require('from2-string');
-var styles = require('style-stream');
-var next = require('next-stream');
-var doiuse = require('doiuse/stream');
-var defaultBrowsers = require('doiuse').default;
+		var JSONStream = require('JSONStream');
+		var pipe = require('mississippi').pipe;
+		var through = require('mississippi').through;
+		var fromString = require('from2-string');
+		var styles = require('style-stream');
+		var next = require('next-stream');
+		var doiuse = require('doiuse/stream');
+		var defaultBrowsers = require('doiuse').default;
 
-var prune = require('../app/utils/prune');
-var unique = require('../app/utils/unique');
-var limitstream = require('../app/utils/limit');
+		var prune = require('../app/utils/prune');
+		var unique = require('../app/utils/unique');
+		var limitstream = require('../app/utils/limit');
 
 
 		function run(args, res) {
+
 			return new Promise(function(resolve, reject) {
 
 				var url = args.url || '';
   				var css = args.css || '';
-  				var browsers = args.browser || ''
+  				var browsers = args.browser || '';
 
 				var streams = [styles({ url: url })];
 
@@ -202,8 +201,9 @@ var limitstream = require('../app/utils/limit');
 				streams = streams.concat([
 					limit,
 					doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
-					.on('data', function(data) { console.log(data)})
-					.on('warning', function (warn) { errorsAndWarnings.push(warn) }),
+					.on('warning', function (warn) { 
+						errorsAndWarnings.push(warn) 
+					}),
 					uniq.features,
 					features
 				]);
@@ -223,18 +223,24 @@ var limitstream = require('../app/utils/limit');
 				})
 
 				// construct JSON output stream
-				pipe(next(['{ "args":', JSON.stringify(args), ',',
-					'"usages": ', stringify.pipe(through()), ',',
-					'"counts": ', uniq.counts, ',',
-					'"size": ', limit.size,
-					error,
-					'}'
-					], { open: false }), res, function (err) {
+				pipe(
+					next([
+						'{ "args":', JSON.stringify(args), ',',
+						'"usages": ', stringify.pipe(through()), ',',
+						'"counts": ', uniq.counts, ',',
+						'"size": ', limit.size,
+						error,
+						'}'
+						], { open: false }
+					), 
+					res, 
+					function (err) {
 						if (err) { 
 							console.error(err) 
 						}
-						res.end();
-				})
+						res.end(next);
+					}
+				)
 			});
 		}
 
