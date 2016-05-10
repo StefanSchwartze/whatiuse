@@ -79,19 +79,6 @@ else {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Parse body
 app.use(bodyParser());
 
@@ -181,7 +168,6 @@ var port = process.env.PORT || config.port || 3000;
 var server = http.createServer(app.callback());
 
 server.listen(port);
-
 
 console.log(`Application started on port ${config.port}`);
 if (process.send) {
