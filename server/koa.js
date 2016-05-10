@@ -22,6 +22,16 @@ import {clone} from "lodash";
 
 import http from "http";
 
+// CSS Processing modules
+import JSONStream from 'JSONStream';
+import { pipe, through, concat } from 'mississippi';
+import styles from 'style-stream';
+import next from 'next-stream';
+import doiuse from 'doiuse/stream';
+import prune from './utils/prune';
+import unique from './utils/unique';
+import limitstream from './utils/limit';
+
 const app = koa();
 const env = process.env.NODE_ENV || "development";
 
@@ -160,43 +170,18 @@ import Example from "./models/example";
 
 	checkRouter.post("/check", function*() {
 
-		this.set({
-			'Content-Type' : 'application/json',
-			'Access-Control-Allow-Origin' : '*'
-		});
+		function evaluate(args, res) {
 
+			return new Promise((resolve, reject) => {
 
-		var request = require('request');
-		var cssFeatures = require('../app/utils/css-features');
-		var limit = require('../app/utils/limit');
-
-		var JSONStream = require('JSONStream');
-		var pipe = require('mississippi').pipe;
-		var through = require('mississippi').through;
-		var concat = require('mississippi').concat;
-		var fromString = require('from2-string');
-		var styles = require('style-stream');
-		var next = require('next-stream');
-		var doiuse = require('doiuse/stream');
-		var defaultBrowsers = require('doiuse').default;
-
-		var prune = require('../app/utils/prune');
-		var unique = require('../app/utils/unique');
-		var limitstream = require('../app/utils/limit');
-
-
-		function run(args, res) {
-
-			return new Promise(function(resolve, reject) {
-
-				var url = args.url || '';
-  				var css = args.css || '';
-  				var browsers = args.browser || '';
-				var streams = [styles({ url: url })];
-				var errorsAndWarnings = [];
-				var uniq = unique();
-				var limit = limitstream(1e6);
-				var features = prune();
+				let url = args.url || '';
+  				let css = args.css || '';
+  				let browsers = args.browser || '';
+				let streams = [styles({ url: url })];
+				let errorsAndWarnings = [];
+				let uniq = unique();
+				let limit = limitstream(1e6);
+				let features = prune();
 
 				streams = streams.concat([
 					limit,
@@ -207,33 +192,32 @@ import Example from "./models/example";
 					uniq.features,
 					features
 				]);
-				var stringify = features.pipe(JSONStream.stringify());
-				var error = through();
-
-
-
-
+				let stringify = features.pipe(JSONStream.stringify());
+				let error = through();
 
 				pipe(streams, 
 					function (err) {
-						console.log('All streams processed!');
 						if (err) {
-							console.error('Error processing CSS', err)
-							console.trace()
-							if (!limit.ended) { limit.end() }
-							if (!uniq.ended) { uniq.features.end() }
-							stringify.end()
-							if (JSON.stringify(err) === '{}') { err = err.toString() }
+							console.error('Error processing CSS', err);
+							console.trace();
+							if (!limit.ended) { 
+								limit.end() 
+							}
+							if (!uniq.ended) { 
+								uniq.features.end() 
+							}
+							stringify.end();
+							if (JSON.stringify(err) === '{}') { 
+								err = err.toString() 
+							}
 							errorsAndWarnings.push(err)
 						}
-						error.end(', "errors":' + JSON.stringify(errorsAndWarnings))
+						error.end(', "errors":' + JSON.stringify(errorsAndWarnings));
 					}
 				)
 						
-
-				var usedata = [];
-
-				var readStream = next([
+				let usageData = [];
+				const concatStream = next([
 					'{ "args":', JSON.stringify(args), ',',
 					'"usages": ', stringify.pipe(through()), ',',
 					'"counts": ', uniq.counts, ',',
@@ -242,23 +226,29 @@ import Example from "./models/example";
 					'}'
 					], { open: false }
 				);
-				var newStream = JSONStream.parse();
-				readStream.pipe(newStream);
+				const finalStream = JSONStream.parse();
+				concatStream.pipe(finalStream);
 
-				newStream.on('data', (chunk) => {
-					console.log('neuer chunk');
-					console.log(chunk);
-					usedata.push(chunk);
+				finalStream.on('data', (data) => {
+					usageData.push(data);
 				});
-				 newStream.on('end', function() {
-					console.log('zuende');
-					resolve(usedata);
+				finalStream.on('error', (err) => {
+					reject(err);
 				});
-				 
+				finalStream.on('end', (err) => {
+					resolve(usageData);
+				});
+
 			});
 		}
-		var answer = yield run({ url : this.request.body.url }, this.res);
-		this.body = answer;
+
+		this.set({
+			'Content-Type' : 'application/json',
+			'Access-Control-Allow-Origin' : '*'
+		});
+
+		let body = yield evaluate({ url : this.request.body.url }, this.res);
+		this.body = body;
 
 	});
 
@@ -266,10 +256,6 @@ import Example from "./models/example";
 		.use(checkRouter.routes())
 		.use(checkRouter.allowedMethods());
 		
-
-
-
-
 app.use(router);
 var port = process.env.PORT || config.port || 3000;
 var server = http.createServer(app.callback());
