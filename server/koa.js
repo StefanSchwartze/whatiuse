@@ -173,6 +173,7 @@ import Example from "./models/example";
 		var JSONStream = require('JSONStream');
 		var pipe = require('mississippi').pipe;
 		var through = require('mississippi').through;
+		var concat = require('mississippi').concat;
 		var fromString = require('from2-string');
 		var styles = require('style-stream');
 		var next = require('next-stream');
@@ -191,13 +192,12 @@ import Example from "./models/example";
 				var url = args.url || '';
   				var css = args.css || '';
   				var browsers = args.browser || '';
-
 				var streams = [styles({ url: url })];
-
 				var errorsAndWarnings = [];
 				var uniq = unique();
 				var limit = limitstream(1e6);
 				var features = prune();
+
 				streams = streams.concat([
 					limit,
 					doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
@@ -209,45 +209,58 @@ import Example from "./models/example";
 				]);
 				var stringify = features.pipe(JSONStream.stringify());
 				var error = through();
-				pipe(streams, function (err) {
-					if (err) {
-						console.error('Error processing CSS', err)
-						console.trace()
-						if (!limit.ended) { limit.end() }
-						if (!uniq.ended) { uniq.features.end() }
-						stringify.end()
-						if (JSON.stringify(err) === '{}') { err = err.toString() }
-						errorsAndWarnings.push(err)
-					}
-					error.end(', "errors":' + JSON.stringify(errorsAndWarnings))
-				})
 
-				// construct JSON output stream
-				pipe(
-					next([
-						'{ "args":', JSON.stringify(args), ',',
-						'"usages": ', stringify.pipe(through()), ',',
-						'"counts": ', uniq.counts, ',',
-						'"size": ', limit.size,
-						error,
-						'}'
-						], { open: false }
-					), 
-					res, 
+
+
+
+
+				pipe(streams, 
 					function (err) {
-						if (err) { 
-							console.error(err) 
+						console.log('All streams processed!');
+						if (err) {
+							console.error('Error processing CSS', err)
+							console.trace()
+							if (!limit.ended) { limit.end() }
+							if (!uniq.ended) { uniq.features.end() }
+							stringify.end()
+							if (JSON.stringify(err) === '{}') { err = err.toString() }
+							errorsAndWarnings.push(err)
 						}
-						res.end(next);
+						error.end(', "errors":' + JSON.stringify(errorsAndWarnings))
 					}
 				)
+						
+
+				var usedata = [];
+
+				var readStream = next([
+					'{ "args":', JSON.stringify(args), ',',
+					'"usages": ', stringify.pipe(through()), ',',
+					'"counts": ', uniq.counts, ',',
+					'"size": ', limit.size,
+					error,
+					'}'
+					], { open: false }
+				);
+				var newStream = JSONStream.parse();
+				readStream.pipe(newStream);
+
+				newStream.on('data', (chunk) => {
+					console.log('neuer chunk');
+					console.log(chunk);
+					usedata.push(chunk);
+				});
+				 newStream.on('end', function() {
+					console.log('zuende');
+					resolve(usedata);
+				});
+				 
 			});
 		}
-
-		yield run({ url : 'http://stefanschwartze.com' }, this.res);
+		var answer = yield run({ url : this.request.body.url }, this.res);
+		this.body = answer;
 
 	});
-
 
 	app
 		.use(checkRouter.routes())
@@ -259,7 +272,6 @@ import Example from "./models/example";
 
 app.use(router);
 var port = process.env.PORT || config.port || 3000;
-console.log(app.callback);
 var server = http.createServer(app.callback());
 
 server.listen(port);
