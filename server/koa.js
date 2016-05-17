@@ -1,6 +1,5 @@
 import path from "path";
 import debug from "debug";
-
 import koa from "koa";
 import hbs from "koa-hbs";
 import mount from "koa-mount";
@@ -10,17 +9,15 @@ import favicon from "koa-favicon";
 import staticCache from "koa-static-cache";
 import responseTime from "koa-response-time";
 import bodyParser from "koa-bodyparser";
-// import koaRouter from "koa-router";
-import generateApi from "./restable/lib";
 import koaRouter from "koa-router";
+import {clone} from "lodash";
+import http from "http";
 
 import router from "./router";
 import config from "./config/init";
 
+import generateApi from "./restable/lib";
 import rest from "./rest";
-import {clone} from "lodash";
-
-import http from "http";
 
 import evaluate from "./utils/features";
 

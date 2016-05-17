@@ -3,7 +3,7 @@ import StatusActions from 'actions/status-actions';
 import LoginActions from 'actions/login-actions';
 
 export default {
-  networkAction: async function(context, method, ...params) {
+  networkAction: async (context, method, ...params) => {
     // try {
       StatusActions.started();
       const response = await method.apply(context, params);
