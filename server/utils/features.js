@@ -23,6 +23,8 @@ module.exports = function evaluate(args) {
 		let limit = limitstream(1e6);
 		let features = prune();
 
+
+
 		streams = streams.concat([
 			limit,
 			doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
@@ -35,7 +37,8 @@ module.exports = function evaluate(args) {
 		let stringify = features.pipe(JSONStream.stringify());
 		let error = through();
 
-		pipe(streams, 
+
+		pipe(streams,
 			function (err) {
 				if (err) {
 					console.error('Error processing CSS', err);
@@ -55,7 +58,34 @@ module.exports = function evaluate(args) {
 				error.end(', "errors":' + JSON.stringify(errorsAndWarnings));
 			}
 		)
-				
+			
+
+
+
+
+var cssstats = require('cssstats');
+
+
+
+		let streamF = styles({ url: url });
+let feat = '';
+		var data = streamF.pipe(through());
+		//console.log(data);
+		data.on('data', (data) => {
+			feat = feat + data.toString('utf8');
+			console.log(feat);
+		});
+
+		data.on('end', (data) => {
+			var stats = cssstats(feat, { mediaQueries: false });
+			console.log(stats);
+			resolve(stats);
+		});
+
+
+
+
+
 		let usageData = [];
 		const concatStream = next([
 			'{ "args":', JSON.stringify(args), ',',
@@ -76,7 +106,7 @@ module.exports = function evaluate(args) {
 			reject(err);
 		});
 		finalStream.on('end', (err) => {
-			resolve(usageData);
+			//resolve(usageData);
 		});
 
 	});

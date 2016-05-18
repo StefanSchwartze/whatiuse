@@ -32,7 +32,7 @@ function pruneFeatureUsage (usageInfo, enc, next) {
       }
     })
   }
-
+  
   var data = {
     message: usageInfo.message,
     error: usageInfo.error,
