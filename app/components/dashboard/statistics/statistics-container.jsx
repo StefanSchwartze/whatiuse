@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 
 import {findItemById} from 'utils/store-utils';
-import {sortBy, orderBy} from 'lodash';
+import {sortBy, orderBy, flatten, reduce} from 'lodash';
 
 import connectToStores from 'alt/utils/connectToStores';
 import StatusStore from 'stores/status-store';
@@ -126,6 +126,60 @@ export default class StatisticsContainer extends React.Component {
 		if(this.props.pages.length > 0) {
 			
 			if(this.props.currentPageId === 'all') {
+
+				var arr1 = [{name: "age", value: 18}, {name: "age", value: 10}];
+				var arr2 = [{name : "age", value: 5}, {name: "lang", value: "English"}];
+				var arr3 = [{name : "age", value: 5}, {name: "age", value: 13}];
+				var arr4 = [{name : "age", value: 5}];
+
+
+
+				var pages = [arr1, arr2, arr3, arr4];
+
+				var finArr = [].concat.apply([], pages); 
+
+
+
+
+
+
+				var arr1 = new Array(
+					{name : "age", value: 5}, 
+					{name: "lang", value: 99}, 
+					{name: "age", value: 18}, 
+					{name : "age", value: 5}, 
+					{name: "lang", value: 13}, 
+					{name: "foo", value: 6}, 
+					{name: "bar", value: 2}, 
+					{name: "bar", value: 3}, 
+					{name : "age", value: 7});
+
+				var arr = arr1.reduce(function(prev, current, index, array){
+				   if(!(current.name in prev.keys)) {
+				      prev.keys[current.name] = index;
+				      prev.result.push(current);   
+				   } 
+				   else {
+				   		if(prev.result[prev.keys[current.name]]) {
+				       		prev.result[prev.keys[current.name]].value = prev.result[prev.keys[current.name]].value + current.value;
+				   		} else {
+				       		prev.result[prev.result.length - 1].value = prev.result[prev.result.length - 1].value + current.value;
+
+				   		}
+				   }  
+
+				   return prev;
+				},{result: [], keys: {}}).result;
+
+				console.log(arr)
+
+
+
+
+
+
+
+
 			} else {
 				page = findItemById(this.props.pages, this.props.currentPageId);
 				if(page.elementsCollections.length > 0) {
