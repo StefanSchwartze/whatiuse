@@ -13,7 +13,7 @@ export default class ElementsList extends React.Component {
 			<div className="elements-list">
 				{this.props.elements && this.props.elements.map((item, index) =>
 					<div className="pile" key={index}>
-						<span>{item.count}</span><span>{item.name}</span>
+						<span>{item.count}</span><span>|</span><span>{item.name}</span>
 					</div>
 				)}
 			</div>

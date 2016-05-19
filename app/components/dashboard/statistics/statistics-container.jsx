@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 
 import {findItemById} from 'utils/store-utils';
+import {sortBy} from 'lodash';
 
 import connectToStores from 'alt/utils/connectToStores';
 import StatusStore from 'stores/status-store';
@@ -130,7 +131,7 @@ export default class StatisticsContainer extends React.Component {
 			} else {
 				page = findItemById(this.props.pages, this.props.currentPageId);
 				if(page.elementsCollections.length > 0) {
-					elements = page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements;
+					elements = sortBy(page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements, function(obj) { return obj.count; });
 				}
 				console.log(elements);
 			}
@@ -146,12 +147,12 @@ export default class StatisticsContainer extends React.Component {
 								<ResponsiveContainer>
 									<BarChart
 										data={elements}>
-										<XAxis dataKey="title"/>
+										<XAxis dataKey="name"/>
 										<YAxis/>
 										<CartesianGrid />
 										<Tooltip/>
 										<Legend />
-										<Bar dataKey="used" fill="#82ca9d" />
+										<Bar dataKey="count" fill="#82ca9d" />
 									</BarChart>
 								</ResponsiveContainer>
 							</div>

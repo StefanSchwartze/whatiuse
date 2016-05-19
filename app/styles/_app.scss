@@ -334,8 +334,11 @@ a {
 	display: inline-flex;
 	align-items: center;
 	vertical-align: middle;
-	> :first-child {
+	> span {
 		margin-right: $spacing-extra-small;
+	}
+	> :last-child {
+		margin-right: 0;
 	}
 }
 
