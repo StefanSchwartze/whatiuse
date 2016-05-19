@@ -131,7 +131,7 @@ export default class StatisticsContainer extends React.Component {
 				page = findItemById(this.props.pages, this.props.currentPageId);
 				if(page.elementsCollections.length > 0) {
 					elements = page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements;
-					elements = orderBy(elements, ['count'], ['desc']);
+					elements = orderBy(elements, 'count', 'desc');
 				}
 			}
 			page = 	<div>
