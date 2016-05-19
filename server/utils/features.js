@@ -62,26 +62,22 @@ module.exports = function evaluate(args) {
 
 
 
-
-var cssstats = require('cssstats');
-
-
-
+/*
+		var cssstats = require('cssstats');
 		let streamF = styles({ url: url });
-let feat = '';
+		let feat = '';
 		var data = streamF.pipe(through());
 		//console.log(data);
 		data.on('data', (data) => {
 			feat = feat + data.toString('utf8');
 			//console.log(feat);
 		});
-
 		data.on('end', (data) => {
 			var stats = cssstats(feat, { mediaQueries: false });
 			//console.log(stats);
 			//resolve(stats);
 		});
-
+*/
 
 		let usageData = [];
 		const concatStream = next([

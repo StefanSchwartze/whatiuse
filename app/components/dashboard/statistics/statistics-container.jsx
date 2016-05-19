@@ -129,7 +129,9 @@ export default class StatisticsContainer extends React.Component {
 				//page = 'hihi';
 			} else {
 				page = findItemById(this.props.pages, this.props.currentPageId);
-				elements = page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements;
+				if(page.elementsCollections.length > 0) {
+					elements = page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements;
+				}
 				console.log(elements);
 			}
 			page = 	<div>
