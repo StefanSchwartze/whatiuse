@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 
 import {findItemById} from 'utils/store-utils';
-import {sortBy} from 'lodash';
+import {sortBy, orderBy} from 'lodash';
 
 import connectToStores from 'alt/utils/connectToStores';
 import StatusStore from 'stores/status-store';
@@ -127,13 +127,12 @@ export default class StatisticsContainer extends React.Component {
 		if(this.props.pages && !this.props.busy) {
 			
 			if(this.props.currentPageId === 'all') {
-				//page = 'hihi';
 			} else {
 				page = findItemById(this.props.pages, this.props.currentPageId);
 				if(page.elementsCollections.length > 0) {
-					elements = sortBy(page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements, function(obj) { return obj.count; });
+					elements = page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements;
+					elements = orderBy(elements, ['count'], ['desc']);
 				}
-				console.log(elements);
 			}
 			page = 	<div>
 						<p>Most used elements:</p>
