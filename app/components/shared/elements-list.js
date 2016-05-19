@@ -9,12 +9,11 @@ export default class ElementsList extends React.Component {
 		super(props);
 	}
 	render() {
-		//console.log(this.props.elements);
 		return (
 			<div className="elements-list">
 				{this.props.elements && this.props.elements.map((item, index) =>
 					<div className="pile" key={index}>
-						<span>{item.title}</span>
+						<span>{item.count}</span><span>{item.name}</span>
 					</div>
 				)}
 			</div>

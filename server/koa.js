@@ -151,8 +151,8 @@ import Example from "./models/example";
 			'Access-Control-Allow-Origin' : '*'
 		});
 
-		let body = yield evaluate({ url : this.request.body.url });
-		this.body = body;
+		let data = yield evaluate({ url : this.request.body.url, browser: ['last 5 versions'] });
+		this.body = data;
 
 	});
 

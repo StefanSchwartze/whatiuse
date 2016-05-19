@@ -31,16 +31,7 @@ export default class PageForm extends React.Component {
 	submit(model) {
 		model.title = model.title || 'Home';
 		model.url = model.url || 'http://sevenval.com';
-		model.elementsCollections = model.elementsCollections || [
-			{
-				elementCollection: [
-					{
-						name: 'flexbox',
-						share: 0.1
-					}
-				]
-			}
-		];
+		model.elementsCollections = model.elementsCollections || [];
 		PagesActions.add(model);
 		if(this.props.onSend) {
 			this.props.onSend('Page added');

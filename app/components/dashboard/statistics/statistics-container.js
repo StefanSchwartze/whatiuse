@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 
+import {findItemById} from 'utils/store-utils';
+
 import connectToStores from 'alt/utils/connectToStores';
 import StatusStore from 'stores/status-store';
 import StatusActions from 'actions/status-actions';
@@ -126,7 +128,9 @@ export default class StatisticsContainer extends React.Component {
 			if(this.props.currentPageId === 'all') {
 				//page = 'hihi';
 			} else {
-				//page = findItemById(this.props.pages, this.props.currentPageId);
+				page = findItemById(this.props.pages, this.props.currentPageId);
+				elements = page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements;
+				console.log(elements);
 			}
 			page = 	<div>
 						<p>Most used elements:</p>

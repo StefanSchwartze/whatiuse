@@ -1,5 +1,5 @@
 import alt from 'utils/alt';
-import {assign} from 'lodash';
+import {assign, map} from 'lodash';
 import {findItemById, findIndexById} from 'utils/store-utils';
 import PagesActions from 'actions/pages-actions';
 
@@ -32,6 +32,7 @@ class PagesStore {
 	}
 	onCheckURL(data) {
 		console.log(data);
+
 	}
 }
 

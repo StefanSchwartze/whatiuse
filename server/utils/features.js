@@ -73,17 +73,14 @@ let feat = '';
 		//console.log(data);
 		data.on('data', (data) => {
 			feat = feat + data.toString('utf8');
-			console.log(feat);
+			//console.log(feat);
 		});
 
 		data.on('end', (data) => {
 			var stats = cssstats(feat, { mediaQueries: false });
-			console.log(stats);
-			resolve(stats);
+			//console.log(stats);
+			//resolve(stats);
 		});
-
-
-
 
 
 		let usageData = [];
@@ -106,7 +103,7 @@ let feat = '';
 			reject(err);
 		});
 		finalStream.on('end', (err) => {
-			//resolve(usageData);
+			resolve(usageData);
 		});
 
 	});

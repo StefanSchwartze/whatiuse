@@ -25,7 +25,8 @@ export default class Page extends React.Component {
 
 	checkUrl() {
 		console.log('click me!');
-		PagesActions.checkURL(this.props.page.url);
+		console.log(this.props.page);
+		PagesActions.checkURL(this.props.page._id, this.props.page.url);
 	}
 
 
