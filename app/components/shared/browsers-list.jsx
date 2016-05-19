@@ -11,7 +11,9 @@ export default class BrowsersList extends React.Component {
 		super(props);
 	}
 	render() {
-		//console.log(this.props.browsers);
+		if(this.props.browsers.length === 0) {
+			return <p>No browsers</p>
+		}
 		return (
 			<div className="browsers-list">
 				{this.props.browsers && this.props.browsers.map((item, index) =>

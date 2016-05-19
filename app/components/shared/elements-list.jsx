@@ -9,6 +9,9 @@ export default class ElementsList extends React.Component {
 		super(props);
 	}
 	render() {
+		if(this.props.elements.length === 0) {
+			return <p>No elements</p>
+		}
 		return (
 			<div className="elements-list">
 				{this.props.elements && this.props.elements.map((item, index) =>

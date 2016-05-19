@@ -33,7 +33,6 @@ export default class StatisticsContainer extends React.Component {
 	componentWillMount() {
 	}
 	render() {
-		//console.log(this.props);
 		let page;
 		let elements = [
 			{
@@ -124,7 +123,7 @@ export default class StatisticsContainer extends React.Component {
 
 		];
 
-		if(this.props.pages && !this.props.busy) {
+		if(this.props.pages.length > 0) {
 			
 			if(this.props.currentPageId === 'all') {
 			} else {
@@ -138,7 +137,7 @@ export default class StatisticsContainer extends React.Component {
 						<p>Most used elements:</p>
 						<ElementsList elements={elements} />
 						<p>Most crashing elements:</p>
-						<ElementsList elements={elements} />
+						<ElementsList elements={[]} />
 						<p>Your site works out of the box with:</p>
 						<BrowsersList browsers={browsers} />
 						<div className="charts-container">
