@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 
 import {findItemById} from 'utils/store-utils';
-import {sortBy, orderBy, flatten, reduce} from 'lodash';
+import {sortBy, orderBy, flatten, reduce, forEach} from 'lodash';
 
 import connectToStores from 'alt/utils/connectToStores';
 import StatusStore from 'stores/status-store';
@@ -34,37 +34,7 @@ export default class StatisticsContainer extends React.Component {
 	}
 	render() {
 		let page;
-		let elements = [
-			{
-				title: 'flexbox',
-				used: 50
-			},
-			{
-				title: 'gradient',
-				used: 30
-			},
-			{
-				title: 'font-face',
-				used: 12
-			},
-			{
-				title: 'pi',
-				used: 10
-			},
-			{
-				title: 'pa',
-				used: 10
-			},
-			{
-				title: 'po',
-				used: 7
-			},
-			{
-				title: 'jenes',
-				used: 3
-			}
-
-		];
+		let elements;
 
 		let elementshtml = [
 			{
@@ -127,43 +97,25 @@ export default class StatisticsContainer extends React.Component {
 			
 			if(this.props.currentPageId === 'all') {
 
-				var arr1 = [{name: "age", value: 18}, {name: "age", value: 10}];
-				var arr2 = [{name : "age", value: 5}, {name: "lang", value: "English"}];
-				var arr3 = [{name : "age", value: 5}, {name: "age", value: 13}];
-				var arr4 = [{name : "age", value: 5}];
+				var elementsArray = [];
 
+				forEach(this.props.pages, function(value, key) {
+					//console.log(value.elementsCollections[value.elementsCollections.length - 1]);
+					elementsArray.push(value.elementsCollections[value.elementsCollections.length - 1].elementCollection);
+				});
 
+				var pageArr = [].concat.apply([], elementsArray);
 
-				var pages = [arr1, arr2, arr3, arr4];
-
-				var finArr = [].concat.apply([], pages); 
-
-
-
-
-
-
-				var arr1 = new Array(
-					{name : "age", value: 5}, 
-					{name: "lang", value: 99}, 
-					{name: "age", value: 18}, 
-					{name : "age", value: 5}, 
-					{name: "lang", value: 13}, 
-					{name: "foo", value: 6}, 
-					{name: "bar", value: 2}, 
-					{name: "bar", value: 3}, 
-					{name : "age", value: 7});
-
-				var arr = arr1.reduce(function(prev, current, index, array){
+				var arr = pageArr.reduce(function(prev, current, index, array){
 				   if(!(current.name in prev.keys)) {
 				      prev.keys[current.name] = index;
 				      prev.result.push(current);   
 				   } 
 				   else {
 				   		if(prev.result[prev.keys[current.name]]) {
-				       		prev.result[prev.keys[current.name]].value = prev.result[prev.keys[current.name]].value + current.value;
+				       		prev.result[prev.keys[current.name]].count = prev.result[prev.keys[current.name]].count + current.count;
 				   		} else {
-				       		prev.result[prev.result.length - 1].value = prev.result[prev.result.length - 1].value + current.value;
+				       		prev.result[prev.result.length - 1].count = prev.result[prev.result.length - 1].count + current.count;
 
 				   		}
 				   }  
@@ -172,13 +124,8 @@ export default class StatisticsContainer extends React.Component {
 				},{result: [], keys: {}}).result;
 
 				console.log(arr)
-
-
-
-
-
-
-
+				elements = arr;
+				elements = orderBy(elements, 'count', 'desc');
 
 			} else {
 				page = findItemById(this.props.pages, this.props.currentPageId);
