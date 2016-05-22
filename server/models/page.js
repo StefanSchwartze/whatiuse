@@ -3,11 +3,12 @@ import mongoose from 'mongoose';
 const PageSchema = new mongoose.Schema({
 	title: 			String,
 	url: 			String,
-	elementsCollections:     [{
+	snapshots:     [{
 		captured:  {
 			type: 		Date,
 			default: 	Date.now
 		},
+		browserCollection: [],
 		elementCollection: [{
 			name: 	String,
 			count: 	Number

@@ -25,14 +25,13 @@ export default class Page extends React.Component {
 
 	checkUrl() {
 		console.log('click me!');
+		PagesActions.checkURL(this.props.page);
 		console.log(this.props.page);
-		PagesActions.checkURL(this.props.page._id, this.props.page.url);
 	}
-
 
 	render() {
 		return (
-			<div className={classnames('page', this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : '')}>
+			<div className={classnames('page', this.props.page.isChecking ? 'isChecking' : '', this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : '')}>
 				<div className="page-overlay">
 					<div className="percentage">
 						<span>

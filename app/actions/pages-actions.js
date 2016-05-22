@@ -26,29 +26,38 @@ class PagesActions {
     delete(id) {
         networkAction(this, api.pages.delete, id);
     }
-    async checkURL(id, url) {
+    checking(id) {
+        this.dispatch(id);
+    }
+    checked(id) {
+        this.dispatch(id);
+    }
+    async checkURL(page) {
         StatusActions.started();
+        this.actions.checking(page._id);
 
         try {
-            const response = await axios.post('/check', { url: url });
+            let browsers = this.alt.stores.BrowsersStore.state.browsers.global;
 
-            let page = findItemById(this.alt.stores.PagesStore.state.pages, id);
+            const response = await axios.post('/check', { url: page.url, browsers: browsers });
             let features = response.data[0].counts;
             var elementCollection = map(features, function(value, prop) {
                 return { name: prop, count: value };
             });
+            page.snapshots.push({
+                elementCollection: elementCollection, 
+                browserCollection: browsers
+            });
+            const update = this.actions.update(page._id, page);
 
-            page.elementsCollections.push({elementCollection});
-            const update = this.actions.update(id, page);
-
-            this.dispatch({ok: true, id: id, data: response.data});
+            this.dispatch({ok: true, id: page._id, data: response.data});
         } catch (err) {
             console.error(err);
             this.dispatch({ok: false, error: err.data});
         }
 
+        this.actions.checked(page._id);
         StatusActions.done();
-
     }
 }
 

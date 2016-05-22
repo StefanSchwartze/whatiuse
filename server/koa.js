@@ -20,6 +20,7 @@ import generateApi from "./restable/lib";
 import rest from "./rest";
 
 import evaluate from "./utils/features";
+import browserslist from "browserslist";
 
 const app = koa();
 const env = process.env.NODE_ENV || "development";
@@ -150,8 +151,10 @@ import Example from "./models/example";
 			'Content-Type' : 'application/json',
 			'Access-Control-Allow-Origin' : '*'
 		});
+		
+		//let browserusage = browserslist.usage.global;
 
-		let data = yield evaluate({ url : this.request.body.url, browser: ['last 5 versions'] });
+		let data = yield evaluate({ url : this.request.body.url, browser: this.request.body.browsers });
 		this.body = data;
 
 	});

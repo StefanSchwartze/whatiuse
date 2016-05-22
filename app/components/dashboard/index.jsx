@@ -5,6 +5,8 @@ import PagesList from './pages/pages-list';
 import PagesStore from 'stores/pages-store';
 import PagesActions from 'actions/pages-actions';
 
+import BrowsersStore from 'stores/browsers-store';
+
 import StatisticsContainer from './statistics/statistics-container';
 
 import {authDecorator} from 'utils/component-utils';

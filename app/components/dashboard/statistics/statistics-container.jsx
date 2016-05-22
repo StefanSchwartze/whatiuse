@@ -34,7 +34,7 @@ export default class StatisticsContainer extends React.Component {
 	}
 	render() {
 		let page;
-		let elements;
+		let elements = [];
 
 		let elementshtml = [
 			{
@@ -96,12 +96,12 @@ export default class StatisticsContainer extends React.Component {
 		if(this.props.pages.length > 0) {
 			
 			if(this.props.currentPageId === 'all') {
-
+/*
 				var elementsArray = [];
 
 				forEach(this.props.pages, function(value, key) {
-					//console.log(value.elementsCollections[value.elementsCollections.length - 1]);
-					elementsArray.push(value.elementsCollections[value.elementsCollections.length - 1].elementCollection);
+					//console.log(value.snapshots[value.snapshots.length - 1]);
+					elementsArray.push(value.snapshots[value.snapshots.length - 1].elementCollection);
 				});
 
 				var pageArr = [].concat.apply([], elementsArray);
@@ -123,14 +123,14 @@ export default class StatisticsContainer extends React.Component {
 				   return prev;
 				},{result: [], keys: {}}).result;
 
-				console.log(arr)
+				//console.log(arr)
 				elements = arr;
 				elements = orderBy(elements, 'count', 'desc');
-
+*/
 			} else {
 				page = findItemById(this.props.pages, this.props.currentPageId);
-				if(page.elementsCollections.length > 0) {
-					elements = page.elementsCollections[page.elementsCollections.length - 1].elementCollection || elements;
+				if(page.snapshots.length > 0) {
+					elements = page.snapshots[page.snapshots.length - 1].elementCollection || elements;
 					elements = orderBy(elements, 'count', 'desc');
 				}
 			}

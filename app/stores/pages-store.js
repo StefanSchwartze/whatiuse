@@ -32,7 +32,16 @@ class PagesStore {
 	}
 	onCheckURL(data) {
 		console.log(data);
-
+	}
+	onChecking(id) {
+		let page = findItemById(this.pages, id);
+		page.isChecking = true;
+		assign(findItemById(this.pages, id), page);
+	}
+	onChecked(id) {
+		let page = findItemById(this.pages, id);
+		page.isChecking = false;
+		assign(findItemById(this.pages, id), page);
 	}
 }
 

@@ -221,6 +221,11 @@ a {
 			background: black;
 		}
 	}
+	&.isChecking {
+		.page-overlay {
+			background: purple !important;
+		}
+	}
 	&.all {
 		.page-overlay {
 			background-color: $green;
