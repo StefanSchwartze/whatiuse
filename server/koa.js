@@ -151,8 +151,6 @@ import Example from "./models/example";
 			'Content-Type' : 'application/json',
 			'Access-Control-Allow-Origin' : '*'
 		});
-		
-		//let browserusage = browserslist.usage.global;
 
 		let data = yield evaluate({ url : this.request.body.url, browser: this.request.body.browsers });
 		this.body = data;

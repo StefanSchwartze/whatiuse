@@ -38,8 +38,16 @@ class PagesActions {
 
         try {
             let browsers = this.alt.stores.BrowsersStore.state.browsers.global;
+            let browserArr = [];
 
-            const response = await axios.post('/check', { url: page.url, browsers: browsers });
+            for (var i = 0; i < browsers.length; i++) {
+                browserArr.push(browsers[i].name);
+            }
+
+            const response = await axios.post('/check', { url: page.url, browsers: browserArr });
+            
+console.log(response.data[0]);
+
             let features = response.data[0].counts;
             var elementCollection = map(features, function(value, prop) {
                 return { name: prop, count: value };
