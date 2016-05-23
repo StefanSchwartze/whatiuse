@@ -30,14 +30,19 @@ export default class Page extends React.Component {
 
 	render() {
 		let support = '- %';
+		let state;
 		if(this.props.page.snapshots && this.props.page.snapshots.length > 0) {
 			support = floor(this.props.page.snapshots[this.props.page.snapshots.length - 1].pageSupport, 2) + '%';
+		}
+		state = <span>{support}</span>;
+		if(this.props.page.isChecking) {
+			state = <span><i className="icon icon-spinner8 animate rotate"></i>Loading…</span>;
 		}
 		return (
 			<div className={classnames('page', this.props.page.isChecking ? 'isChecking' : '', this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : '')}>
 				<div className="page-overlay">
 					<div className="percentage">
-						<span>{support}</span>
+						{state}
 					</div>
 					<div className="open">
 						<button onClick={this.setActive.bind(this)} className="button button--wide button--strong button--yellow" >Open</button>

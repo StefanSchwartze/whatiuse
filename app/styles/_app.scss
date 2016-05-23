@@ -222,8 +222,8 @@ a {
 		}
 	}
 	&.isChecking {
-		.page-overlay {
-			background: purple !important;
+		.page-thumb {
+			filter: blur(10px);
 		}
 	}
 	&.all {
@@ -271,20 +271,25 @@ a {
 		.percentage {
 			transition: all .2s;
 			border-bottom: solid 1px white;
-			width: 50%;
+			width: 75%;
 			height: 50%;
 			align-self: center;
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
 			justify-content: center;
 			transform: translate3d(0, 0, 0);
 			font-size: $font-size-xlarge;
 			font-weight: bold;
+			align-items: center;
+			justify-content: flex-start;
+			.icon {
+				margin-right: $spacing-small;
+			}
 		}
 		.title {
 			transition: all .2s;
 			border-top: solid 1px white;
-			width: 50%;
+			width: 75%;
 			height: 50%;
 			align-self: center;
 			display: flex;
@@ -317,6 +322,7 @@ a {
 		height: 700px;
 		transform: scale(0.2);
 		transform-origin: left top;
+		transition: all .7s;
 		position: absolute;
 		border: none;
 		left: 0;
@@ -362,4 +368,44 @@ a {
 	width: 100%;
 	margin: $spacing-large 0;
 	display: inline-block;
+}
+
+/*
+*	Animations
+*/
+@keyframes spinnerRotate
+{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+.animate.rotate{
+	animation-name: spinnerRotate;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+@keyframes lightUp
+{
+    0% {
+    	box-shadow: 0 2px 14px -2px $grey-dark;
+    	transform: scale(1);
+    }
+    33% {
+    	transform: scale(.8);
+    }
+    50% {
+    	transform: scale(1);
+    }
+    70% {
+    	transform: scale(1.05);
+    }
+    100% {
+    	box-shadow: 0 4px 18px 0px #0E772A;
+    	transform: scale(1);
+    }
+}
+.animate.checked{
+	animation-name: lightUp;
+	animation-duration: 1s;
+	animation-timing-function: linear;
 }
