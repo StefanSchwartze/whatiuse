@@ -10,7 +10,8 @@ import Page from './page';
 export default class PagesList extends React.Component {
 	static propTypes = {
 		pages: React.PropTypes.array,
-		currentPageId: React.PropTypes.string
+		currentPageId: React.PropTypes.string,
+		completeSupport: React.PropTypes.number
 	}
 	constructor(props) {
 		super(props);
@@ -61,7 +62,7 @@ export default class PagesList extends React.Component {
 					<div className={classnames('page', 'all', this.props.currentPageId === 'all' ? 'active' : '')} >
 						<div className="page-overlay">
 							<div className="percentage">
-								<span>98%</span>
+								<span>{this.props.completeSupport || '- '}%</span>
 							</div>
 							<div className="open">
 								<button onClick={this.setCurrentPageId.bind(this)} className="button button--wide button--strong button--yellow">Open</button>

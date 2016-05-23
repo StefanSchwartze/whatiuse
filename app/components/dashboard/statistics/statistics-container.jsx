@@ -17,6 +17,7 @@ import BrowsersList from '../../shared/browsers-list';
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
 		pages: React.PropTypes.array,
+		allElements: React.PropTypes.array,
 		currentPageId: React.PropTypes.string
 	}
 	static getStores() {
@@ -96,37 +97,9 @@ export default class StatisticsContainer extends React.Component {
 		if(this.props.pages.length > 0) {
 			
 			if(this.props.currentPageId === 'all') {
-/*
-				var elementsArray = [];
 
-				forEach(this.props.pages, function(value, key) {
-					//console.log(value.snapshots[value.snapshots.length - 1]);
-					elementsArray.push(value.snapshots[value.snapshots.length - 1].elementCollection);
-				});
+				elements = this.props.allElements || elements;
 
-				var pageArr = [].concat.apply([], elementsArray);
-
-				var arr = pageArr.reduce(function(prev, current, index, array){
-				   if(!(current.name in prev.keys)) {
-				      prev.keys[current.name] = index;
-				      prev.result.push(current);   
-				   } 
-				   else {
-				   		if(prev.result[prev.keys[current.name]]) {
-				       		prev.result[prev.keys[current.name]].count = prev.result[prev.keys[current.name]].count + current.count;
-				   		} else {
-				       		prev.result[prev.result.length - 1].count = prev.result[prev.result.length - 1].count + current.count;
-
-				   		}
-				   }  
-
-				   return prev;
-				},{result: [], keys: {}}).result;
-
-				//console.log(arr)
-				elements = arr;
-				elements = orderBy(elements, 'count', 'desc');
-*/
 			} else {
 				page = findItemById(this.props.pages, this.props.currentPageId);
 				if(page.snapshots.length > 0) {
@@ -172,7 +145,7 @@ export default class StatisticsContainer extends React.Component {
 					</div>;
 
 		} else {
-			page = <span>Loading...</span>;
+			page = <span>No pages investigated yet.</span>;
 		}
 		return (
 			<div className="">
