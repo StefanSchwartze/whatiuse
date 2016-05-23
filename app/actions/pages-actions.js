@@ -1,6 +1,6 @@
 import alt from 'utils/alt';
 import api from 'utils/api';
-import {clone, assign, map} from 'lodash';
+import {clone, assign, map, flatten, findKey, forEach, find} from 'lodash';
 import {networkAction} from 'utils/action-utils';
 import {findItemById} from 'utils/store-utils';
 import {agents} from 'utils/user-agents';
@@ -46,11 +46,58 @@ class PagesActions {
             }
 
             const response = await axios.post('/check', { url: page.url, browsers: browserArr });
+        
+            function getMissingBrowserVersions(missing) {
+
+                let browsers = [];
+
+                for (var i = 0; i < missing.length; i++) {
+                    browsers.push(missing[i].missing);
+                }
+
+                return flatten(browsers).reduce(function(prev, current, index, array){
+                    let nextVersions = current.versions.replace(/[()]/g, '').replace(/,\s*$/, "").split(',');
+                    if(!(current.browser in prev.keys)) {
+                        prev.keys[current.browser] = index;
+                        prev.result.push({
+                            browser: current.browser.trim(),
+                            versions: nextVersions,
+                            alias: findKey(agents, function(o) { return o.browser === current.browser.trim(); })
+                        });
+                    } 
+                   else {
+                        if(prev.result[prev.keys[current.browser]]) {
+                            prev.result[prev.keys[current.browser]].versions.concat(nextVersions);
+                        } else {
+                            prev.result[prev.result.length - 1].versions.concat(nextVersions);
+                        }
+                   }  
+
+                   return prev;
+                },{result: [], keys: {}}).result;
+            }
+
+            function getPercentage(browserset, browsersWithPercentages) {
+                let sum = 0;
+
+                forEach(browserset, function(browser, key) {
+                    forEach(browser.versions, function(value, key) {
+                        let obje = find(browsersWithPercentages, function(o) {
+                            return o.name === browser.alias + ' ' + value; 
+                        });
+                        sum += obje.share;
+                    })
+                })
+
+                return sum;
+            }
+
             let features = response.data[0].counts;
             var elementCollection = map(features, function(value, prop) {
                 return { name: prop, count: value };
             });
             page.snapshots.push({
+                pageSupport: 100 - getPercentage(getMissingBrowserVersions(response.data[0].usages), browsers),
                 elementCollection: elementCollection, 
                 browserCollection: browsers
             });

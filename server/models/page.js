@@ -8,6 +8,7 @@ const PageSchema = new mongoose.Schema({
 			type: 		Date,
 			default: 	Date.now
 		},
+		pageSupport: Number,
 		browserCollection: [],
 		elementCollection: [{
 			name: 	String,

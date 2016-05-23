@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
+import {floor} from 'lodash';
 
 import PagesActions from 'actions/pages-actions';
 
@@ -24,18 +25,19 @@ export default class Page extends React.Component {
 	}
 
 	checkUrl() {
-		console.log('click me!');
 		PagesActions.checkURL(this.props.page);
 	}
 
 	render() {
+		let support = '- %';
+		if(this.props.page.snapshots && this.props.page.snapshots.length > 0) {
+			support = floor(this.props.page.snapshots[this.props.page.snapshots.length - 1].pageSupport, 2) + '%';
+		}
 		return (
 			<div className={classnames('page', this.props.page.isChecking ? 'isChecking' : '', this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : '')}>
 				<div className="page-overlay">
 					<div className="percentage">
-						<span>
-							75%
-						</span>
+						<span>{support}</span>
 					</div>
 					<div className="open">
 						<button onClick={this.setActive.bind(this)} className="button button--wide button--strong button--yellow" >Open</button>

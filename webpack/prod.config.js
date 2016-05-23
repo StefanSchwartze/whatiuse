@@ -38,7 +38,7 @@ module.exports = {
     loaders: [
       {
         test: /\.json$/,
-        loader: 'json'
+        loader: "json-loader"
       },
       // {
       //   test: /\.(eot|ttf)$/,
