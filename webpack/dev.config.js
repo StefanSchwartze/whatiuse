@@ -55,7 +55,7 @@ export default {
 			loaders: [
 				{
 					test: /\.json$/,
-					loader: "json"
+					loader: "json-loader"
 				},
 				{
 					// |svg|woff|eot|ttf

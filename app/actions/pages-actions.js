@@ -3,6 +3,7 @@ import api from 'utils/api';
 import {clone, assign, map} from 'lodash';
 import {networkAction} from 'utils/action-utils';
 import {findItemById} from 'utils/store-utils';
+import {agents} from 'utils/user-agents';
 
 import axios from 'axios';
 import StatusActions from 'actions/status-actions';
@@ -45,9 +46,6 @@ class PagesActions {
             }
 
             const response = await axios.post('/check', { url: page.url, browsers: browserArr });
-            
-console.log(response.data[0]);
-
             let features = response.data[0].counts;
             var elementCollection = map(features, function(value, prop) {
                 return { name: prop, count: value };

@@ -31,7 +31,6 @@ class PagesStore {
 		this.currentPageId = id;
 	}
 	onCheckURL(data) {
-		console.log(data);
 	}
 	onChecking(id) {
 		let page = findItemById(this.pages, id);

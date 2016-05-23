@@ -43,6 +43,7 @@
     "imagemin": "^3.2.0",
     "iso": "^4.1.0",
     "jsdom": "^5.6.0",
+    "json-loader": "^0.5.4",
     "koa": "^1.2.0",
     "koa-bodyparser": "^2.0.1",
     "koa-cash": "^1.0.1",
