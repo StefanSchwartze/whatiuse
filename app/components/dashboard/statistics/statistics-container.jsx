@@ -117,7 +117,7 @@ export default class StatisticsContainer extends React.Component {
 							<div className="chart-container">
 								<ResponsiveContainer>
 									<BarChart
-										data={elements}>
+										data={orderBy(elements, 'count', 'desc')}>
 										<XAxis dataKey="name"/>
 										<YAxis/>
 										<CartesianGrid />

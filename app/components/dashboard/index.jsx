@@ -45,7 +45,7 @@ export default class Dashboard extends React.Component {
 
 		var pageArr = [].concat.apply([], elementsArray);
 
-		var arr = pageArr.reduce(function(prev, current, index, array){
+		return pageArr.reduce(function(prev, current, index, array){
 		   if(!(current.name in prev.keys)) {
 		      prev.keys[current.name] = index;
 		      prev.result.push(current);   
@@ -61,8 +61,6 @@ export default class Dashboard extends React.Component {
 
 		   return prev;
 		},{result: [], keys: {}}).result;
-
-		return orderBy(arr, 'count', 'desc');
 	}
 	calcCompleteSupport(pages) {
 		let sum = 100;
