@@ -12,7 +12,8 @@ const PageSchema = new mongoose.Schema({
 		browserCollection: [],
 		elementCollection: [{
 			name: 	String,
-			count: 	Number
+			count: 	Number,
+			impact: Number
 		}]
 	}],
 	user: {

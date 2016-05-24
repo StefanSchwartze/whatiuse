@@ -104,14 +104,13 @@ export default class StatisticsContainer extends React.Component {
 				page = findItemById(this.props.pages, this.props.currentPageId);
 				if(page.snapshots.length > 0) {
 					elements = page.snapshots[page.snapshots.length - 1].elementCollection || elements;
-					elements = orderBy(elements, 'count', 'desc');
 				}
 			}
 			page = 	<div>
 						<p>Most used elements:</p>
-						<ElementsList elements={elements} />
+						<ElementsList elements={elements} orderProp="count" />
 						<p>Most crashing elements:</p>
-						<ElementsList elements={[]} />
+						<ElementsList elements={elements} orderProp="impact" unit="%" />
 						<p>Your site works out of the box with:</p>
 						<BrowsersList browsers={browsers} />
 						<div className="charts-container">
