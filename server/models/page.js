@@ -10,11 +10,7 @@ const PageSchema = new mongoose.Schema({
 		},
 		pageSupport: Number,
 		browserCollection: [],
-		elementCollection: [{
-			name: 	String,
-			count: 	Number,
-			impact: Number
-		}]
+		elementCollection: []
 	}],
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
