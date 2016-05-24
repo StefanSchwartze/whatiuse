@@ -47,12 +47,11 @@ class PagesActions {
 
             const response = await axios.post('/check', { url: page.url, browsers: browserArr });
         
-            function getMissingBrowserVersions(missing) {
-
+            function getMissingBrowserVersions(feature) {
                 let browsers = [];
 
-                for (var i = 0; i < missing.length; i++) {
-                    browsers.push(missing[i].missing);
+                for (var i = 0; i < feature.length; i++) {
+                    browsers.push(feature[i].missing);
                 }
 
                 return flatten(browsers).reduce(function(prev, current, index, array){
@@ -92,12 +91,18 @@ class PagesActions {
                 return sum;
             }
 
-            let features = response.data[0].counts;
+            let features = response.data[0].usages;
+            let counts = response.data[0].counts;
             var elementCollection = map(features, function(value, prop) {
-                return { name: prop, count: value };
+                let feature = value;
+                feature.count = counts[feature.feature];
+                feature.name = feature.feature;
+                feature.impact = getPercentage(getMissingBrowserVersions([feature]), browsers);
+                return feature;
             });
+
             page.snapshots.push({
-                pageSupport: 100 - getPercentage(getMissingBrowserVersions(response.data[0].usages), browsers),
+                pageSupport: 100 - getPercentage(getMissingBrowserVersions(features), browsers),
                 elementCollection: elementCollection, 
                 browserCollection: browsers
             });

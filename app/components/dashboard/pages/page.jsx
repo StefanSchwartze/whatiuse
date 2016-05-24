@@ -23,11 +23,9 @@ export default class Page extends React.Component {
 	setActive() {
 		PagesActions.selectPage(this.props.page._id);
 	}
-
 	checkUrl() {
 		PagesActions.checkURL(this.props.page);
 	}
-
 	render() {
 		let support = '- %';
 		let state;
