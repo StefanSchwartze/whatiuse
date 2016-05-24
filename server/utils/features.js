@@ -23,8 +23,6 @@ module.exports = function evaluate(args) {
 		let limit = limitstream(1e6);
 		let features = prune();
 
-
-
 		streams = streams.concat([
 			limit,
 			doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
@@ -59,9 +57,6 @@ module.exports = function evaluate(args) {
 			}
 		)
 			
-
-
-
 /*
 		var cssstats = require('cssstats');
 		let streamF = styles({ url: url });
