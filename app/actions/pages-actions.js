@@ -34,6 +34,7 @@ class PagesActions {
         this.dispatch(id);
     }
     async checkURL(page) {
+        console.log('called checkURL');
         StatusActions.started();
         this.actions.checking(page._id);
 
@@ -98,6 +99,7 @@ class PagesActions {
                 feature.count = counts[feature.feature];
                 feature.name = feature.feature;
                 feature.impact = getPercentage(getMissingBrowserVersions([feature]), browsers);
+                feature.message = feature.message;
                 return feature;
             });
 

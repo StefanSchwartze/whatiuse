@@ -16,7 +16,6 @@ export default class ElementsList extends React.Component {
 		if(this.props.elements.length === 0) {
 			return <p>No elements</p>
 		}
-		//console.log(this.props);
 		return (
 			<div className="elements-list">
 				{this.props.elements && this.props.elements.sort((a, b) => b[this.props.orderProp] - a[this.props.orderProp]).map((item, index) =>
