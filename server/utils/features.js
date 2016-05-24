@@ -6,6 +6,8 @@ import doiuse from 'doiuse/stream';
 import prune from './prune';
 import unique from './unique';
 import limitstream from './limit';
+import {agents} from './user-agents';
+import {clone, assign, map, flatten, findKey, forEach, find} from 'lodash';
 
 /*
 * options must have `url`.
@@ -16,12 +18,22 @@ module.exports = function evaluate(args) {
 
 		let url = args.url || '';
 		let css = args.css || '';
-		let browsers = args.browser || '';
+		let browsers;
 		let streams = [styles({ url: url })];
 		let errorsAndWarnings = [];
 		let uniq = unique();
 		let limit = limitstream(1e6);
 		let features = prune();
+		
+		if(args.browsers) {
+			let browserArr = [];
+			for (var i = 0; i < args.browsers.length; i++) {
+                browserArr.push(args.browsers[i].name);
+            }
+            browsers = browserArr;
+		} else {
+			browsers = '';
+		}
 
 		streams = streams.concat([
 			limit,
@@ -74,7 +86,7 @@ module.exports = function evaluate(args) {
 		});
 */
 
-		let usageData = [];
+		let usageData;
 		const concatStream = next([
 			'{ "args":', JSON.stringify(args), ',',
 			'"usages": ', stringify.pipe(through()), ',',
@@ -88,12 +100,72 @@ module.exports = function evaluate(args) {
 		concatStream.pipe(finalStream);
 
 		finalStream.on('data', (data) => {
-			usageData.push(data);
+			usageData = data;
 		});
 		finalStream.on('error', (err) => {
 			reject(err);
 		});
 		finalStream.on('end', (err) => {
+
+			function getMissingBrowserVersions(feature) {
+	            let browsers = [];
+
+	            for (var i = 0; i < feature.length; i++) {
+	                browsers.push(feature[i].missing);
+	            }
+
+	            return flatten(browsers).reduce(function(prev, current, index, array){
+	                let nextVersions = current.versions.replace(/[()]/g, '').replace(/,\s*$/, "").split(',');
+	                if(!(current.browser in prev.keys)) {
+	                    prev.keys[current.browser] = index;
+	                    prev.result.push({
+	                        browser: current.browser.trim(),
+	                        versions: nextVersions,
+	                        alias: findKey(agents, function(o) { return o.browser === current.browser.trim(); })
+	                    });
+	                } 
+	               else {
+	                    if(prev.result[prev.keys[current.browser]]) {
+	                        prev.result[prev.keys[current.browser]].versions.concat(nextVersions);
+	                    } else {
+	                        prev.result[prev.result.length - 1].versions.concat(nextVersions);
+	                    }
+	               }  
+
+	               return prev;
+	            },{result: [], keys: {}}).result;
+	        }
+
+		    function getPercentage(browserset, browsersWithPercentages) {
+		        let sum = 0;
+		        forEach(browserset, function(browser, key) {
+		            forEach(browser.versions, function(value, key) {
+		                let obje = find(browsersWithPercentages, function(o) {
+		                    return o.name === browser.alias + ' ' + value; 
+		                });
+		                sum += obje.share;
+		            })
+		        })
+
+		        return sum;
+		    }			
+
+			let features = usageData.usages;
+	        let counts = usageData.counts;
+	        var elementCollection = map(features, function(value, prop) {
+	            let feature = value;
+	            feature.count = counts[feature.feature];
+	            feature.name = feature.feature;
+	            feature.impact = getPercentage(getMissingBrowserVersions([feature]), args.browsers);
+	            feature.message = feature.message;
+	            return feature;
+	        });
+
+	        usageData.features = features;
+	        usageData.counts = counts;
+	        usageData.elementCollection = elementCollection;
+	        usageData.pageSupport = 100 - getPercentage(getMissingBrowserVersions(features), args.browsers);
+
 			resolve(usageData);
 		});
 

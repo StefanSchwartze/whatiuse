@@ -152,7 +152,8 @@ import Example from "./models/example";
 			'Access-Control-Allow-Origin' : '*'
 		});
 
-		let data = yield evaluate({ url : this.request.body.url, browser: this.request.body.browsers });
+		let data = yield evaluate({ url : this.request.body.url, browsers: this.request.body.browsers });
+		
 		this.body = data;
 
 	});
