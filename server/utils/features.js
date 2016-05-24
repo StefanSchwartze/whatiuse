@@ -18,26 +18,16 @@ module.exports = function evaluate(args) {
 
 		let url = args.url || '';
 		let css = args.css || '';
-		let browsers;
+		let browsers = args.browsers || '';
 		let streams = [styles({ url: url })];
 		let errorsAndWarnings = [];
 		let uniq = unique();
 		let limit = limitstream(1e6);
 		let features = prune();
-		
-		if(args.browsers) {
-			let browserArr = [];
-			for (var i = 0; i < args.browsers.length; i++) {
-                browserArr.push(args.browsers[i].name);
-            }
-            browsers = browserArr;
-		} else {
-			browsers = '';
-		}
 
 		streams = streams.concat([
 			limit,
-			doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
+			doiuse({ browsers: browsers.map((obj) => obj.name), skipErrors: true }, url.trim().length ? url : 'pasted content')
 			.on('warning', function (warn) { 
 				errorsAndWarnings.push(warn) 
 			}),
@@ -46,7 +36,6 @@ module.exports = function evaluate(args) {
 		]);
 		let stringify = features.pipe(JSONStream.stringify());
 		let error = through();
-
 
 		pipe(streams,
 			function (err) {
@@ -89,7 +78,7 @@ module.exports = function evaluate(args) {
 		let usageData;
 		const concatStream = next([
 			'{ "args":', JSON.stringify(args), ',',
-			'"usages": ', stringify.pipe(through()), ',',
+			'"features": ', stringify.pipe(through()), ',',
 			'"counts": ', uniq.counts, ',',
 			'"size": ', limit.size,
 			error,
@@ -107,21 +96,21 @@ module.exports = function evaluate(args) {
 		});
 		finalStream.on('end', (err) => {
 
-			function getMissingBrowserVersions(feature) {
+			var getMissingBrowserVersions = (feature) => {
 	            let browsers = [];
 
 	            for (var i = 0; i < feature.length; i++) {
 	                browsers.push(feature[i].missing);
 	            }
 
-	            return flatten(browsers).reduce(function(prev, current, index, array){
+	            return flatten(browsers).reduce((prev, current, index, array) => {
 	                let nextVersions = current.versions.replace(/[()]/g, '').replace(/,\s*$/, "").split(',');
 	                if(!(current.browser in prev.keys)) {
 	                    prev.keys[current.browser] = index;
 	                    prev.result.push({
 	                        browser: current.browser.trim(),
 	                        versions: nextVersions,
-	                        alias: findKey(agents, function(o) { return o.browser === current.browser.trim(); })
+	                        alias: findKey(agents, (o) => { return o.browser === current.browser.trim(); })
 	                    });
 	                } 
 	               else {
@@ -136,7 +125,7 @@ module.exports = function evaluate(args) {
 	            },{result: [], keys: {}}).result;
 	        }
 
-		    function getPercentage(browserset, browsersWithPercentages) {
+		    var getPercentage = (browserset, browsersWithPercentages) => {
 		        let sum = 0;
 		        forEach(browserset, function(browser, key) {
 		            forEach(browser.versions, function(value, key) {
@@ -150,21 +139,15 @@ module.exports = function evaluate(args) {
 		        return sum;
 		    }			
 
-			let features = usageData.usages;
-	        let counts = usageData.counts;
-	        var elementCollection = map(features, function(value, prop) {
+	        usageData.pageSupport = 100 - getPercentage(getMissingBrowserVersions(usageData.features), args.browsers);
+	        usageData.elementCollection = map(usageData.features, (value, prop) => {
 	            let feature = value;
-	            feature.count = counts[feature.feature];
+	            feature.count = usageData.counts[feature.feature];
 	            feature.name = feature.feature;
 	            feature.impact = getPercentage(getMissingBrowserVersions([feature]), args.browsers);
 	            feature.message = feature.message;
 	            return feature;
 	        });
-
-	        usageData.features = features;
-	        usageData.counts = counts;
-	        usageData.elementCollection = elementCollection;
-	        usageData.pageSupport = 100 - getPercentage(getMissingBrowserVersions(features), args.browsers);
 
 			resolve(usageData);
 		});

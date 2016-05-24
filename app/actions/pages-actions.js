@@ -34,7 +34,6 @@ class PagesActions {
         this.dispatch(id);
     }
     async checkURL(page) {
-        console.log('called checkURL');
         StatusActions.started();
         this.actions.checking(page._id);
 
