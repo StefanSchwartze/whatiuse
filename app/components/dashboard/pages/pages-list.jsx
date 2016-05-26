@@ -40,7 +40,7 @@ export default class PagesList extends React.Component {
 				<Modal 
 					transitionSpeed={250}
 					className="modal"
-					containerClassName="modal-container"
+					containerClassName={classnames('animate', 'modal-container', 'checked')}
 					closeOnOuterClick={true}
 					show={this.state.showModal}
 					onClose={this.closeModal.bind(this)} >

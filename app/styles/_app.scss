@@ -606,25 +606,23 @@ a {
 @keyframes lightUp
 {
     0% {
-    	box-shadow: 0 2px 14px -2px $grey-dark;
-    	transform: scale(1);
+    	transform: translateY(-50%) scale(1);
     }
     33% {
-    	transform: scale(.8);
+    	transform: translateY(-50%) scale(.8);
     }
     50% {
-    	transform: scale(1);
+    	transform: translateY(-50%) scale(1);
     }
     70% {
-    	transform: scale(1.05);
+    	transform: translateY(-50%) scale(1.05);
     }
     100% {
-    	box-shadow: 0 4px 18px 0px #0E772A;
-    	transform: scale(1);
+    	transform: translateY(-50%) scale(1);
     }
 }
 .animate.checked{
 	animation-name: lightUp;
-	animation-duration: 1s;
+	animation-duration: .5s;
 	animation-timing-function: linear;
 }
