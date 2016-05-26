@@ -108,20 +108,21 @@ export default class StatisticsContainer extends React.Component {
 					elements = page.snapshots[page.snapshots.length - 1].elementCollection || elements;
 				}
 				snapshots = page.snapshots;
+				var timeline = <div className="history-container">
+									<p className="label">Timeline</p>
+									<HistoryTooltip/>
+									<div className="chart">
+										<ResponsiveContainer>
+											<LineChart data={snapshots} height={100} width={1000}>
+												<Line type='monotone' dataKey='pageSupport' stroke='#8884d8' strokeWidth={1} />
+												<Tooltip content={<HistoryTooltip/>}/>
+											</LineChart>
+										</ResponsiveContainer>
+									</div>
+								</div>
 			}
 			page = 	<div>
-						<div className="history-container">
-							<p className="label">Timeline</p>
-							<HistoryTooltip/>
-							<div className="chart">
-								<ResponsiveContainer>
-									<LineChart data={snapshots} height={100} width={1000}>
-										<Line type='monotone' dataKey='pageSupport' stroke='#8884d8' strokeWidth={1} />
-										<Tooltip content={<HistoryTooltip/>}/>
-									</LineChart>
-								</ResponsiveContainer>
-							</div>
-						</div>
+						{timeline}
 						<p>Most used elements:</p>
 						<ElementsList elements={elements} orderProp="count" />
 						<p>Most crashing elements:</p>
