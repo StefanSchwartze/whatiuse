@@ -66,6 +66,7 @@
     "lodash": "^4.12.0",
     "lru-cache": "^2.6.5",
     "mississippi": "^1.2.0",
+    "moment": "^2.13.0",
     "mongoose": "^4.0.6",
     "mongoose-json-select": "^0.2.1",
     "next-stream": "^2.2.2",

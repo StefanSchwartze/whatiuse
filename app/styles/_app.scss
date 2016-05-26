@@ -371,6 +371,48 @@ a {
 }
 
 /*
+*	Component: Historycontainer
+*/
+.history-container {
+	width: 100%;
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+	.label {
+		/*color: $grey-dark;*/
+		margin: 0 0 $spacing-small 0;
+	}
+	.chart {
+		width: 100%;
+		height: 40px;
+	}
+}
+/*
+*	Component: Historytooltip
+*/
+.history-tooltip {
+	display: flex !important;
+	max-width: 300px;
+	border-radius: $border-radius-small;
+	background-color: white;
+	filter: drop-shadow(rgba(0, 0, 0, 0.2) 0 8px 12px);
+	align-items: center;
+	flex-direction: column;
+	padding: $spacing-small;
+	.label {
+		font-size: $font-size-small;
+	}
+	.value {
+		font-size: $font-size-xlarge;
+		margin: $spacing-extra-small;
+		color: $green
+	}
+}
+
+
+
+
+/*
 *	Component: Tooltip
 */
 .rc-tooltip {

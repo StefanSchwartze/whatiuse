@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line} from 'recharts';
+import HistoryTooltip from '../../shared/history-tooltip';
 
 import {findItemById} from 'utils/store-utils';
 import {sortBy, orderBy, flatten, reduce, forEach} from 'lodash';
@@ -36,6 +37,7 @@ export default class StatisticsContainer extends React.Component {
 	render() {
 		let page;
 		let elements = [];
+		let snapshots = [];
 
 		let elementshtml = [
 			{
@@ -105,8 +107,21 @@ export default class StatisticsContainer extends React.Component {
 				if(page.snapshots.length > 0) {
 					elements = page.snapshots[page.snapshots.length - 1].elementCollection || elements;
 				}
+				snapshots = page.snapshots;
 			}
 			page = 	<div>
+						<div className="history-container">
+							<p className="label">Timeline</p>
+							<HistoryTooltip/>
+							<div className="chart">
+								<ResponsiveContainer>
+									<LineChart data={snapshots} height={100} width={1000}>
+										<Line type='monotone' dataKey='pageSupport' stroke='#8884d8' strokeWidth={1} />
+										<Tooltip content={<HistoryTooltip/>}/>
+									</LineChart>
+								</ResponsiveContainer>
+							</div>
+						</div>
 						<p>Most used elements:</p>
 						<ElementsList elements={elements} orderProp="count" />
 						<p>Most crashing elements:</p>
