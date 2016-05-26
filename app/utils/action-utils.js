@@ -1,15 +1,17 @@
 // import {isFunction} from 'lodash';
+import alt from 'utils/alt';
 import StatusActions from 'actions/status-actions';
 import LoginActions from 'actions/login-actions';
 
 export default {
-  networkAction: async (context, method, ...params) => {
+  networkAction: async (dispatch, context, method, ...params) => {
     // try {
       StatusActions.started();
       const response = await method.apply(context, params);
       // const data = isFunction(response) ? response().data : response.data;
-      context.dispatch(response().data);
+      dispatch(response().data);
       StatusActions.done();
+
     // } catch (err) {
     //   console.error(err);
     //   if (err.status === 401) {
