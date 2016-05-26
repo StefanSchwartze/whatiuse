@@ -1,6 +1,6 @@
 import React from 'react';
 
-import connectToStores from 'alt/utils/connectToStores';
+import connectToStores from 'alt-utils/lib/connectToStores';
 import {authDecorator} from 'utils/component-utils';
 
 import ExamplesStore from 'stores/examples-store';

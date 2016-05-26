@@ -2,7 +2,6 @@ import React from 'react';
 import { Form } from 'formsy-react';
 import TextInput from 'components/shared/form-elements/input';
 
-import connectToStores from 'alt/utils/connectToStores';
 import {authDecorator} from 'utils/component-utils';
 
 import PagesActions from 'actions/pages-actions';

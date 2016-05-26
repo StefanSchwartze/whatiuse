@@ -6,7 +6,7 @@ import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip
 import {findItemById} from 'utils/store-utils';
 import {sortBy, orderBy, flatten, reduce, forEach} from 'lodash';
 
-import connectToStores from 'alt/utils/connectToStores';
+import connectToStores from 'alt-utils/lib/connectToStores';
 import StatusStore from 'stores/status-store';
 import StatusActions from 'actions/status-actions';
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {changeHandler} from 'utils/component-utils';
-import connectToStores from 'alt/utils/connectToStores';
+import connectToStores from 'alt-utils/lib/connectToStores';
 
 import LoginActions from 'actions/login-actions';
 import LoginStore from 'stores/login-store';

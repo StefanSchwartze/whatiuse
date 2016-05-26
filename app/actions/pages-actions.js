@@ -13,49 +13,65 @@ class PagesActions {
         this.generateActions('removeCurrent', 'selectPage');
     }
     fetch() {
-        networkAction(this, api.pages.getAll);
+        return async (dispatch) => {
+            networkAction(dispatch, this, api.pages.getAll);
+        }
     }
     get(id) {
-        networkAction(this, api.pages.get, id);
+        return async (dispatch) => {
+            networkAction(dispatch, this, api.pages.get, id);
+        }
     }
     add(data) {
-        networkAction(this, api.pages.post, clone(data));
+        return async (dispatch) => {
+            networkAction(dispatch, this, api.pages.post, clone(data));
+        }
     }
     update(id, data) {
-        networkAction(this, api.pages.put, id, clone(data));
+        return async (dispatch) => {
+            networkAction(dispatch, this, api.pages.put, id, clone(data));
+        }
     }
     delete(id) {
-        networkAction(this, api.pages.delete, id);
+        return async (dispatch) => {
+            networkAction(dispatch, this, api.pages.delete, id);
+        }
     }
     checking(id) {
-        this.dispatch(id);
+        return id;
     }
     checked(id) {
-        this.dispatch(id);
+        return id;
     }
-    async checkURL(page) {
-        StatusActions.started();
-        this.actions.checking(page._id);
+    checkURL(page) {
 
-        try {
-            let browsers = this.alt.stores.BrowsersStore.state.browsers.global;
-            const response = await axios.post('/check', { url: page.url, browsers: browsers });
+        return async (dispatch) => {
+    
+            StatusActions.started();
+            this.checking(page._id);
 
-            page.snapshots.push({
-                pageSupport: response.data.pageSupport,
-                elementCollection: response.data.elementCollection, 
-                browserCollection: browsers
-            });
-            const update = this.actions.update(page._id, page);
+            try {
+                let browsers = alt.stores.BrowsersStore.state.browsers.global;
+                const response = await axios.post('/check', { url: page.url, browsers: browsers });
 
-            this.dispatch({ok: true, id: page._id, data: response.data});
-        } catch (err) {
-            console.error(err);
-            this.dispatch({ok: false, error: err.data});
+                page.snapshots.push({
+                    pageSupport: response.data.pageSupport,
+                    elementCollection: response.data.elementCollection, 
+                    browserCollection: browsers
+                });
+                const update = this.update(page._id, page);
+
+                dispatch({ok: true, id: page._id, data: response.data});
+            } catch (err) {
+                console.error(err);
+                dispatch({ok: false, error: err.data});
+            }
+
+            this.checked(page._id);
+            StatusActions.done();
+
         }
 
-        this.actions.checked(page._id);
-        StatusActions.done();
     }
 }
 

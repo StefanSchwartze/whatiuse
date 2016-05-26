@@ -1,14 +1,14 @@
 import React from 'react';
-import AltContainer from 'alt/AltContainer';
+import AltContainer from 'alt-container';
 import ExamplesList from './examples-list';
 
 import ExamplesStore from 'stores/examples-store';
 import {authDecorator} from 'utils/component-utils';
 
-import connectToStores from 'alt/utils/connectToStores';
+import connectToStores from 'alt-utils/lib/connectToStores';
 
 @authDecorator
-export default class Projects extends React.Component {
+export default class Examples extends React.Component {
   static willTransitionTo(transition) {
     console.log(transition);
   }

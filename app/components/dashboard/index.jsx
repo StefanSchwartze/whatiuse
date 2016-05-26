@@ -1,5 +1,5 @@
 import React from 'react';
-import AltContainer from 'alt/AltContainer';
+import AltContainer from 'alt-container';
 
 import PagesList from './pages/pages-list';
 import PagesStore from 'stores/pages-store';
@@ -12,7 +12,7 @@ import StatisticsContainer from './statistics/statistics-container';
 import {sortBy, orderBy, flatten, reduce, forEach, floor} from 'lodash';
 
 import {authDecorator} from 'utils/component-utils';
-import connectToStores from 'alt/utils/connectToStores';
+import connectToStores from 'alt-utils/lib/connectToStores';
 
 @authDecorator
 @connectToStores

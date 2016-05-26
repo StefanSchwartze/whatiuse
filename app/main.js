@@ -24,7 +24,7 @@ const boostrap = () => {
 (async () => {
 
   if (process.env.BROWSER) {
-    var chromeDebug = require('alt/utils/chromeDebug');
+    var chromeDebug = require('alt-utils/lib/chromeDebug');
     chromeDebug(alt);
     require('./styles/_main.scss');
   }

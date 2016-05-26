@@ -1,5 +1,5 @@
 import React from 'react';
-import connectToStores from 'alt/utils/connectToStores';
+import connectToStores from 'alt-utils/lib/connectToStores';
 import {Link} from 'react-router';
 
 import StatusStore from 'stores/status-store';
