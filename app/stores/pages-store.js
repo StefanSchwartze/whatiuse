@@ -28,7 +28,9 @@ class PagesStore {
 		this.currentPageId = 'all';
 	}
 	onSelectPage(id) {
-		this.currentPageId = id;
+		if(this.currentPageId !== id) {
+			this.currentPageId = id;
+		}
 	}
 	onCheckURL(data) {
 	}

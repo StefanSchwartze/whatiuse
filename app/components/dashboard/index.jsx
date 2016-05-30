@@ -66,7 +66,7 @@ export default class Dashboard extends React.Component {
 		let sum = 100;
 		for (var i = 0; i < pages.length; i++) {
 			if(pages[i].snapshots && pages[i].snapshots.length > 0) {
-				let support = pages[i].snapshots[pages[i].snapshots.length - 1].pageSupport || sum;
+				let support = pages[i].latestSupport || sum;
 				if(support < sum) {
 					sum = support;
 				}

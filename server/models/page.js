@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const PageSchema = new mongoose.Schema({
 	title: 			String,
 	url: 			String,
+	latestSupport: Number,
 	snapshots:     [{
 		captured:  {
 			type: 		Date,

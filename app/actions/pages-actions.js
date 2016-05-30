@@ -10,7 +10,7 @@ import StatusActions from 'actions/status-actions';
 
 class PagesActions {
     constructor() {
-        this.generateActions('removeCurrent', 'selectPage');
+        this.generateActions('removeCurrent', 'selectPage', 'checking', 'checked');
     }
     fetch() {
         return async (dispatch) => {
@@ -37,12 +37,6 @@ class PagesActions {
             networkAction(dispatch, this, api.pages.delete, id);
         }
     }
-    checking(id) {
-        return id;
-    }
-    checked(id) {
-        return id;
-    }
     checkURL(page) {
 
         return async (dispatch) => {
@@ -59,6 +53,7 @@ class PagesActions {
                     elementCollection: response.data.elementCollection, 
                     browserCollection: browsers
                 });
+                page.latestSupport = response.data.pageSupport;
                 const update = this.update(page._id, page);
 
                 dispatch({ok: true, id: page._id, data: response.data});
