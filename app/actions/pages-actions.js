@@ -48,15 +48,17 @@ class PagesActions {
                 let browsers = alt.stores.BrowsersStore.state.browsers.global;
                 const response = await axios.post('/check', { url: page.url, browsers: browsers });
 
-                page.snapshots.push({
+                let snapshot = {
                     pageSupport: response.data.pageSupport,
                     elementCollection: response.data.elementCollection, 
                     browserCollection: browsers
-                });
-                page.latestSupport = response.data.pageSupport;
-                const update = this.update(page._id, page);
+                }
 
-                dispatch({ok: true, id: page._id, data: response.data});
+                page.snapshots.push(snapshot);
+                page.latestSupport = response.data.pageSupport;
+                this.update(page._id, page);
+
+                dispatch({ok: true, id: page._id, data: snapshot});
             } catch (err) {
                 console.error(err);
                 dispatch({ok: false, error: err.data});

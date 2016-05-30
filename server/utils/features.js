@@ -138,9 +138,9 @@ module.exports = function evaluate(args) {
 
 		        return sum;
 		    }			
-
-	        usageData.pageSupport = 100 - getPercentage(getMissingBrowserVersions(usageData.features), args.browsers);
-	        usageData.elementCollection = map(usageData.features, (value, prop) => {
+		    let data = {};
+	        data.pageSupport = 100 - getPercentage(getMissingBrowserVersions(usageData.features), args.browsers);
+	        data.elementCollection = map(usageData.features, (value, prop) => {
 	            let feature = value;
 	            feature.count = usageData.counts[feature.feature];
 	            feature.name = feature.feature;
@@ -149,7 +149,7 @@ module.exports = function evaluate(args) {
 	            return feature;
 	        });
 
-			resolve(usageData);
+			resolve(data);
 		});
 
 	});
