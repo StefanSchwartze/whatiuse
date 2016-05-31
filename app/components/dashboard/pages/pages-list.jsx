@@ -72,14 +72,11 @@ export default class PagesList extends React.Component {
 							</div>
 						</div>
 					</div>
-					{this.props.pages && 
-						this.props.pages
-							.sort((a, b) => 
-								b.latestSupport - a.latestSupport
-							)
+					{this.props.pages && this.props.pages
+							.sort((a, b) => b.latestSupport - a.latestSupport)
 							.map((item, index) =>
-						<Page key={index} page={item} isActive={this.props.currentPageId === item._id} />
-					)}
+						<Page key={index} page={item} isActive={this.props.currentPageId === item._id} />)
+					}
 				</div>
 			</div>
 		);
