@@ -2,7 +2,7 @@ import alt from 'utils/alt';
 import api from 'utils/api';
 import {clone, assign, map, flatten, findKey, forEach, find} from 'lodash';
 import {networkAction} from 'utils/action-utils';
-import {findItemById} from 'utils/store-utils';
+import {findItemById, findItemByTitleAndUrl} from 'utils/store-utils';
 import {agents} from 'utils/user-agents';
 
 import axios from 'axios';
@@ -24,6 +24,7 @@ class PagesActions {
     }
     add(data) {
         return async (dispatch) => {
+            this.createBackground(data.url, data.title);
             networkAction(dispatch, this, api.pages.post, clone(data));
         }
     }
@@ -35,6 +36,14 @@ class PagesActions {
     delete(id) {
         return async (dispatch) => {
             networkAction(dispatch, this, api.pages.delete, id);
+        }
+    }
+    createBackground(url, title) {
+        return async (dispatch) => {
+            const response = await axios.post('/image', { url: url, title: title });
+            let page = findItemByTitleAndUrl(alt.stores.PagesStore.state.pages, title, url);
+            page.imgSrc = response.data.imgSrc;
+            this.update(page._id, page);
         }
     }
     checkURL(page) {

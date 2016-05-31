@@ -7,10 +7,11 @@ import helmet from "koa-helmet";
 import logger from "koa-logger";
 import favicon from "koa-favicon";
 import staticCache from "koa-static-cache";
+import serve from "koa-static";
 import responseTime from "koa-response-time";
 import bodyParser from "koa-bodyparser";
 import koaRouter from "koa-router";
-import {clone} from "lodash";
+import {clone, camelCase} from "lodash";
 import http from "http";
 
 import router from "./router";
@@ -21,6 +22,8 @@ import rest from "./rest";
 
 import evaluate from "./utils/features";
 import browserslist from "browserslist";
+
+import urlToImage from "url-to-image";
 
 const app = koa();
 const env = process.env.NODE_ENV || "development";
@@ -75,7 +78,7 @@ if (env === "development") {
 else {
 	app.use(mount("/assets", staticCache(path.join(__dirname, "../dist"), cacheOpts)));
 }
-
+app.use(serve(__dirname + '/../public'));
 
 // Parse body
 app.use(bodyParser());
@@ -161,6 +164,40 @@ import Example from "./models/example";
 	app
 		.use(checkRouter.routes())
 		.use(checkRouter.allowedMethods());
+
+
+	var imageRouter = koaRouter();
+
+	imageRouter.post("/image", function*() {
+
+		this.set({
+			'Content-Type' : 'application/json',
+			'Access-Control-Allow-Origin' : '*'
+		});
+
+		let options = {
+		    width: 1280,
+		    height: 800,
+		    cropHeight: true,
+		    fileQuality: 100,
+		    requestTimeout: 100
+		}
+		let fileName = camelCase(this.request.body.title + new Date().getTime()) + '.png';
+		let filePath = (__dirname + '/../public/' + fileName);
+		let self = this;
+		yield urlToImage(this.request.body.url, filePath, options).then(function() {
+			self.status = 200;
+			self.body = { message: "Image was created successfully!", imgSrc: fileName };
+		}).catch(function(err) {
+			console.error(err);
+			self.body = { err: err, message: "Image could not be created!" };
+		});
+
+	});
+
+	app
+		.use(imageRouter.routes())
+		.use(imageRouter.allowedMethods());
 		
 app.use(router);
 var port = process.env.PORT || config.port || 3000;

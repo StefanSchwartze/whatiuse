@@ -9,5 +9,8 @@ export default {
       return x._id === id;
     });
     return index;
-  }
+  },
+  findItemByTitleAndUrl: function(collection, title, url) {
+    return collection.find(x => x.title === title && x.url === url);
+  },
 };

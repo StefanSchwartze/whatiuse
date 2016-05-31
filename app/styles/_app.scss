@@ -226,7 +226,7 @@ a {
 		}
 	}
 	&.isChecking {
-		.page-thumb {
+		.page-preview {
 			filter: blur(10px);
 		}
 	}
@@ -258,6 +258,12 @@ a {
 		.page-overlay {
 			border: solid 5px;
 		}
+	}
+	&-preview {
+		height: 100%;
+		overflow: hidden;
+		transition: all 1s;
+		filter: blur(0px);
 	}
     &-overlay {
 		position: absolute;
@@ -326,12 +332,12 @@ a {
 		height: 700px;
 		transform: scale(0.2);
 		transform-origin: left top;
-		transition: all .7s;
 		position: absolute;
 		border: none;
 		left: 0;
 		top: 0;
 		z-index: 0;
+		overflow: hidden;
 	}
 }
 

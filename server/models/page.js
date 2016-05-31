@@ -4,6 +4,7 @@ const PageSchema = new mongoose.Schema({
 	title: 			String,
 	url: 			String,
 	latestSupport: Number,
+	imgSrc: String,
 	snapshots:     [{
 		captured:  {
 			type: 		Date,

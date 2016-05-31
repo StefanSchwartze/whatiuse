@@ -44,6 +44,8 @@ class PagesStore {
 		page.isChecking = false;
 		assign(findItemById(this.pages, id), page);
 	}
+	onCreateBackground(data) {
+	}
 }
 
 module.exports = (alt.createStore(PagesStore));

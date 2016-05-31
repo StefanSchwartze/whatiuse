@@ -12,10 +12,12 @@ export default class Page extends React.Component {
 	}
 	constructor(props) {
 		super(props);
-		this.state = { isLoading: true };
+		this.state = { isLoading: false };
 	}
 	componentDidMount() {
-		this.refs.iframe.addEventListener('load', this.onLoad.bind(this));
+		if(this.refs.iframe) {
+			this.refs.iframe.addEventListener('load', this.onLoad.bind(this));
+		}
 	}
 	onLoad() {
 		this.setState({ isLoading: false });
@@ -36,8 +38,15 @@ export default class Page extends React.Component {
 		if(this.props.page.isChecking) {
 			state = <span><i className="icon icon-spinner8 animate rotate"></i>Loading…</span>;
 		}
+		let preview = this.props.page.imgSrc ? 
+			<img src={this.props.page.imgSrc} width="100%" /> : 
+			<iframe ref="iframe" className="page-thumb" src={this.props.page.url} width="1200" height="700"></iframe>; 
 		return (
-			<div className={classnames('page', this.props.page.isChecking ? 'isChecking' : '', this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : '')}>
+			<div className={classnames(
+							'page', 
+							this.props.page.isChecking ? 'isChecking' : '', 
+							this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : ''
+							)}>
 				<div className="page-overlay">
 					<div className="percentage">
 						{state}
@@ -50,7 +59,9 @@ export default class Page extends React.Component {
 						<span>{this.props.page.title}</span>
 					</div>
 				</div>
-				<iframe ref="iframe" className="page-thumb" src={this.props.page.url} width="1200" height="700"></iframe>
+				<div className="page-preview">
+					{preview}
+				</div>
 			</div>
 		);
 	}
