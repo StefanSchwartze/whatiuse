@@ -7,7 +7,7 @@ body {
 	margin: 0;
 	padding: 0;
     font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: $grey;
+    //background-color: $grey;
     font-size: 1rem;
 }
 a {
@@ -60,6 +60,7 @@ a {
 	}
 	&--full {
 		width: 100%;
+		margin-bottom: $spacing-small;
 	}
 	&--strong {
 		text-transform: uppercase;
@@ -104,6 +105,7 @@ a {
 	}
 	&.slider-container {
 		background-color: $grey-medium;
+		max-width: 100%;
 	}
 	&.statistics-container {
 		background-color: white;
@@ -157,6 +159,8 @@ a {
 *	Component: Page-List
 */
 .page-slider {
+	max-width: 1280px;
+    margin: auto;
 	.pages-head {
 		display: flex;
 		justify-content: space-between;
@@ -181,7 +185,7 @@ a {
 	}
 	.slider {
 		overflow-y: hidden;
-		overflow-x: scroll;
+		//overflow-x: scroll;
 		will-change: scroll-position;
 		white-space: nowrap;
 		-webkit-overflow-scrolling: touch;

@@ -65,8 +65,8 @@ export default class LoginPage extends React.Component {
 						type='password'
 						value={this.state.login.password}
 						onChange={this.changeHandler.bind(this, 'login', 'password')} />
-					<button className="button button--wide button--yellow" onClick={this.register.bind(this)}>Create account</button>
-					<button className="button button--wide button--red" onClick={this.login.bind(this)}>Sign in</button>
+					<button className="button button--wide button--full button--yellow" onClick={this.register.bind(this)}>Create account</button>
+					<button className="button button--wide button--full button--red" onClick={this.login.bind(this)}>Sign in</button>
 				</div>
 			</div>
 		);
