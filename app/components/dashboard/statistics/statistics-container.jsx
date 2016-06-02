@@ -36,8 +36,10 @@ export default class StatisticsContainer extends React.Component {
 	}
 	render() {
 		let page;
+		let timeline;
 		let elements = [];
 		let snapshots = [];
+
 
 		let browsers = [
 			{
@@ -80,7 +82,8 @@ export default class StatisticsContainer extends React.Component {
 					elements = page.snapshots[page.snapshots.length - 1].elementCollection || elements;
 				}
 				snapshots = page.snapshots;
-				var timeline = <div className="history-container">
+				if(page.snapshots.length > 1) {
+					timeline = <div className="history-container">
 									<p className="label">Timeline</p>
 									<HistoryTooltip/>
 									<div className="chart">
@@ -92,6 +95,7 @@ export default class StatisticsContainer extends React.Component {
 										</ResponsiveContainer>
 									</div>
 								</div>
+				}
 			}
 			page = 	<div>
 						{timeline}
