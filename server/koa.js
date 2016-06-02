@@ -81,7 +81,7 @@ else {
 app.use(serve(__dirname + '/../public'));
 
 // Parse body
-app.use(bodyParser());
+app.use(bodyParser({jsonLimit: '5mb'}));
 
 import bcrypt from "bcrypt";
 import uuid from "node-uuid";
