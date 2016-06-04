@@ -17,10 +17,7 @@ import BrowsersList from '../../shared/browsers-list';
 
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
-		page: React.PropTypes.object,
-		pages: React.PropTypes.array,
-		allElements: React.PropTypes.array,
-		currentPageId: React.PropTypes.string
+		page: React.PropTypes.object
 	}
 	constructor(props) {
 		super(props);
@@ -28,10 +25,7 @@ export default class StatisticsContainer extends React.Component {
 	}
 	render() {
 		let pageElem;
-		let page;
 		let timeline;
-		let elements = [];
-		let snapshots = [];
 
 		let browsers = [
 			{
@@ -66,8 +60,7 @@ export default class StatisticsContainer extends React.Component {
 			
 			const page = this.props.page;
 			let snapshots = page.snapshots || [];
-			elements = page.snapshots[page.snapshots.length - 1].elementCollection || [];
-			snapshots = page.snapshots || [];
+			let elements = page.snapshots[page.snapshots.length - 1].elementCollection || [];
 
 			if(page.snapshots.length > 1) {
 				timeline = <div className="history-container">
