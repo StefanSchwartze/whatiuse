@@ -9,6 +9,7 @@ import BrowsersStore from 'stores/browsers-store';
 
 import StatisticsContainer from './statistics/statistics-container';
 
+import {findItemById} from 'utils/store-utils';
 import {sortBy, orderBy, flatten, reduce, forEach, floor, map, values, head} from 'lodash';
 
 import {authDecorator} from 'utils/component-utils';
@@ -31,9 +32,6 @@ export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 	}
-	shouldComponentUpdate(nextProps) {
-		return !Object.is(JSON.stringify(nextProps), JSON.stringify(this.props));
-	}
 	componentWillMount() {
 		return PagesActions.fetch();
 	}
@@ -42,7 +40,7 @@ export default class Dashboard extends React.Component {
 		const pagesCol = pages;
 
 		forEach(pagesCol, function(value, key) {
-			const snapshots = value.snapshots;
+			const snapshots = value.snapshots || [];
 			if(snapshots.length > 0) {
 				elementsArray.push(head(snapshots).elementCollection);
 			}
@@ -76,8 +74,18 @@ export default class Dashboard extends React.Component {
 		}
 		return floor(sum, 2);
 	}
+	currentPage(pages, currentPageId) {
+		if(pages && currentPageId === 'all') {
+			console.log(this.props.pages);
+			const collection = this.calcElementSum(pages);
+			return { snapshots: [{ elementCollection: collection}] };
+		} else {
+			return findItemById(pages, currentPageId) || {};
+		}
+	}
 	render() {
 		const pages = JSON.parse(JSON.stringify(this.props.pages));
+		const currentPageId = this.props.currentPageId;
 		return (
 			<AltContainer
 				stores={{
@@ -87,13 +95,11 @@ export default class Dashboard extends React.Component {
 					<PagesList 
 						completeSupport={this.calcCompleteSupport(pages)}
 						pages={pages}
-						currentPageId={this.props.currentPageId} />
+						currentPageId={currentPageId} />
 				</div>
 				<div className="content-container content statistics-container">
 					<StatisticsContainer
-						allElements={this.calcElementSum(pages)}
-						pages={pages}
-						currentPageId={this.props.currentPageId} />
+						page={this.currentPage(pages, currentPageId)} />
 				</div>
 			</AltContainer>
 		);

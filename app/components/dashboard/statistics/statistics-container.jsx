@@ -17,6 +17,7 @@ import BrowsersList from '../../shared/browsers-list';
 
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
+		page: React.PropTypes.object,
 		pages: React.PropTypes.array,
 		allElements: React.PropTypes.array,
 		currentPageId: React.PropTypes.string
@@ -26,6 +27,7 @@ export default class StatisticsContainer extends React.Component {
 		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
+		let pageElem;
 		let page;
 		let timeline;
 		let elements = [];
@@ -60,35 +62,29 @@ export default class StatisticsContainer extends React.Component {
 
 		];
 
-		if(this.props.pages.length > 0) {
+		if(this.props.page && this.props.page.snapshots && this.props.page.snapshots.length > 0) {
 			
-			if(this.props.currentPageId === 'all') {
+			const page = this.props.page;
+			let snapshots = page.snapshots || [];
+			elements = page.snapshots[page.snapshots.length - 1].elementCollection || [];
+			snapshots = page.snapshots || [];
 
-				elements = this.props.allElements || [];
-
-			} else {
-				const page = findItemById(this.props.pages, this.props.currentPageId);
-				console.log(this.props.pages);
-				if(page.snapshots.length > 0) {
-					elements = page.snapshots[page.snapshots.length - 1].elementCollection;
-				}
-				snapshots = page.snapshots;
-				if(page.snapshots.length > 1) {
-					timeline = <div className="history-container">
-									<p className="label">Timeline</p>
-									<HistoryTooltip/>
-									<div className="chart">
-										<ResponsiveContainer>
-											<LineChart data={snapshots} height={100} width={1000}>
-												<Line type='monotone' dataKey='pageSupport' stroke='#8884d8' strokeWidth={1} />
-												<Tooltip content={<HistoryTooltip/>}/>
-											</LineChart>
-										</ResponsiveContainer>
-									</div>
+			if(page.snapshots.length > 1) {
+				timeline = <div className="history-container">
+								<p className="label">Timeline</p>
+								<HistoryTooltip/>
+								<div className="chart">
+									<ResponsiveContainer>
+										<LineChart data={snapshots} height={100} width={1000}>
+											<Line type='monotone' dataKey='pageSupport' stroke='#8884d8' strokeWidth={1} />
+											<Tooltip content={<HistoryTooltip/>}/>
+										</LineChart>
+									</ResponsiveContainer>
 								</div>
-				}
+							</div>
 			}
-			page = 	<div>
+
+			pageElem = 	<div>
 						{timeline}
 						<p>Most used elements:</p>
 						<ElementsList elements={elements} orderProp="count" />
@@ -114,11 +110,11 @@ export default class StatisticsContainer extends React.Component {
 					</div>;
 
 		} else {
-			page = <span>No pages investigated yet.</span>;
+			pageElem = <span>Not investigated yet.</span>;
 		}
 		return (
 			<div className="">
-				{page}
+				{pageElem}
 			</div>
 		);
 	}
