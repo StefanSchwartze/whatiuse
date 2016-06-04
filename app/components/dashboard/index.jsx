@@ -9,7 +9,7 @@ import BrowsersStore from 'stores/browsers-store';
 
 import StatisticsContainer from './statistics/statistics-container';
 
-import {sortBy, orderBy, flatten, reduce, forEach, floor} from 'lodash';
+import {sortBy, orderBy, flatten, reduce, forEach, floor, map, values, head} from 'lodash';
 
 import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
@@ -31,36 +31,38 @@ export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 	}
+	shouldComponentUpdate(nextProps) {
+		return !Object.is(JSON.stringify(nextProps), JSON.stringify(this.props));
+	}
 	componentWillMount() {
 		return PagesActions.fetch();
 	}
 	calcElementSum(pages) {
-		var elementsArray = [];
+		let elementsArray = [];
+		const pagesCol = pages;
 
-		forEach(pages, function(value, key) {
-			if(value.snapshots.length > 0) {
-				elementsArray.push(value.snapshots[value.snapshots.length - 1].elementCollection);
+		forEach(pagesCol, function(value, key) {
+			const snapshots = value.snapshots;
+			if(snapshots.length > 0) {
+				elementsArray.push(head(snapshots).elementCollection);
 			}
 		});
+		let pageArr = [].concat.apply([], elementsArray);
 
-		var pageArr = [].concat.apply([], elementsArray);
-
-		return pageArr.reduce(function(prev, current, index, array){
-		   if(!(current.name in prev.keys)) {
-		      prev.keys[current.name] = index;
-		      prev.result.push(current);   
+		let newArr = values(pageArr.reduce(function(prev, current, index, array){
+		   if(!(current.name in prev.result)) {
+		      prev.result[current.name] = current;  
 		   } 
 		   else {
-		   		if(prev.result[prev.keys[current.name]]) {
-		       		prev.result[prev.keys[current.name]].count = prev.result[prev.keys[current.name]].count + current.count;
-		   		} else {
-		       		prev.result[prev.result.length - 1].count = prev.result[prev.result.length - 1].count + current.count;
-
+		   		if(prev.result[current.name]) {
+		       		prev.result[current.name].count += current.count;
 		   		}
 		   }  
 
 		   return prev;
-		},{result: [], keys: {}}).result;
+		},{result: {}}).result);
+
+		return JSON.parse(JSON.stringify(newArr));
 	}
 	calcCompleteSupport(pages) {
 		let sum = 100;
@@ -75,6 +77,7 @@ export default class Dashboard extends React.Component {
 		return floor(sum, 2);
 	}
 	render() {
+		const pages = JSON.parse(JSON.stringify(this.props.pages));
 		return (
 			<AltContainer
 				stores={{
@@ -82,14 +85,14 @@ export default class Dashboard extends React.Component {
 				}}>
 				<div className="content-container edged content slider-container">
 					<PagesList 
-						completeSupport={this.calcCompleteSupport(this.props.pages)}
-						pages={this.props.pages}
+						completeSupport={this.calcCompleteSupport(pages)}
+						pages={pages}
 						currentPageId={this.props.currentPageId} />
 				</div>
 				<div className="content-container content statistics-container">
 					<StatisticsContainer
-						allElements={this.calcElementSum(this.props.pages)}
-						pages={this.props.pages}
+						allElements={this.calcElementSum(pages)}
+						pages={pages}
 						currentPageId={this.props.currentPageId} />
 				</div>
 			</AltContainer>

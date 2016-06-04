@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line} from 'recharts';
 import HistoryTooltip from '../../shared/history-tooltip';
@@ -14,32 +15,21 @@ import StatusActions from 'actions/status-actions';
 import ElementsList from '../../shared/elements-list';
 import BrowsersList from '../../shared/browsers-list';
 
-@connectToStores
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
 		pages: React.PropTypes.array,
 		allElements: React.PropTypes.array,
 		currentPageId: React.PropTypes.string
 	}
-	static getStores() {
-		return [
-			StatusStore
-		];
-	}
-	static getPropsFromStores() {
-		return StatusStore.getState();
-	}
 	constructor(props) {
 		super(props);
-	}
-	componentWillMount() {
+		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
 		let page;
 		let timeline;
 		let elements = [];
 		let snapshots = [];
-
 
 		let browsers = [
 			{
@@ -74,12 +64,13 @@ export default class StatisticsContainer extends React.Component {
 			
 			if(this.props.currentPageId === 'all') {
 
-				elements = this.props.allElements || elements;
+				elements = this.props.allElements || [];
 
 			} else {
-				page = findItemById(this.props.pages, this.props.currentPageId);
+				const page = findItemById(this.props.pages, this.props.currentPageId);
+				console.log(this.props.pages);
 				if(page.snapshots.length > 0) {
-					elements = page.snapshots[page.snapshots.length - 1].elementCollection || elements;
+					elements = page.snapshots[page.snapshots.length - 1].elementCollection;
 				}
 				snapshots = page.snapshots;
 				if(page.snapshots.length > 1) {
