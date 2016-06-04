@@ -205,6 +205,11 @@ a {
 		> *:first-child {
 			margin-left: $spacing-medium;
 		}
+		> .hint--empty {
+			font-size: $font-size-xlarge;
+			text-align: center;
+			color: $grey-light;
+		}
 	}
 }
 /*

@@ -35,6 +35,26 @@ export default class PagesList extends React.Component {
 		PagesActions.selectPage('all');
 	}
 	render() {
+		let globalTile;
+		if(this.props.pages.length > 0) {
+			if(this.props.pages.length > 1) {
+				globalTile = <div className={classnames('page', 'all', this.props.currentPageId === 'all' ? 'active' : '')} >
+							<div className="page-overlay">
+								<div className="percentage">
+									<span>{this.props.completeSupport || '- '}%</span>
+								</div>
+								<div className="open">
+									<button onClick={this.setCurrentPageId.bind(this)} className="button button--wide button--strong button--yellow">Open</button>
+								</div>
+								<div className="title">
+									<span>All</span>
+								</div>
+							</div>
+						</div>
+			}
+		} else {
+			globalTile = <h2 className="hint--empty">No pages added yet.</h2>
+		}
 		return (
 			<div className="page-slider">
 				<Modal 
@@ -59,19 +79,7 @@ export default class PagesList extends React.Component {
 					<button className="button button--yellow" onClick={this.showModal.bind(this)}><span className="icon-add"></span>Add page</button>
 				</div>
 				<div className={classnames('slider', this.state.rtl ? 'orderReverse' : '')}>
-					<div className={classnames('page', 'all', this.props.currentPageId === 'all' ? 'active' : '')} >
-						<div className="page-overlay">
-							<div className="percentage">
-								<span>{this.props.completeSupport || '- '}%</span>
-							</div>
-							<div className="open">
-								<button onClick={this.setCurrentPageId.bind(this)} className="button button--wide button--strong button--yellow">Open</button>
-							</div>
-							<div className="title">
-								<span>All</span>
-							</div>
-						</div>
-					</div>
+					{globalTile}
 					{this.props.pages && this.props.pages
 							/*.sort((a, b) => b.latestSupport - a.latestSupport)*/
 							.map((item, index) =>

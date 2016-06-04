@@ -64,19 +64,22 @@ export default class Dashboard extends React.Component {
 	}
 	calcCompleteSupport(pages) {
 		let sum = 100;
-		for (var i = 0; i < pages.length; i++) {
-			if(pages[i].snapshots && pages[i].snapshots.length > 0) {
-				let support = pages[i].latestSupport || sum;
-				if(support < sum) {
-					sum = support;
+		if(pages && pages.length > 0) {
+			for (var i = 0; i < pages.length; i++) {
+				if(pages[i].snapshots && pages[i].snapshots.length > 0) {
+					let support = pages[i].latestSupport || sum;
+					if(support < sum) {
+						sum = support;
+					}
 				}
 			}
+		} else {
+			return '- ';
 		}
 		return floor(sum, 2);
 	}
 	currentPage(pages, currentPageId) {
 		if(pages && currentPageId === 'all') {
-			console.log(this.props.pages);
 			const collection = this.calcElementSum(pages);
 			return { snapshots: [{ elementCollection: collection}] };
 		} else {
@@ -86,6 +89,13 @@ export default class Dashboard extends React.Component {
 	render() {
 		const pages = JSON.parse(JSON.stringify(this.props.pages));
 		const currentPageId = this.props.currentPageId;
+		let statistics = <div></div>
+		if(pages.length > 0) {
+			statistics = <div className="content-container content statistics-container">
+							<StatisticsContainer
+								page={this.currentPage(pages, currentPageId)} />
+						</div>
+		}
 		return (
 			<AltContainer
 				stores={{
@@ -97,10 +107,7 @@ export default class Dashboard extends React.Component {
 						pages={pages}
 						currentPageId={currentPageId} />
 				</div>
-				<div className="content-container content statistics-container">
-					<StatisticsContainer
-						page={this.currentPage(pages, currentPageId)} />
-				</div>
+				{statistics}
 			</AltContainer>
 		);
 	}
