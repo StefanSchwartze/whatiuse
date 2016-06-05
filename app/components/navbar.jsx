@@ -87,7 +87,7 @@ export default class Navbar extends React.Component {
 								<Modal 
 									transitionSpeed={250}
 									className="modal"
-									containerClassName={classnames('animate', 'modal-container', 'checked')}
+									containerClassName={classnames('animate', 'modal-container', 'modal-container--wide', 'checked')}
 									closeOnOuterClick={true}
 									show={this.state.showModal}
 									onClose={this.closeModal.bind(this)} >

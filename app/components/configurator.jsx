@@ -2,9 +2,41 @@ import React from 'react';
 import { Form } from 'formsy-react';
 import TextInput from 'components/shared/form-elements/input';
 
-import {authDecorator} from 'utils/component-utils';
+import MySelect from 'components/shared/form-elements/select';
 
-import PagesActions from 'actions/pages-actions';
+const Fields = props => {
+	function onRemove(pos) {
+		return event => {
+			event.preventDefault();
+			props.onRemove(pos);
+		};
+	}
+	return (
+		<div className="fields">
+			{props.data.map((field, i) => (
+				<div className="field" key={field.id}>
+					{
+						<MySelect
+							name={`fields[${i}]`}
+							title={field.validations ? JSON.stringify(field.validations) : 'No validations'}
+							required={field.required}
+							validations={field.validations}
+							options={[
+								{title: '123', value: '123'},
+								{title: 'some long text', value: 'some long text'},
+								{title: '`empty string`', value: ''},
+								{title: 'alpha42', value: 'alpha42'},
+								{title: 'test@mail.com', value: 'test@mail.com'}
+							]}
+						/>
+					}
+					<a href="#" className="remove-field" onClick={onRemove(i)}>X</a>
+				</div>
+				))
+			}
+		</div>
+	);
+};
 
 export default class Configurator extends React.Component {
 	static propTypes = {
@@ -14,49 +46,52 @@ export default class Configurator extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			canSubmit: false
+			canSubmit: false,
+			fields: []
 		};
 	}
+	addField() {
+		let fieldData = {};
+		fieldData.id = Date.now();
+		this.setState({ fields: this.state.fields.concat(fieldData) });
+	}
+	removeField(pos) {
+		const fields = this.state.fields;
+		this.setState({ fields: fields.slice(0, pos).concat(fields.slice(pos+1)) })
+	}
 	enableButton() {
-		this.setState({
-			canSubmit: true
-		});
+		this.setState({ canSubmit: true });
 	}
 	disableButton() {
-		this.setState({
-			canSubmit: false
-		});
+		this.setState({ canSubmit: false });
 	}
 	submit(model) {
-		model.title = model.title || 'Home';
-		model.url = model.url || 'http://sevenval.com';
-		model.elementsCollections = model.elementsCollections || [];
-		PagesActions.add(model);
-		if(this.props.onSend) {
-			this.props.onSend('Page added');
-		}
+		console.log(model);
 	}
 	send() {
-		this.refs.pageForm.submit();
+		this.refs.configForm.submit();
 	}
 	render() {
+		const { fields, canSubmit } = this.state;
 		return (
 			<div>
-				<Form ref="pageForm" 
-					onValidSubmit={this.submit.bind(this)}
-					onValid={this.enableButton.bind(this)}
-					onInvalid={this.disableButton.bind(this)}>
-					<TextInput
-						autofocus={true}
-						placeholder="Title"
-						classes=""
-						name="title"
-						title=""
-						type="text"
-						validations="minLength:3"
-						validationError={'Must be longer than 3 characters'} />
+				<Form 
+					ref="configForm" 
+					onSubmit={this.submit.bind(this)} 
+					onValid={this.enableButton.bind(this)} 
+					onInvalid={this.disableButton.bind(this)} 
+					className="configurator">
+					<Fields 
+						data={fields} 
+						onRemove={this.removeField.bind(this)} />
+					<button onClick={this.addField.bind(this)}>Add browser</button>
+					<button 
+						disabled={!this.state.canSubmit} 
+						className="button button--full button--yellow" 
+						onClick={this.send.bind(this)}>
+						Save settings
+					</button>
 				</Form>
-				<button disabled={!this.state.canSubmit} className="button button--full button--yellow" onClick={this.send.bind(this)}>Save settings</button>
 			</div>
 		);
 	}

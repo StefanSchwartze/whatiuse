@@ -137,12 +137,24 @@ a {
 	top: 50%;
 	transform: translateY(-50%);
 	box-shadow: 0 0 14px 0px $grey-dark;
+	max-width: 100%;
+	&--wide {
+		width: 480px;
+	}
 }
 .modal-head {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: $spacing-medium;
+	color: $black-ninety;
+}
+
+/*
+*	Configurator page
+*/
+
+.configurator {
 	color: $black-ninety;
 }
 
