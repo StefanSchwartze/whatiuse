@@ -96,12 +96,13 @@ class BrowsersStore {
 					name: 'safari 9',
 					share: 0.787626
 				}
-			]
+			],
+			custom: ['gh']
 		};
-		this.currentSource = 'global';
+		this.currentScope = 'global';
 	}
-	onSelectGlobal() {
-		this.currentSource = 'global';
+	onSelectScope(scope) {
+		this.currentScope = scope;
 	}
 }
 

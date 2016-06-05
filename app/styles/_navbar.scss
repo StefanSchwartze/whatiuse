@@ -17,3 +17,25 @@
 		display: inline-block;
 	}
 }
+.toggle {
+	.toggle-button {
+		border: solid 1px white;
+		display: inline-block;
+		cursor: pointer;
+		padding: $spacing-extra-small $spacing-small;
+		text-transform: capitalize;
+		&.active {
+			background: white;
+			color: $black-ninety;
+		}
+		&:hover:not(.active) {
+			background: rgba(255,255,255,0.25);
+		}
+		&:first-child {
+			border-radius: $border-radius-large 0 0 $border-radius-large;
+		}
+		&:last-child {
+			border-radius: 0 $border-radius-large $border-radius-large 0;
+		}
+	}
+}

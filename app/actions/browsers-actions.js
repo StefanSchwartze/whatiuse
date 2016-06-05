@@ -10,8 +10,8 @@ class BrowsersActions {
     constructor() {
 
     }
-    setGlobal() {
-        this.dispatch();
+    selectScope(scope) {
+        return scope;
     }
 }
 
