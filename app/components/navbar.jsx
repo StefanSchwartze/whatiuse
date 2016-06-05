@@ -1,7 +1,10 @@
 import React from 'react';
+import Modal, {closeStyle} from 'simple-react-modal';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import {Link} from 'react-router';
 import classnames from 'classnames';
+
+import Configurator from './configurator';
 
 import StatusStore from 'stores/status-store';
 import BrowsersStore from 'stores/browsers-store';
@@ -12,6 +15,10 @@ import BrowserActions from 'actions/browsers-actions';
 
 @connectToStores
 export default class Navbar extends React.Component {
+	constructor(props) {
+		super();
+		this.state = { showModal: false };
+	}
 	static contextTypes = {
 		router: React.PropTypes.func
 	}
@@ -37,6 +44,12 @@ export default class Navbar extends React.Component {
 	}
 	selectBrowserScope(scope) {
 		BrowserActions.selectScope(scope);
+	}
+	showModal(){
+		this.setState({showModal: true})
+	}
+	closeModal(){
+		this.setState({showModal: false})
 	}
 	render() {
 		let errorComponent;
@@ -71,7 +84,21 @@ export default class Navbar extends React.Component {
 									)
 								}
 								</div>
+								<Modal 
+									transitionSpeed={250}
+									className="modal"
+									containerClassName={classnames('animate', 'modal-container', 'checked')}
+									closeOnOuterClick={true}
+									show={this.state.showModal}
+									onClose={this.closeModal.bind(this)} >
+									<div className="modal-head">
+										<span>Configurator</span>
+										<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
+									</div>
+									<Configurator onSend={this.closeModal.bind(this)} />
+								</Modal>
 							</li>
+							<li className="nav-list-item" onClick={this.showModal.bind(this)}>Settings</li>
 							<li className="nav-list-item" onClick={this.logout.bind(this)}>
 								<a href="#" className="link">Logout</a>
 							</li>
