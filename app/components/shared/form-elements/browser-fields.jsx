@@ -1,5 +1,5 @@
 import React from 'react';
-import OptionSelect from 'components/shared/form-elements/select';
+import Browserfield from 'components/shared/form-elements/browser-field';
 
 export default class Browserfields extends React.Component {
 	static propTypes = {
@@ -15,9 +15,6 @@ export default class Browserfields extends React.Component {
 			this.props.onRemove(i);
 		}
 	}
-	toggleVersion(e) {
-		console.log(e);
-	}
 	render() {
 		let agentArray = [];
 		let agents = this.props.agents;
@@ -30,33 +27,9 @@ export default class Browserfields extends React.Component {
 
 		return (
 			<div className="fields">
-				{this.props.data.map((field, i) => {
-					let showVersion = false;
-					return (
-
-						<div className="field" key={field.id}>
-							<OptionSelect
-								name={`fields[${i}]`}
-								title={'Browser'}
-								required={field.required}
-								validations={field.validations}
-								options={agentArray.map((agent) => ({ title: agent.title, value: agent.value }))}
-								onChange={this.toggleVersion.bind(this)}
-							/>
-							<OptionSelect
-								name={`fields[${i+1}]`}
-								title={'Version'}
-								required={field.required}
-								validations={field.validations}
-								options={[
-									{title: '45', value: '45'},
-									{title: '46', value: '46'}
-								]}
-							/>
-							<button className="remove-field" onClick={this.remove.bind(this, i)}>X</button>
-						</div>
-					)
-				})}
+				{this.props.data.map((field, i) => (
+					<Browserfield options={agentArray} key={field.id} field={field} onRemove={this.remove.bind(this, i)} />
+				))}
 			</div>
 		);
 	}

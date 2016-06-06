@@ -40,7 +40,6 @@ export default class Configurator extends React.Component {
 	}
 	render() {
 		const { fields, canSubmit } = this.state;
-		//console.log(this.props, Object.keys(this.props.agents));
 		return (
 			<div>
 				<Form 
