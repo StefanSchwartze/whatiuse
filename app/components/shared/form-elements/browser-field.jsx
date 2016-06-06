@@ -25,8 +25,8 @@ export default class Browserfield extends React.Component {
 		let versions = [];
 		if(this.state.currentBrowser !== '') {
 			versions = agents
-							.find((agent) => { return agent.value === this.state.currentBrowser })
-							.version_list.map((version) => ({title: version.version, value: version.version}));
+						.find((agent) => { return agent.value === this.state.currentBrowser })
+						.version_list.map((version) => ({title: version.version, value: version.version}));
 		}
 		return (
 			<div className="field">

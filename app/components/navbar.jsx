@@ -95,7 +95,7 @@ export default class Navbar extends React.Component {
 										<span>Configurator</span>
 										<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 									</div>
-									<Configurator agents={this.props.agents} onSend={this.closeModal.bind(this)} />
+									<Configurator browsers={this.props.browsers.custom} agents={this.props.agents} onSend={this.closeModal.bind(this)} />
 								</Modal>
 							</li>
 							<li className="nav-list-item" onClick={this.showModal.bind(this)}>Settings</li>

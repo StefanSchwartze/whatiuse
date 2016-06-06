@@ -99,7 +99,7 @@ class BrowsersStore {
 					share: 0.787626
 				}
 			],
-			custom: ['gh']
+			custom: []
 		};
 		this.agents = agents;
 		this.currentScope = 'global';

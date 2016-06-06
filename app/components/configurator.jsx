@@ -6,15 +6,15 @@ import Browserfields from 'components/shared/form-elements/browser-fields';
 
 export default class Configurator extends React.Component {
 	static propTypes = {
-		pages: React.PropTypes.array,
 		onSend: React.PropTypes.func,
-		agents: React.PropTypes.object
+		agents: React.PropTypes.object,
+		browsers: React.PropTypes.array
 	}
 	constructor(props) {
 		super(props);
 		this.state = {
 			canSubmit: false,
-			fields: []
+			fields: props.browsers || []
 		};
 	}
 	addField() {
@@ -40,6 +40,7 @@ export default class Configurator extends React.Component {
 	}
 	render() {
 		const { fields, canSubmit } = this.state;
+		console.log(fields);
 		return (
 			<div>
 				<Form 

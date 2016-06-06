@@ -157,6 +157,12 @@ a {
 .configurator {
 	color: $black-ninety;
 }
+.field {
+	display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
 
 /*
 *	Login page
