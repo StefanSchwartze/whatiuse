@@ -18,7 +18,6 @@ import router from "./router";
 import config from "./config/init";
 
 import generateApi from "./restable/lib";
-import rest from "./rest";
 
 import evaluate from "./utils/features";
 import browserslist from "browserslist";
@@ -88,18 +87,18 @@ import uuid from "node-uuid";
 
 import User from "./models/user";
 import Page from "./models/page";
-import Example from "./models/example";
+import Project from "./models/project";
 
 	const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0.1:27017/whatiuse";
 	const mongoose = require("mongoose");
 
 	mongoose.connect(mongoUrl);
 
+	var ProjectController = generateApi(app, Project, "/api");
+	ProjectController.mount();
+
 	var PagesController = generateApi(app, Page, "/api");
 	PagesController.mount();
-
-	var ExamplesController = generateApi(app, Example, "/api");
-	ExamplesController.mount();
 
 	var authRouter = koaRouter();
 
