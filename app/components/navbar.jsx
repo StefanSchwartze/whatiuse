@@ -29,11 +29,11 @@ export default class Navbar extends React.Component {
 		];
 	}
 	static getPropsFromStores() {
-		let browserstore = BrowsersStore.getState();
 		return {
 			status: StatusStore.getState(),
-			browserScope: browserstore.currentScope,
-			browsers: BrowsersStore.getState().browsers
+			browserScope: BrowsersStore.getState().currentScope,
+			browsers: BrowsersStore.getState().browsers,
+			agents: BrowsersStore.getState().agents
 		}
 	}
 	retry() {
@@ -95,7 +95,7 @@ export default class Navbar extends React.Component {
 										<span>Configurator</span>
 										<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 									</div>
-									<Configurator onSend={this.closeModal.bind(this)} />
+									<Configurator agents={this.props.agents} onSend={this.closeModal.bind(this)} />
 								</Modal>
 							</li>
 							<li className="nav-list-item" onClick={this.showModal.bind(this)}>Settings</li>

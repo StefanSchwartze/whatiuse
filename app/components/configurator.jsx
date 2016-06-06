@@ -1,47 +1,14 @@
 import React from 'react';
 import { Form } from 'formsy-react';
 import TextInput from 'components/shared/form-elements/input';
-
 import MySelect from 'components/shared/form-elements/select';
-
-const Fields = props => {
-	function onRemove(pos) {
-		return event => {
-			event.preventDefault();
-			props.onRemove(pos);
-		};
-	}
-	return (
-		<div className="fields">
-			{props.data.map((field, i) => (
-				<div className="field" key={field.id}>
-					{
-						<MySelect
-							name={`fields[${i}]`}
-							title={field.validations ? JSON.stringify(field.validations) : 'No validations'}
-							required={field.required}
-							validations={field.validations}
-							options={[
-								{title: '123', value: '123'},
-								{title: 'some long text', value: 'some long text'},
-								{title: '`empty string`', value: ''},
-								{title: 'alpha42', value: 'alpha42'},
-								{title: 'test@mail.com', value: 'test@mail.com'}
-							]}
-						/>
-					}
-					<a href="#" className="remove-field" onClick={onRemove(i)}>X</a>
-				</div>
-				))
-			}
-		</div>
-	);
-};
+import Browserfields from 'components/shared/form-elements/browser-fields';
 
 export default class Configurator extends React.Component {
 	static propTypes = {
 		pages: React.PropTypes.array,
-		onSend: React.PropTypes.func
+		onSend: React.PropTypes.func,
+		agents: React.PropTypes.object
 	}
 	constructor(props) {
 		super(props);
@@ -73,6 +40,7 @@ export default class Configurator extends React.Component {
 	}
 	render() {
 		const { fields, canSubmit } = this.state;
+		//console.log(this.props, Object.keys(this.props.agents));
 		return (
 			<div>
 				<Form 
@@ -81,7 +49,8 @@ export default class Configurator extends React.Component {
 					onValid={this.enableButton.bind(this)} 
 					onInvalid={this.disableButton.bind(this)} 
 					className="configurator">
-					<Fields 
+					<Browserfields
+						agents={this.props.agents}
 						data={fields} 
 						onRemove={this.removeField.bind(this)} />
 					<button onClick={this.addField.bind(this)}>Add browser</button>

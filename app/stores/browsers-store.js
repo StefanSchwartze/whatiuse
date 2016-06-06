@@ -3,6 +3,8 @@ import {assign, map} from 'lodash';
 import {findItemById, findIndexById} from 'utils/store-utils';
 import BrowsersActions from 'actions/browsers-actions';
 
+import {agents} from '../utils/user-agents';
+
 class BrowsersStore {
 	constructor() {
 		this.bindActions(BrowsersActions);
@@ -99,6 +101,7 @@ class BrowsersStore {
 			],
 			custom: ['gh']
 		};
+		this.agents = agents;
 		this.currentScope = 'global';
 	}
 	onSelectScope(scope) {
