@@ -76,7 +76,7 @@ export default class Dashboard extends React.Component {
 		} else {
 			return '- ';
 		}
-		return floor(sum, 2);
+		return toString(floor(sum, 2));
 	}
 	currentPage(pages, currentPageId) {
 		if(pages && currentPageId === 'all') {

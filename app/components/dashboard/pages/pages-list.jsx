@@ -11,7 +11,7 @@ export default class PagesList extends React.Component {
 	static propTypes = {
 		pages: React.PropTypes.array,
 		currentPageId: React.PropTypes.string,
-		completeSupport: React.PropTypes.number
+		completeSupport: React.PropTypes.string
 	}
 	constructor(props) {
 		super(props);
