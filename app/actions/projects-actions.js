@@ -8,9 +8,18 @@ class ProjectsActions {
         this.generateActions('removeCurrent');
     }
     fetch() {
+        /*
         return async (dispatch) => {
             networkAction(dispatch, this, api.projects.getAll);
-        }
+        }*/
+        return [{
+            id: "id4567585676",
+            title: "Example project",
+            url: "http://example.com",
+            settings: {
+                browsers: []
+            }
+        }]
     }
     get(id) {
         return async (dispatch) => {
