@@ -24,11 +24,16 @@ export default class Browserfields extends React.Component {
 			agent.value = agentKey;
 			agentArray.push(agent);
 		});
-
 		return (
 			<div className="fields">
 				{this.props.data.map((field, i) => (
-					<Browserfield options={agentArray} key={field.id} field={field} onRemove={this.remove.bind(this, i)} />
+					<Browserfield 
+						index={i} 
+						options={agentArray} 
+						key={i} 
+						field={field} 
+						onRemove={this.remove.bind(this, i)} 
+					/>
 				))}
 			</div>
 		);

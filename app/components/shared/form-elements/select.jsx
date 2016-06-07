@@ -8,11 +8,16 @@ export default class OptionSelect extends React.Component {
 	static propTypes = {
 		name: React.PropTypes.string.isRequired,
 		title: React.PropTypes.string.isRequired,
+		options: React.PropTypes.array.isRequired,
 		classes: React.PropTypes.string,
 		autofocus: React.PropTypes.bool,
-        onChange: React.PropTypes.func
+        onChange: React.PropTypes.func,
+        selected: React.PropTypes.string
 	}
 	componentDidMount(){
+		if(this.props.selected) {
+			this.props.setValue(this.props.selected);
+		}
 		if(this.props.autofocus) {
 			ReactDOM.findDOMNode(this.refs[this.props.name]).focus(); 
 		}
@@ -36,17 +41,20 @@ export default class OptionSelect extends React.Component {
 		var errorMessage = this.props.getErrorMessage();
 
 		const options = this.props.options.map((option, i) => (
-			<option key={option.title+option.value} value={option.value}>
+			<option
+				key={option.title+option.value} 
+				value={option.value}>
 				{option.title}
 			</option>
 		));
         return (
 			<div className={className + ' form-group'}>
 				<label htmlFor={this.props.name}>{this.props.title}</label>
-				<select className={classNames('select', this.props.classes)} 
+				<select 
+					className={classNames('select', this.props.classes)} 
 					name={this.props.name} 
 					onChange={this.onChange.bind(this)}  
-					value={this.props.getValue()}>
+					value={this.props.selected || this.props.getValue()}>
 					{options}
 				</select>
 				<span className='validation-error'>{errorMessage}</span>

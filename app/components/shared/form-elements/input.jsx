@@ -6,6 +6,7 @@ import classNames from 'classnames';
 @FormsyElement()
 export default class TextInput extends React.Component {
 	static propTypes = {
+		value: React.PropTypes.string,
 		name: React.PropTypes.string.isRequired,
 		title: React.PropTypes.string.isRequired,
 		type: React.PropTypes.string.isRequired,
@@ -16,6 +17,9 @@ export default class TextInput extends React.Component {
 	componentDidMount(){
 		if(this.props.autofocus) {
 			ReactDOM.findDOMNode(this.refs[this.props.name]).focus(); 
+		}
+		if(this.props.value) {
+			this.props.setValue(this.props.value);
 		}
 	}
 	render() {
@@ -36,7 +40,7 @@ export default class TextInput extends React.Component {
 				<input className={classNames('input', this.props.classes)}
 					ref={this.props.name}
 					placeholder={this.props.placeholder}
-					type="text" 
+					type={this.props.type}
 					onChange={(e) => this.props.setValue(e.target.value)} 
 					value={this.props.getValue()}/>
 				<span className='validation-error'>{errorMessage}</span>

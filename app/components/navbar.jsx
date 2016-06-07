@@ -3,15 +3,19 @@ import Modal, {closeStyle} from 'simple-react-modal';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import {Link} from 'react-router';
 import classnames from 'classnames';
+import { findItemById } from 'utils/store-utils';
 
 import Configurator from './configurator';
+import ProjectForm from './shared/forms/project-form';
 
 import StatusStore from 'stores/status-store';
 import BrowsersStore from 'stores/browsers-store';
+import ProjectsStore from 'stores/projects-store';
 
-import StatusActions from 'actions/status-actions';
 import LoginActions from 'actions/login-actions';
+import StatusActions from 'actions/status-actions';
 import BrowserActions from 'actions/browsers-actions';
+import ProjectActions from 'actions/projects-actions';
 
 @connectToStores
 export default class Navbar extends React.Component {
@@ -25,7 +29,8 @@ export default class Navbar extends React.Component {
 	static getStores() {
 		return [
 			StatusStore,
-			BrowsersStore
+			ProjectsStore,
+			BrowsersStore,
 		];
 	}
 	static getPropsFromStores() {
@@ -33,8 +38,14 @@ export default class Navbar extends React.Component {
 			status: StatusStore.getState(),
 			browserScope: BrowsersStore.getState().currentScope,
 			browsers: BrowsersStore.getState().browsers,
-			agents: BrowsersStore.getState().agents
+			agents: BrowsersStore.getState().agents,
+			projects: ProjectsStore.getState().projects,
+			currentProjectId: ProjectsStore.getState().currentProjectId
 		}
+	}
+	componentDidMount() {
+		ProjectActions.fetch();
+		ProjectActions.get('5756be4c57ce5aef23861c7d');
 	}
 	retry() {
 		StatusActions.retry();
@@ -46,10 +57,14 @@ export default class Navbar extends React.Component {
 		BrowserActions.selectScope(scope);
 	}
 	showModal(){
+		BrowserActions.fetchConfig();
 		this.setState({showModal: true})
 	}
 	closeModal(){
 		this.setState({showModal: false})
+	}
+	closeProjectModal(){
+		this.setState({showProjectModal: false})
 	}
 	render() {
 		let errorComponent;
@@ -75,6 +90,22 @@ export default class Navbar extends React.Component {
 								<Link to='app' className="link">Dashboard</Link>
 							</li>
 							<li className="nav-list-item">
+								<button className="button button--yellow" onClick={() => this.setState({showProjectModal: true})}><span className="icon-add"></span>Add project</button>
+								<Modal 
+									transitionSpeed={250}
+									className="modal"
+									containerClassName={classnames('animate', 'modal-container', 'checked')}
+									closeOnOuterClick={true}
+									show={this.state.showProjectModal}
+									onClose={this.closeProjectModal.bind(this)} >
+									<div className="modal-head">
+										<span>Add new project</span>
+										<button className="icon-close button button--close" onClick={this.closeProjectModal.bind(this)}></button>
+									</div>
+									<ProjectForm onSend={this.closeProjectModal.bind(this)} />
+								</Modal>
+							</li>
+							<li className="nav-list-item">
 								<div className="toggle">
 								{this.props.browsers && Object.keys(this.props.browsers).map(
 									(item, key) => 
@@ -95,7 +126,12 @@ export default class Navbar extends React.Component {
 										<span>Configurator</span>
 										<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 									</div>
-									<Configurator browsers={this.props.browsers.custom} agents={this.props.agents} onSend={this.closeModal.bind(this)} />
+									<Configurator 
+										currentProject={findItemById(this.props.projects, this.props.currentProjectId)} 
+										browsers={this.props.browsers.custom} 
+										agents={this.props.agents} 
+										onSend={this.closeModal.bind(this)} 
+									/>
 								</Modal>
 							</li>
 							<li className="nav-list-item" onClick={this.showModal.bind(this)}>Settings</li>

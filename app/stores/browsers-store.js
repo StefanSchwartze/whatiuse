@@ -104,6 +104,9 @@ class BrowsersStore {
 		this.agents = agents;
 		this.currentScope = 'global';
 	}
+	onFetchConfig(config) {
+		this.browsers.custom = config;
+	}
 	onSelectScope(scope) {
 		this.currentScope = scope;
 	}

@@ -3,11 +3,11 @@ import {assign, map} from 'lodash';
 import {findItemById, findIndexById} from 'utils/store-utils';
 import ProjectsActions from 'actions/projects-actions';
 
-class PagesStore {
+class ProjectsStore {
 	constructor() {
 		this.bindActions(ProjectsActions);
 		this.projects = [];
-		this.currentProjectId = null;
+		this.currentProjectId = "";
 	}
 	onAdd(item) {
 		this.projects.push(item);
@@ -15,8 +15,8 @@ class PagesStore {
 	onFetch(projects) {
 		this.projects = projects;
 	}
-	onGet(page) {
-		this.currentProjectId = page._id;
+	onGet(project) {
+		this.currentProjectId = project._id;
 	}
 	onUpdate(item) {
 		assign(findItemById(this.projects, item._id), item);
@@ -34,4 +34,4 @@ class PagesStore {
 	}
 }
 
-module.exports = (alt.createStore(PagesStore));
+module.exports = (alt.createStore(ProjectsStore));

@@ -1,28 +1,22 @@
+import alt from 'utils/alt';
 import api from 'utils/api';
 import {clone} from 'lodash';
 import {networkAction} from 'utils/action-utils';
 import {findItemById, findItemByTitleAndUrl} from 'utils/store-utils';
+import BrowsersActions from './browsers-actions';
 
 class ProjectsActions {
     constructor() {
         this.generateActions('removeCurrent');
     }
     fetch() {
-        /*
         return async (dispatch) => {
             networkAction(dispatch, this, api.projects.getAll);
-        }*/
-        return [{
-            id: "id4567585676",
-            title: "Example project",
-            url: "http://example.com",
-            settings: {
-                browsers: []
-            }
-        }]
+        }
     }
     get(id) {
         return async (dispatch) => {
+            console.log(id);
             networkAction(dispatch, this, api.projects.get, id);
         }
     }
@@ -33,6 +27,8 @@ class ProjectsActions {
     }
     update(id, data) {
         return async (dispatch) => {
+            console.log(data);
+            //BrowsersActions.update(data, "custom");
             networkAction(dispatch, this, api.projects.put, id, clone(data));
         }
     }

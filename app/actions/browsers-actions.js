@@ -1,14 +1,16 @@
 import alt from 'utils/alt';
-import api from 'utils/api';
-import {clone, assign, map} from 'lodash';
 import {findItemById} from 'utils/store-utils';
-
-import axios from 'axios';
-import StatusActions from 'actions/status-actions';
 
 class BrowsersActions {
     constructor() {
-
+    }
+    update(browsers, type) {
+    	console.log(browsers, type);
+    }
+    fetchConfig() {
+    	const projectStore = alt.stores.ProjectsStore.state;
+    	const project = findItemById(projectStore.projects, projectStore.currentProjectId);
+    	return project.settings.browsers;
     }
     selectScope(scope) {
         return scope;
