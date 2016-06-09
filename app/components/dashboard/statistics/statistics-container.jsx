@@ -40,7 +40,7 @@ export default class StatisticsContainer extends React.Component {
 			},
 			{
 				title: 'IE',
-				slug: 'IE',
+				slug: 'internet-explorer',
 				version: 10
 			},
 			{

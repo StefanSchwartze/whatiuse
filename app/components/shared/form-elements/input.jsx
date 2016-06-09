@@ -8,7 +8,7 @@ export default class TextInput extends React.Component {
 	static propTypes = {
 		value: React.PropTypes.string,
 		name: React.PropTypes.string.isRequired,
-		title: React.PropTypes.string.isRequired,
+		title: React.PropTypes.string,
 		type: React.PropTypes.string.isRequired,
 		classes: React.PropTypes.string,
 		placeholder: React.PropTypes.string,
@@ -34,10 +34,11 @@ export default class TextInput extends React.Component {
 		// or the server has returned an error message
 		var errorMessage = this.props.getErrorMessage();
 
+		const label = this.props.title ? <label htmlFor={this.props.name}>{this.props.title}</label> : '';
 		return (
-			<div className={className + ' form-group'}>
-				<label htmlFor={this.props.name}>{this.props.title}</label>
-				<input className={classNames('input', this.props.classes)}
+			<div className={classNames(this.props.classes, className, 'form-group')}>
+				{label}
+				<input className="input"
 					ref={this.props.name}
 					placeholder={this.props.placeholder}
 					type={this.props.type}

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 export default class OptionSelect extends React.Component {
 	static propTypes = {
 		name: React.PropTypes.string.isRequired,
-		title: React.PropTypes.string.isRequired,
+		title: React.PropTypes.string,
 		options: React.PropTypes.array.isRequired,
 		classes: React.PropTypes.string,
 		autofocus: React.PropTypes.bool,
@@ -47,11 +47,12 @@ export default class OptionSelect extends React.Component {
 				{option.title}
 			</option>
 		));
+		const label = this.props.title ? <label htmlFor={this.props.name}>{this.props.title}</label> : '';
         return (
-			<div className={className + ' form-group'}>
-				<label htmlFor={this.props.name}>{this.props.title}</label>
+			<div className={classNames(this.props.classes, className, 'form-group select')}>
+				{label}
 				<select 
-					className={classNames('select', this.props.classes)} 
+					className="select"
 					name={this.props.name} 
 					onChange={this.onChange.bind(this)}  
 					value={this.props.selected || this.props.getValue()}>

@@ -34,15 +34,26 @@ a {
 	padding: $spacing-small;
 	border-radius: $border-radius-small;
 	background-color: white;
-	margin-bottom: $spacing-medium;
 	width: 100%;
 	max-width: 320px;
 	outline: none;
-	box-shadow: 0 0 0 1px #ededed;
+	box-shadow: 0 0 0 1px $grey;
 	transition: all .15s;
 	&:focus {
 		box-shadow: 0 0 0 2px #3FAAF2;
 	}
+}
+.form-group {
+	margin-bottom: $spacing-medium;
+	.select {
+		-webkit-appearance: none;
+		border: solid 1px $grey;
+		padding: .5rem;
+		font-size: $font-size-medium; 
+		background: none;
+		width: 100%;
+	}
+
 }
 .button {
 	-webkit-appearance: none;
@@ -78,13 +89,32 @@ a {
 			box-shadow: 0 0 0 2px $red-dark;
 		}
 	}
-	&--close {
+	&--close, &--delete {
 		font-size: $font-size-large;
 		color: $grey-light;
 		padding: 0;
 		margin: 0;
 		&:hover {
 			color: black;
+		}
+	}
+	&--delete {
+		border: solid 1px $grey;
+		width: 40px;
+	}
+	&--browser {
+		border: solid 1px $grey;
+		border-radius: 3px;
+		width: 40px;
+		color: $grey-light;
+		font-size: $font-size-medium;
+		&:hover {
+			color: $black-ninety;
+			border-color: $grey-light;
+		}
+		&.active {
+			background: $grey;
+			color: $black-ninety;
 		}
 	}
 }
@@ -156,12 +186,54 @@ a {
 
 .configurator {
 	color: $black-ninety;
+	.button--add {
+		margin-bottom: $spacing-medium;
+	}
 }
-.field {
+.browser-field {
 	display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
+    margin-bottom: $spacing-medium;
+    .form-group {
+    	display: inline-flex;
+    	flex-direction: column;
+    	margin-bottom: 0;
+    	label {
+    		font-size: $font-size-small;
+    		color: $grey-light;
+    	}
+    	&.select--browser {
+			/*min-width: 50%;*/
+			max-width: 220px;
+    	}
+    	&.select--version {
+    		min-width: 80px;
+    	}
+    	&.input--share {
+    		min-width: 50px;
+    		max-width: 50px;
+    	}
+    }
+    .quick-selector {
+    	display: inherit;
+    	.button {
+    		border-radius: 0;
+	    	&:first-child {
+	    		border-radius: $border-radius-small 0 0 $border-radius-small;
+	    	}
+	    	&:last-child {
+	    		border-radius: 0 $border-radius-small $border-radius-small 0;
+	    	}
+    	}
+    }
+    > * {
+    	margin-right: $spacing-small;
+    	&:last-child {
+    		margin-right: 0;
+    	}
+    }
 }
 
 /*
