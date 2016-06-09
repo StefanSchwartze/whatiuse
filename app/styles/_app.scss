@@ -344,13 +344,14 @@ a {
 		width: 0;
 		position: absolute;
 		pointer-events: none;
-		margin-top: 5px;
+		margin-top: 0px;
 		border-color: transparent;
 		border-bottom-color: #fff;
 		border-width: 20px;
-		margin-left: -50px;
+		margin-left: -20px;
 		transition: margin .25s;
 		z-index: 2;
+		left: 50%;
 	}
 	&.active {
 		&:after {
