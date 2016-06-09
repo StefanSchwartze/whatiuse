@@ -54,13 +54,16 @@ class PagesActions {
             this.checking(page._id);
 
             try {
-                let browsers = alt.stores.BrowsersStore.state.browsers.global;
+                const store = alt.stores.BrowsersStore.state;
+                const type = store.currentScope;
+                const browsers = store.browsers[type];
                 const response = await axios.post('/check', { url: page.url, browsers: browsers });
 
-                let snapshot = {
+                const snapshot = {
                     pageSupport: response.data.pageSupport,
                     elementCollection: response.data.elementCollection, 
-                    browserCollection: browsers
+                    browserCollection: browsers,
+                    type: type
                 }
 
                 page.snapshots.push(snapshot);

@@ -17,7 +17,8 @@ const PageSchema = new mongoose.Schema({
 			count: 	Number,
 			impact: Number,
 			message: String
-		}]
+		}],
+		scope: String
 	}],
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
