@@ -84,8 +84,8 @@ export default class Browserfield extends React.Component {
 					name={"share" + index}
 					type="text"
 					required={true}
-					validations={"isFloat", "isExisty"}
-					validationError={'Must be a valid number'} 
+					validations={"isFloat", "isExisty", "isMoreThan:0", "isLessThanAllofType:share"}
+					validationError={'Must be a valid number; Sum must not be greater than 100'} 
 				/>
 				<button className="icon-close button button--delete" onClick={this.remove.bind(this)}></button>
 			</div>

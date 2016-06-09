@@ -39,8 +39,12 @@ a {
 	outline: none;
 	box-shadow: 0 0 0 1px $grey;
 	transition: all .15s;
-	&:focus {
-		box-shadow: 0 0 0 2px #3FAAF2;
+}
+.input, .select, .button {
+	&:focus, &:active {
+		box-shadow: 0 0 0 1px #3FAAF2;
+		z-index: 1;
+		outline: 0;
 	}
 }
 .form-group {
