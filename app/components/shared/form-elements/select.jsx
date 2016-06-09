@@ -28,6 +28,9 @@ export default class OptionSelect extends React.Component {
             this.props.onChange(e.target.value);
         }
     }
+    componentDidUpdate(prevProps, prevState) {
+		//this.props.setValue(this.props.selected);
+    }
 	render() {
 		// Set a specific className based on the validation
 		// state of this component. showRequired() is true

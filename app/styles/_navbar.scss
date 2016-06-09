@@ -3,7 +3,7 @@
 	box-shadow: 0 0 14px -3px $grey-dark;
 	background-color: $black-ninety;
 	color: white;
-	z-index: 1;
+	z-index: 2;
 	position: relative;
 }
 .nav-list {
@@ -16,6 +16,21 @@
 	align-items: center;
 	.nav-list-item {
 		display: inline-block;
+		&.withOverlay.active:after{
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+			margin-top: 10px;
+			border-color: transparent;
+			border-bottom-color: #fff;
+			border-width: 20px;
+			margin-left: -50px;
+			transition: margin .25s;
+			z-index: 10;
+		}
 	}
 }
 .toggle {

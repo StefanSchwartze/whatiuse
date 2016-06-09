@@ -2,6 +2,7 @@ import React from 'react';
 import Modal, {closeStyle} from 'simple-react-modal';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import {Link} from 'react-router';
+import Tooltip from 'rc-tooltip';
 import classnames from 'classnames';
 import { findItemById } from 'utils/store-utils';
 
@@ -115,26 +116,36 @@ export default class Navbar extends React.Component {
 									)
 								}
 								</div>
-								<Modal 
-									transitionSpeed={250}
-									className="modal"
-									containerClassName={classnames('animate', 'modal-container', 'modal-container--wide', 'checked')}
-									closeOnOuterClick={true}
-									show={this.state.showModal}
-									onClose={this.closeModal.bind(this)} >
-									<div className="modal-head">
-										<span>Configurator</span>
-										<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
-									</div>
-									<Configurator 
-										currentProject={findItemById(this.props.projects, this.props.currentProjectId)} 
-										browsers={this.props.browsers.custom} 
-										agents={this.props.agents} 
-										onSend={this.closeModal.bind(this)} 
-									/>
-								</Modal>
 							</li>
-							<li className="nav-list-item" onClick={this.showModal.bind(this)}>Settings</li>
+							<Tooltip 
+								overlayClassName="tooltip--local"
+								visible={this.state.showModal}
+								placement="bottom"
+								mouseEnterDelay={0}
+								mouseLeaveDelay={0}
+								destroyTooltipOnHide={true}
+								overlay={
+									<div className="modal-container modal-container--wide">
+										<div className="modal-head">
+											<span>Add new project</span>
+											<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
+										</div>
+										<Configurator 
+											currentProject={findItemById(this.props.projects, this.props.currentProjectId)} 
+											browsers={this.props.browsers.custom} 
+											agents={this.props.agents} 
+											onSend={this.closeModal.bind(this)} 
+										/>
+									</div>
+								}
+							>
+								<li 
+									className={classnames('nav-list-item withOverlay', this.state.showModal ? 'active' : '')} 
+									onClick={this.showModal.bind(this)}
+								>
+									<span>Settings</span>
+								</li>
+					        </Tooltip>
 							<li className="nav-list-item" onClick={this.logout.bind(this)}>
 								<a href="#" className="link">Logout</a>
 							</li>

@@ -20,7 +20,8 @@ export default class ElementsList extends React.Component {
 			<div className="elements-list">
 				{this.props.elements && this.props.elements.sort((a, b) => b[this.props.orderProp] - a[this.props.orderProp]).map((item, index) =>
 					<div className="pile" key={index}>
-						<Tooltip 
+						<Tooltip
+							overlayClassName="tooltip--simple"
 							placement="top"
 							mouseEnterDelay={0}
 							mouseLeaveDelay={0}

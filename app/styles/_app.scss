@@ -159,6 +159,10 @@ a {
 	background: rgba(0, 0, 0, 0.45);
 	z-index: 1;
 	transition: opacity .1s;
+	.modal-container {
+		top: 50%;
+		transform: translateY(-50%);
+	}
 }
 .modal-container {
 	display: block;
@@ -168,8 +172,6 @@ a {
 	background: white;
 	border-radius: $border-radius-small;
 	padding: $spacing-small;
-	top: 50%;
-	transform: translateY(-50%);
 	box-shadow: 0 0 14px 0px $grey-dark;
 	max-width: 100%;
 	&--wide {
@@ -336,20 +338,19 @@ a {
 		}	
 	}
 	&:after{
-		top: 100%;
-		left: 50%;
 		border: solid transparent;
 		content: " ";
 		height: 0;
 		width: 0;
 		position: absolute;
 		pointer-events: none;
-		margin-top: 0px;
+		margin-top: 5px;
 		border-color: transparent;
 		border-bottom-color: #fff;
 		border-width: 20px;
-		margin-left: -20px;
+		margin-left: -50px;
 		transition: margin .25s;
+		z-index: 2;
 	}
 	&.active {
 		&:after {
@@ -525,46 +526,40 @@ a {
 /*
 *	Component: Tooltip
 */
+.tooltip--simple {
+	-webkit-filter: drop-shadow(4px 10px 15px rgba(0,0,0,.25));
+	margin-top: -20px;
+	.rc-tooltip-inner {
+		background: white;
+		color: $black-ninety;
+		padding: $spacing-small;
+		border-radius: $border-radius-small;
+	}
+	.rc-tooltip-arrow {
+		border-top-color: white !important;
+		bottom: -10px !important;
+		border-width: 10px 10px 0 !important;
+		margin-left: -10px;
+	}
+}
+.tooltip--local {
+	.rc-tooltip-inner {
+		margin-top: 25px;
+	}
+	.rc-tooltip-arrow {
+		display: none;
+	}
+}
 .rc-tooltip {
   position: absolute;
-  z-index: 1070;
+  z-index: 1;
   display: block;
   visibility: visible;
-  font-size: 12px;
-  line-height: 1.5;
-  opacity: 0.9;
 }
 .rc-tooltip-hidden {
   display: none;
 }
-.rc-tooltip-placement-top,
-.rc-tooltip-placement-topLeft,
-.rc-tooltip-placement-topRight {
-  padding: 5px 0 9px 0;
-}
-.rc-tooltip-placement-right,
-.rc-tooltip-placement-rightTop,
-.rc-tooltip-placement-rightBottom {
-  padding: 0 5px 0 9px;
-}
-.rc-tooltip-placement-bottom,
-.rc-tooltip-placement-bottomLeft,
-.rc-tooltip-placement-bottomRight {
-  padding: 9px 0 5px 0;
-}
-.rc-tooltip-placement-left,
-.rc-tooltip-placement-leftTop,
-.rc-tooltip-placement-leftBottom {
-  padding: 0 9px 0 5px;
-}
 .rc-tooltip-inner {
-  padding: 8px 10px;
-  color: #fff;
-  text-align: left;
-  text-decoration: none;
-  background-color: black;
-  border-radius: 6px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
   min-height: 34px;
 }
 .rc-tooltip-arrow {
