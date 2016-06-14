@@ -127,7 +127,7 @@ export default class Navbar extends React.Component {
 								overlay={
 									<div className="modal-container modal-container--wide">
 										<div className="modal-head">
-											<span>Add new project</span>
+											<span>Configurator</span>
 											<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 										</div>
 										<Configurator 
