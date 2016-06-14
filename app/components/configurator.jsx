@@ -2,6 +2,7 @@ import React from 'react';
 import { Form } from 'formsy-react';
 import Browserfields from 'components/shared/form-elements/browser-fields';
 import ProjectActions from 'actions/projects-actions';
+import BrowserActions from 'actions/browsers-actions';
 
 export default class Configurator extends React.Component {
 	static propTypes = {
@@ -51,6 +52,7 @@ export default class Configurator extends React.Component {
 		
 		project.settings.browsers = models;
 		ProjectActions.update(project._id, project);
+		BrowserActions.update('custom', models);
 		if(this.props.onSend) {
 			this.props.onSend();
 		}

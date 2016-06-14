@@ -4,8 +4,8 @@ import {findItemById} from 'utils/store-utils';
 class BrowsersActions {
     constructor() {
     }
-    update(browsers, type) {
-    	console.log(browsers, type);
+    update(type, browsers) {
+    	return { browsers: browsers, type: type };
     }
     fetchConfig() {
     	const projectStore = alt.stores.ProjectsStore.state;

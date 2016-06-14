@@ -25,9 +25,11 @@ module.exports = function evaluate(args) {
 		let limit = limitstream(1e6);
 		let features = prune();
 
+		browsers = browsers.map((obj) => obj.version ? (obj.name + ' ' + obj.version) : obj.name);
+
 		streams = streams.concat([
 			limit,
-			doiuse({ browsers: browsers.map((obj) => obj.name), skipErrors: true }, url.trim().length ? url : 'pasted content')
+			doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
 			.on('warning', function (warn) { 
 				errorsAndWarnings.push(warn) 
 			}),
@@ -130,9 +132,9 @@ module.exports = function evaluate(args) {
 		        forEach(browserset, function(browser, key) {
 		            forEach(browser.versions, function(value, key) {
 		                let obje = find(browsersWithPercentages, function(o) {
-		                    return o.name === browser.alias + ' ' + value; 
+		                    return (o.name === browser.alias + ' ' + value) || (o.name === browser.alias); 
 		                });
-		                sum += obje.share;
+		                sum += parseFloat(obje.share);
 		            })
 		        })
 

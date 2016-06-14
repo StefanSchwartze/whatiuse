@@ -110,6 +110,11 @@ class BrowsersStore {
 	onSelectScope(scope) {
 		this.currentScope = scope;
 	}
+	onUpdate(data) {
+		let newBrowsers = this.browsers;
+		newBrowsers[data.type] = data.browsers;
+		assign(this.browsers, newBrowsers);
+	}
 }
 
 module.exports = (alt.createStore(BrowsersStore));
