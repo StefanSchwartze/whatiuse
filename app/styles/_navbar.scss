@@ -27,19 +27,26 @@
 			border-color: transparent;
 			border-bottom-color: #fff;
 			border-width: 20px;
-			margin-left: -50px;
+			margin-left: -30px;
 			transition: margin .25s;
 			z-index: 10;
 		}
 	}
 }
 .toggle {
+	display: flex;
 	.toggle-button {
 		border: solid 1px white;
 		display: inline-block;
 		cursor: pointer;
 		padding: $spacing-extra-small $spacing-small;
 		text-transform: capitalize;
+		display: inline-flex;
+		align-items: center;
+		vertical-align: center;
+		> :first-child {
+			margin-right: $spacing-small;
+		}
 		&.active {
 			background: white;
 			color: $black-ninety;

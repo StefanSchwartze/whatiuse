@@ -112,7 +112,7 @@ export default class Navbar extends React.Component {
 									(item, key) => 
 									<div key={key}
 										className={classnames('toggle-button', this.props.browserScope == item ? 'active' : '')}
-										onClick={this.selectBrowserScope.bind(this, item)}>{item}</div>
+										onClick={this.selectBrowserScope.bind(this, item)}><span className={"icon-" + item}></span> {item}</div>
 									)
 								}
 								</div>
@@ -143,7 +143,7 @@ export default class Navbar extends React.Component {
 									className={classnames('nav-list-item withOverlay', this.state.showModal ? 'active' : '')} 
 									onClick={this.showModal.bind(this)}
 								>
-									<span>Settings</span>
+									<span className="icon-settings"></span>
 								</li>
 					        </Tooltip>
 							<li className="nav-list-item" onClick={this.logout.bind(this)}>
