@@ -6,6 +6,8 @@ import Tooltip from 'rc-tooltip';
 import classnames from 'classnames';
 import { findItemById } from 'utils/store-utils';
 
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import Dropzone from 'react-dropzone';
 import Configurator from './configurator';
 import ProjectForm from './shared/forms/project-form';
 
@@ -126,16 +128,36 @@ export default class Navbar extends React.Component {
 								destroyTooltipOnHide={true}
 								overlay={
 									<div className="modal-container modal-container--wide">
+
+
 										<div className="modal-head">
-											<span>Configurator</span>
+											<span>Browser settings</span>
 											<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 										</div>
-										<Configurator 
-											currentProject={findItemById(this.props.projects, this.props.currentProjectId)} 
-											browsers={this.props.browsers.custom} 
-											agents={this.props.agents} 
-											onSend={this.closeModal.bind(this)} 
-										/>
+										<Tabs
+											onSelect={this.handleSelect}
+											selectedIndex={0}
+										>
+											<TabList>
+												<Tab>Configurator</Tab>
+												<Tab>Upload</Tab>
+											</TabList>
+											<TabPanel>
+												<Configurator 
+													currentProject={findItemById(this.props.projects, this.props.currentProjectId)} 
+													browsers={this.props.browsers.custom} 
+													agents={this.props.agents} 
+													onSend={this.closeModal.bind(this)} 
+												/>
+											</TabPanel>
+											<TabPanel>
+												<Dropzone className="dropzone-container" onDrop={this.onDrop}>
+													<div className="dropzone-content">
+														<p>Try dropping some files here, or click to select files to upload.</p>
+													</div>
+												</Dropzone>
+											</TabPanel>
+										</Tabs>
 									</div>
 								}
 							>
@@ -147,7 +169,7 @@ export default class Navbar extends React.Component {
 								</li>
 					        </Tooltip>
 							<li className="nav-list-item" onClick={this.logout.bind(this)}>
-								<a href="#" className="link">Logout</a>
+								<a href="#" className="link"><span className="icon-enter"></span></a>
 							</li>
 							{busyComponent}
 						</ul>

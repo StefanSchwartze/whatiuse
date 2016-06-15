@@ -88,6 +88,7 @@
     "react-hot-loader": "^1.2.7",
     "react-mixin": "^1.5.0",
     "react-router": "^0.13.3",
+    "react-tabs": "^0.5.5",
     "recharts": "^0.10.1",
     "request": "^2.72.0",
     "restful.js": "git://github.com/tomaash/restful.js.git",

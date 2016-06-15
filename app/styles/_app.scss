@@ -474,6 +474,21 @@ a {
 }
 
 /*
+*	Component: Dropzone
+*/
+
+.dropzone-container {
+	width: 100%;
+	min-height: 200px;
+	border: dashed 2px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+/*
 *	Component: Chartcontainer
 */
 .charts-container {
