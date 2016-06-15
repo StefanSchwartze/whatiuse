@@ -64,7 +64,10 @@ export default class StatisticsContainer extends React.Component {
 
 			if(page.snapshots.length > 1) {
 				timeline = <div className="history-container">
-								<p className="label">Timeline</p>
+								<div className="description">
+									<span>Timeline</span>
+									<p>Last check: {page.snapshots[page.snapshots.length - 1].captured}</p>
+								</div>
 								<HistoryTooltip/>
 								<div className="chart">
 									<ResponsiveContainer>
@@ -79,11 +82,17 @@ export default class StatisticsContainer extends React.Component {
 
 			pageElem = 	<div>
 						{timeline}
-						<p>Most used elements:</p>
+						<div className="description">
+							<p>Most used elements:</p>
+						</div>
 						<ElementsList elements={elements} orderProp="count" />
-						<p>Most crashing elements:</p>
+						<div className="description">
+							<p>Most crashing elements:</p>
+						</div>
 						<ElementsList elements={elements} orderProp="impact" unit="%" />
-						<p>Your site works out of the box with:</p>
+						<div className="description">
+							<p>Your site works out of the box with:</p>
+						</div>
 						<BrowsersList browsers={browsers} />
 						<div className="charts-container">
 							<div className="chart-container">

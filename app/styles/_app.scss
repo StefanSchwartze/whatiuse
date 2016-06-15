@@ -145,6 +145,13 @@ a {
 		background-color: white;
 	}
 }
+.description {
+	color: $grey-dark;
+	margin: 0 0 $spacing-small 0;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
 
 
 /*
@@ -352,6 +359,7 @@ a {
 		transition: margin .25s;
 		z-index: 2;
 		left: 50%;
+		top: 100%;
 	}
 	&.active {
 		&:after {
@@ -490,13 +498,12 @@ a {
 	display: flex;
 	align-items: flex-start;
 	flex-direction: column;
-	.label {
-		/*color: $grey-dark;*/
-		margin: 0 0 $spacing-small 0;
-	}
 	.chart {
 		width: 100%;
 		height: 40px;
+		padding: $spacing-small;
+		background: $grey;
+		border-radius: $border-radius-small;
 	}
 }
 /*
