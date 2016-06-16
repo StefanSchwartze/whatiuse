@@ -7,8 +7,8 @@ import classnames from 'classnames';
 import { findItemById } from 'utils/store-utils';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import Dropzone from 'react-dropzone';
 import Configurator from './configurator';
+import Uploader from './uploader';
 import ProjectForm from './shared/forms/project-form';
 
 import StatusStore from 'stores/status-store';
@@ -151,11 +151,9 @@ export default class Navbar extends React.Component {
 												/>
 											</TabPanel>
 											<TabPanel>
-												<Dropzone className="dropzone-container" onDrop={this.onDrop}>
-													<div className="dropzone-content">
-														<p>Try dropping some files here, or click to select files to upload.</p>
-													</div>
-												</Dropzone>
+												<Uploader
+													onSend={this.closeModal.bind(this)}
+												/>	
 											</TabPanel>
 										</Tabs>
 									</div>

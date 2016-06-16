@@ -20,6 +20,7 @@ import config from "./config/init";
 import generateApi from "./restable/lib";
 
 import evaluate from "./utils/features";
+import normalizeBrowsers from "./utils/normalize-browsers";
 import browserslist from "browserslist";
 
 import urlToImage from "url-to-image";
@@ -197,6 +198,25 @@ import Project from "./models/project";
 	app
 		.use(imageRouter.routes())
 		.use(imageRouter.allowedMethods());
+
+	var uploadRouter = koaRouter();
+
+	uploadRouter.post("/browsers/validate", function*() {
+
+		this.set({
+			'Content-Type' : 'application/json',
+			'Access-Control-Allow-Origin' : '*'
+		});
+
+		let data = yield normalizeBrowsers(this.request.body.browsers);
+		this.status = 200;
+		this.body = { message: "Browsers evaluated successfully!", browsers: data };
+
+	});
+
+	app
+		.use(uploadRouter.routes())
+		.use(uploadRouter.allowedMethods());
 		
 app.use(router);
 var port = process.env.PORT || config.port || 3000;

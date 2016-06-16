@@ -47,6 +47,11 @@ a {
 		outline: 0;
 	}
 }
+.strong {
+	font-weight: bold;
+	color: $black-ninety;
+	cursor: pointer;
+}
 .form-group {
 	margin-bottom: $spacing-medium;
 	.select {
@@ -485,8 +490,36 @@ a {
 	align-items: center;
 	text-align: center;
 	justify-content: center;
-	cursor: pointer;
+	margin-bottom: $spacing-medium;
+	border-radius: $border-radius-small;
+	color: $grey-light;
+	&:hover {
+		color: $black-ninety;
+	}
 }
+.dropzone-content {
+	font-size: $font-size-medium;
+	.icon-cloud-upload {
+		font-size: $font-size-xlarge;
+	}
+}
+	.file-tile {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		background: rgba(214, 225, 228, 0.5);
+		padding: $spacing-medium;
+		border-radius: $border-radius-large;
+		.icon-file {
+			font-size: 4rem;
+			margin-right: $spacing-small;
+		}
+		.desc {
+			display: flex;
+			flex-direction: column;
+			text-align: left;
+		}
+	}
 
 /*
 *	Component: Chartcontainer
@@ -515,7 +548,7 @@ a {
 	flex-direction: column;
 	.chart {
 		width: 100%;
-		height: 40px;
+		height: 60px;
 		padding: $spacing-small;
 		background: $grey;
 		border-radius: $border-radius-small;

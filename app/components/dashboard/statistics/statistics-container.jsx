@@ -66,7 +66,7 @@ export default class StatisticsContainer extends React.Component {
 				timeline = <div className="history-container">
 								<div className="description">
 									<span>Timeline</span>
-									<p>Last check: {page.snapshots[page.snapshots.length - 1].captured}</p>
+									<span>Last check: {page.snapshots[page.snapshots.length - 1].captured}</span>
 								</div>
 								<HistoryTooltip/>
 								<div className="chart">
