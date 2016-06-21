@@ -1,4 +1,4 @@
-import { forEach, head } from 'lodash';
+import { forEach, head, values } from 'lodash';
 import { agents } from 'caniuse-db/data';
 
 module.exports = (browsers) => {
@@ -96,6 +96,20 @@ module.exports = (browsers) => {
 		return getVersion(version, getAllValidVersionsFromBrowser(browser));
 	}
 
+	const sumByNameAndVersion = (browsers) => {
+		return values(browsers.reduce(function(prev, current, index, array){
+			const identifier = current.name + current.version;
+			if(!(identifier in prev.result)) {
+				prev.result[identifier] = current;  
+			} 
+			else if(prev.result[identifier]) {
+				prev.result[identifier].share += current.share;
+			}  
+
+		   return prev;
+		},{result: {}}).result);
+	}
+
 	if(head(browsers).count >= 1 || head(browsers).share >= 1) {
 		browsers = calculateShares(browsers);
 	}
@@ -116,8 +130,8 @@ module.exports = (browsers) => {
 	}
 
 	let data = {
-		browsers: validBrowsersList,
-		unknown: unknownBrowsersList
+		browsers: sumByNameAndVersion(validBrowsersList),
+		unknown: sumByNameAndVersion(unknownBrowsersList)
 	}
 	return data;
 }
