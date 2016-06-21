@@ -56,7 +56,7 @@ class PagesActions {
             try {
                 const store = alt.stores.BrowsersStore.state;
                 const scope = store.currentScope;
-                const browsers = store.browsers[scope];
+                const browsers = store.browserscopes[scope].browsers;
                 const response = await axios.post('/check', { url: page.url, browsers: browsers });
                 const snapshot = {
                     pageSupport: response.data.pageSupport,

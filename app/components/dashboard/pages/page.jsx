@@ -52,7 +52,9 @@ export default class Page extends React.Component {
 						{state}
 					</div>
 					<div className="open">
-						<button onClick={this.setActive.bind(this)} className="button button--wide button--strong button--yellow" >Open</button>
+						{
+							!this.props.isActive ? <button onClick={this.setActive.bind(this)} className="button button--wide button--strong button--yellow" >Open</button> : ""
+						}
 						<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >CHECK</button>
 					</div>
 					<div className="title">
