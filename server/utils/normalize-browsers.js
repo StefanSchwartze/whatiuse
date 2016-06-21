@@ -14,6 +14,22 @@ module.exports = (browsers) => {
 			"ios" : 'ios_saf',
 			"apple safari" : 'safari',
 			"safari" : 'safari',
+			"opera" : "opera",
+			"opera mobile" : "op_mob",
+			"opera mini" : "op_mini",
+			"firefox" : "firefox",
+			"mozilla firefox" : "firefox",
+			"internet explorer" : "ie",
+			"microsoft internet explorer" : "ie",
+			"microsoft edge" : "edge",
+			"chrome" : "chrome",
+			"google chrome" : "chrome",
+			"google chrome for android" : "and_chr",
+			"firefox for android" : "and_ff",
+			"firefox mobile" : "and_ff",
+			"open handset alliance android built-in" : "android",
+			"uc browser for android" : "and_uc",
+			"blackberry browser" : "bb"
 		}
 
 		const calculateShares = (browsers) => {
@@ -43,7 +59,7 @@ module.exports = (browsers) => {
 			const getAllValidVersionsFromBrowser = (browser) => {
 				const validVersions = Object.keys(agents[browser].usage_global);
 				let versions = {};
-				
+
 				forEach(validVersions, (version) => {
 					let minusIndex = version.indexOf("-");
 					if(minusIndex > -1) {
