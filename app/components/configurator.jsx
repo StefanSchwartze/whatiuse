@@ -50,7 +50,7 @@ export default class Configurator extends React.Component {
 			models.push(model);
 		}
 		
-		project.settings.browsers = models;
+		project.browserscopes.config.browsers = models;
 		ProjectActions.update(project._id, project);
 		BrowserActions.update('custom', models);
 		if(this.props.onSend) {

@@ -58,7 +58,7 @@ export default class Uploader extends React.Component {
 	render() {
 		let content;
 		let button;
-		let formattedfileSize = function(size) {
+		const formattedfileSize = function(size) {
 			let val;
 			if(size >= 1000000) {
 				return (size / 1000000).toFixed(1) + 'MB';

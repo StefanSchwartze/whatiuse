@@ -3,7 +3,7 @@ import api from 'utils/api';
 import {clone} from 'lodash';
 import {networkAction} from 'utils/action-utils';
 import {findItemById, findItemByTitleAndUrl} from 'utils/store-utils';
-import BrowsersActions from './browsers-actions';
+//import BrowsersActions from './browsers-actions';
 import StatusActions from './status-actions';
 
 class ProjectsActions {
@@ -28,7 +28,6 @@ class ProjectsActions {
     }
     update(id, data) {
         return async (dispatch) => {
-            console.log(data);
             //BrowsersActions.update(data, "custom");
             networkAction(dispatch, this, api.projects.put, id, clone(data));
         }

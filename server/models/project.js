@@ -7,8 +7,14 @@ const ProjectSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'user'
 	},
-	settings: {
-		browsers: []
+	browserscopes: {
+		config: {
+			browsers: []
+		},
+		fdx: {
+			browsers: [],
+			unknown: []
+		}
 	}
 });
 

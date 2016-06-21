@@ -40,7 +40,7 @@ export default class Navbar extends React.Component {
 		return {
 			status: StatusStore.getState(),
 			browserScope: BrowsersStore.getState().currentScope,
-			browsers: BrowsersStore.getState().browsers,
+			browserscopes: BrowsersStore.getState().browserscopes,
 			agents: BrowsersStore.getState().agents,
 			projects: ProjectsStore.getState().projects,
 			currentProjectId: ProjectsStore.getState().currentProjectId
@@ -48,7 +48,7 @@ export default class Navbar extends React.Component {
 	}
 	componentDidMount() {
 		ProjectActions.fetch();
-		ProjectActions.get('5756be4c57ce5aef23861c7d');
+		ProjectActions.get('576922ea9fbb95093996d29b');
 	}
 	retry() {
 		StatusActions.retry();
@@ -68,6 +68,9 @@ export default class Navbar extends React.Component {
 	}
 	closeProjectModal(){
 		this.setState({showProjectModal: false})
+	}
+	handleTabSelect(index) {
+		this.setState({tabIndex: index})
 	}
 	render() {
 		let errorComponent;
@@ -110,7 +113,7 @@ export default class Navbar extends React.Component {
 							</li>
 							<li className="nav-list-item">
 								<div className="toggle">
-								{this.props.browsers && Object.keys(this.props.browsers).map(
+								{this.props.browserscopes && Object.keys(this.props.browserscopes).map(
 									(item, key) => 
 									<div key={key}
 										className={classnames('toggle-button', this.props.browserScope == item ? 'active' : '')}
@@ -135,8 +138,8 @@ export default class Navbar extends React.Component {
 											<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 										</div>
 										<Tabs
-											onSelect={this.handleSelect}
-											selectedIndex={0}
+											onSelect={this.handleTabSelect.bind(this)}
+											selectedIndex={this.state.tabIndex}
 										>
 											<TabList>
 												<Tab>Configurator</Tab>
@@ -145,7 +148,7 @@ export default class Navbar extends React.Component {
 											<TabPanel>
 												<Configurator 
 													currentProject={findItemById(this.props.projects, this.props.currentProjectId)} 
-													browsers={this.props.browsers.custom} 
+													browsers={this.props.browserscopes.custom.browsers} 
 													agents={this.props.agents} 
 													onSend={this.closeModal.bind(this)} 
 												/>

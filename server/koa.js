@@ -208,7 +208,7 @@ import Project from "./models/project";
 			'Access-Control-Allow-Origin' : '*'
 		});
 
-		let data = yield normalizeBrowsers(this.request.body.browsers);
+		let data = normalizeBrowsers(this.request.body.browsers);
 		this.status = 200;
 		this.body = { message: "Browsers evaluated successfully!", browsers: data };
 
