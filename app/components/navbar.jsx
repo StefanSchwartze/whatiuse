@@ -79,8 +79,6 @@ export default class Navbar extends React.Component {
 		this.setState({tabIndex: index})
 	}
 	render() {
-		console.log(this.props.browserscopes);
-		console.log(this.props.browserScope);
 		let errorComponent;
 		let retryComponent;
 		let busyComponent;
