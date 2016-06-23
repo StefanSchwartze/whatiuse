@@ -16,7 +16,8 @@ export default class App extends React.Component {
   }
   render() {
     var navbar;
-    if (this.getPathname() !== '/login') {
+    if (this.getPathname() !== '/login' &&
+        this.getPathname() !== '/projects') {
       navbar = <Navbar />;
     }
     return (

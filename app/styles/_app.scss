@@ -158,6 +158,24 @@ a {
 	width: 100%;
 }
 
+/*
+*	Project-list component
+*/
+.projects-list {
+	max-width: 320px;
+	border: solid 1px #efefef;
+	margin: auto;
+	border-radius: $border-radius-large;
+	-webkit-filter: drop-shadow(0 2px 29px rgba(0,0,0,.5));
+	background: white;
+	.project {
+		padding: $spacing-medium;
+		border-bottom: solid 1px $grey;
+		> * {
+			margin: 0;
+		}
+	}
+}
 
 /*
 *	Modal component
