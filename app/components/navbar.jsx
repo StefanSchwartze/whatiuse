@@ -63,16 +63,24 @@ export default class Navbar extends React.Component {
 		BrowserActions.fetchConfig();
 		this.setState({showModal: true})
 	}
+	showBrowserModal(){
+		this.setState({showBrowserModal: true})
+	}
 	closeModal(){
 		this.setState({showModal: false})
 	}
 	closeProjectModal(){
 		this.setState({showProjectModal: false})
 	}
+	closeBrowserModal(){
+		this.setState({showBrowserModal: false})
+	}
 	handleTabSelect(index) {
 		this.setState({tabIndex: index})
 	}
 	render() {
+		console.log(this.props.browserscopes);
+		console.log(this.props.browserScope);
 		let errorComponent;
 		let retryComponent;
 		let busyComponent;
@@ -111,6 +119,40 @@ export default class Navbar extends React.Component {
 									<ProjectForm onSend={this.closeProjectModal.bind(this)} />
 								</Modal>
 							</li>
+							<Tooltip 
+								overlayClassName="tooltip--local"
+								visible={this.state.showBrowserModal}
+								placement="bottom"
+								mouseEnterDelay={0}
+								mouseLeaveDelay={0}
+								destroyTooltipOnHide={true}
+								overlay={
+									<div className="modal-container">
+
+
+										<div className="modal-head">
+											<span>Browser set</span>
+											<button className="icon-close button button--close" onClick={this.closeBrowserModal.bind(this)}></button>
+										</div>
+										<div className="">
+											{this.props.browserscopes[this.props.browserScope] && this.props.browserscopes[this.props.browserScope].browsers.map(
+												(item, key) => 
+												<div key={key}>
+													{item.name} | {item.version} | {item.share}
+												</div>
+												)
+											}
+										</div>
+									</div>
+								}
+							>
+								<li 
+									className={classnames('nav-list-item withOverlay', this.state.showBrowserModal ? 'active' : '')} 
+									onClick={this.showBrowserModal.bind(this)}
+								>
+									Browsers
+								</li>
+					        </Tooltip>
 							<li className="nav-list-item">
 								<div className="toggle">
 								{this.props.browserscopes && Object.keys(this.props.browserscopes).map(
