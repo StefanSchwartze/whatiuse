@@ -80,43 +80,6 @@ class PagesActions {
         this.update(snapshot.pageId, page);
         return {ok: true, id: page._id, data: snapshot};
     }
-    checkURL(page) {
-
-        return async (dispatch) => {
-    
-            StatusActions.started();
-            this.checking(page._id);
-
-            try {
-                const store = alt.stores.BrowsersStore.state;
-                const scope = store.currentScope;
-                const browsers = store.browserscopes[scope].browsers;
-
-
-                const response = await axios.post('/check', { url: page.url, browsers: browsers });
-                const snapshot = {
-                    pageSupport: response.data.pageSupport,
-                    elementCollection: response.data.elementCollection, 
-                    browserCollection: browsers,
-                    scope: scope
-                }
-
-                page.snapshots.push(snapshot);
-                page.latestSupport = response.data.pageSupport;
-                this.update(page._id, page);
-
-                dispatch({ok: true, id: page._id, data: snapshot});
-            } catch (err) {
-                console.error(err);
-                dispatch({ok: false, error: err.data});
-            }
-
-            this.checked(page._id);
-            StatusActions.done();
-
-        }
-
-    }
 }
 
 module.exports = (alt.createActions(PagesActions));

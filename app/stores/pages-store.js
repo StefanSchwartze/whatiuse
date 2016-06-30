@@ -45,11 +45,6 @@ class PagesStore {
 			this.currentPageId = id;
 		}
 	}
-	onCheckURL(data) {
-	}
-	onTriggerURLCheck(data) {
-		console.log('Currently checking a page!');
-	}
 	onChecking(id) {
 		let page = findItemById(this.pages, id);
 		page.isChecking = true;
@@ -63,9 +58,7 @@ class PagesStore {
 	onCreateBackground(data) {
 	}
 	onProgress(data) {
-		console.log(data);
 		let page = findItemById(this.pages, data.pageId);
-		//console.log(page);
 		page.progress = data.progress;
 		assign(findItemById(this.pages, data.pageId), page);
 	}

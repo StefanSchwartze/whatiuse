@@ -11,19 +11,23 @@ import { map, flatten, findKey, forEach, find, values, uniq } from 'lodash';
 import getCss from 'get-css';
 import fromString from 'from2-string';
 
-/*
-* options must have `url`.
-*/
 module.exports = function evaluate(args) {
 
 	return new Promise((resolve, reject) => {
 
-		var options = {
-			timeout: 5000
-		};
-
 		const url = args.url || '';
 		let browsers = args.browsers || '';
+			browsers = browsers.map((obj) => obj.version ? (obj.name + ' ' + obj.version) : obj.name);
+		const currentBrowser = browsers[0];
+		const name = currentBrowser.split(' ')[0];
+		const version = currentBrowser.split(' ')[1];
+		const fullName = agents[name].browser + ' ' + version;
+		const options = {
+			timeout: 5000,
+			headers: { 
+				'User-Agent': fullName 
+			}
+		};
 
 		getCss(args.url, options)
 			.then(function(response) {
@@ -34,7 +38,6 @@ module.exports = function evaluate(args) {
 				let limit = limitstream(1e6);
 				let features = prune();
 
-				browsers = browsers.map((obj) => obj.version ? (obj.name + ' ' + obj.version) : obj.name);
 
 				streams = streams.concat([
 					limit,
@@ -90,41 +93,7 @@ module.exports = function evaluate(args) {
 				});
 				finalStream.on('end', (err) => {
 
-					const getMissingBrowserVersions = (features) => {
-			            let browsers = [];
-
-			            for (var i = 0; i < features.length; i++) {
-			                browsers.push.apply(browsers, flatten(features[i].missing));
-			            }
-			            return sumBrowserVersions(browsers);
-			        }
-
-			        const sumBrowserVersions = (browsers) => {
-
-			        	return values(browsers.reduce((prev, current, index, array) => {
-			                if(!(current.alias in prev.result)) {
-			                    prev.result[current.alias] = current;
-			                } 
-			               else if(prev.result[current.alias]) {
-		                        prev.result[current.alias].versions = uniq(prev.result[current.alias].versions.concat(current.versions));
-		                    }
-			               return prev;
-			            },{result: {}}).result);
-			        }
-
-				    const getPercentage = (browserset, browsersWithPercentages) => {
-				        let sum = 0;
-				        forEach(browserset, function(browser, key) {
-				            forEach(browser.versions, function(value, key) {
-				                let obje = find(browsersWithPercentages, function(o) {
-				                    return (o.name === browser.alias + ' ' + value) || (o.name === browser.alias); 
-				                });
-				                if(obje) sum += parseFloat(obje.share);
-				            })
-				        })
-
-				        return sum;
-				    }			
+								
 
 				    const transformBrowserVersion = (features) => {
 
@@ -153,13 +122,10 @@ module.exports = function evaluate(args) {
 
 				    let data = {};
 				    const features = transformBrowserVersion(usageData.features);
-				    data.browserCollection = args.browsers;
-			        data.pageSupport = 100 - getPercentage(getMissingBrowserVersions(features), args.browsers);
-			        data.elementCollection = map(features, (value, prop) => {
+				    data.elementCollection = map(features, (value, prop) => {
 			            let feature = value;
 			            feature.count = usageData.counts[feature.feature];
 			            feature.name = feature.feature;
-			            feature.impact = getPercentage(getMissingBrowserVersions([feature]), args.browsers);
 			            feature.message = feature.message;
 			            return feature;
 			        });
