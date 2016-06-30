@@ -26,17 +26,21 @@ export default class Page extends React.Component {
 		PagesActions.selectPage(this.props.page._id);
 	}
 	checkUrl() {
-		PagesActions.checkURL(this.props.page);
+		PagesActions.triggerURLCheck(this.props.page);
 	}
 	render() {
 		let support = '- %';
 		let state;
+		let progress;
 		if(this.props.page.snapshots && this.props.page.snapshots.length > 0) {
 			support = floor(this.props.page.snapshots[this.props.page.snapshots.length - 1].pageSupport, 2) + '%';
 		}
 		state = <span>{support}</span>;
 		if(this.props.page.isChecking) {
-			state = <span><i className="icon icon-spinner8 animate rotate"></i>Loading…</span>;
+			if(this.props.page.progress) {
+				progress = floor(this.props.page.progress * 100, 1) + '%';
+			}
+			state = <span><i className="icon icon-spinner8 animate rotate"></i>Loading…{progress}</span>;
 		}
 		let preview = this.props.page.imgSrc ? 
 			<img src={this.props.page.imgSrc} width="100%" /> : 

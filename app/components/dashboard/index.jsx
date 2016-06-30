@@ -15,6 +15,10 @@ import {sortBy, orderBy, flatten, reduce, forEach, floor, map, values, head} fro
 import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
 
+
+
+import alt from 'utils/alt';
+
 @authDecorator
 @connectToStores
 export default class Dashboard extends React.Component {
@@ -34,6 +38,19 @@ export default class Dashboard extends React.Component {
 	}
 	componentWillMount() {
 		return PagesActions.fetch();
+	}
+	componentDidMount() {
+		let socket = io.connect();
+		socket.on('connect', function() {
+			console.log('connected!');
+		});
+		socket.on('progress', function(data) {
+			PagesActions.progress({ progress: data.progress, pageId: data.pageId});
+		}); 
+		socket.on('triggerComplete', function(data) {
+			console.log('complete');
+			PagesActions.checkComplete(data.data);
+		});
 	}
 	calcElementSum(pages) {
 		let elementsArray = [];

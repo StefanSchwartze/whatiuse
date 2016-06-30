@@ -11,7 +11,7 @@ import serve from "koa-static";
 import responseTime from "koa-response-time";
 import bodyParser from "koa-bodyparser";
 import koaRouter from "koa-router";
-import {clone, camelCase} from "lodash";
+import {clone, camelCase, flatten, values} from "lodash";
 import http from "http";
 
 import router from "./router";
@@ -155,7 +155,26 @@ import Project from "./models/project";
 			'Access-Control-Allow-Origin' : '*'
 		});
 
-		let data = yield evaluate({ url : this.request.body.url, browsers: this.request.body.browsers });
+		let doit = (item, index) => {
+			return new Promise((resolve, reject) => {
+				resolve('hihihihi' + item);
+			});
+		}
+
+		// map over forEach since it returns
+		var items = this.request.body.browsers;
+		var actions = items.map(doit); // run the function over all items.
+
+		// we now have a promises array and we want to wait for it
+		var results = Promise.all(actions); // pass array of promises
+
+		results.then(data => {// or just .then(console.log)
+			console.log('Result: ', data); // [2, 4, 6, 8, 10]
+
+			//resolve(data);
+		});
+
+		let data = yield evaluate({ url : this.request.body.url, browsers: [this.request.body.browsers[0]] });
 		
 		this.body = data;
 
@@ -219,8 +238,75 @@ import Project from "./models/project";
 		.use(uploadRouter.allowedMethods());
 		
 app.use(router);
-var port = process.env.PORT || config.port || 3000;
+
 var server = http.createServer(app.callback());
+var io = require('socket.io')(server);
+
+io.on('connection', function(socket){
+
+	socket.on('triggerURL', function (data) {
+
+		const url = data.url;
+		const id = data.id;
+		let browsers = data.browsers;
+		//browsers.length = 3;
+		let progress = 0;
+
+    	const doit = (item, index, that) => {
+			return new Promise((resolve, reject) => {
+				evaluate({ url : url, browsers: [item] }).then(function(results) {
+					console.log('Done..');
+					io.emit('progress', { progress: (++progress) / that.length, pageId: id });
+					resolve(results);
+				});
+			});
+		}
+
+		Promise.all(browsers.map(doit)).then(data => {
+			console.log('Ready..');
+			let elementCollection = [];
+			for (var i = 0; i < data.length; i++) {
+				elementCollection.push(data[i].elementCollection);
+			}
+			let newElems = flatten(elementCollection);
+
+			const sumObjectArrayByProp = (array, reduceProp, unifiedProp) => {
+				let newArray = values(array.reduce((prev, current, index, array) => {
+	                if(!(current[reduceProp] in prev.result)) {
+	                    prev.result[current[reduceProp]] = current;
+	                }
+					else if(prev.result[current[reduceProp]]) {
+						if(typeof prev.result[current[reduceProp]] === "object") {
+							prev.result[current[reduceProp]][unifiedProp] = prev.result[current[reduceProp]][unifiedProp].concat(current[unifiedProp]);
+						}
+					}
+	               return prev;
+	            },{result: {}}).result);
+
+
+				return newArray;
+			}
+
+			let elements = sumObjectArrayByProp(newElems, 'feature', 'missing', 'array');
+
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].missing = sumObjectArrayByProp(elements[i].missing, 'alias', 'versions');
+			}
+
+			let send = {
+				elementCollection: elements,
+				browserCollection: browsers,
+				pageSupport: 50,
+				pageId: id
+			}
+
+			io.emit('triggerComplete', { data: send });
+		});
+	});
+
+});
+
+var port = process.env.PORT || config.port || 3000;
 
 server.listen(port);
 

@@ -3,11 +3,24 @@ import {assign, map} from 'lodash';
 import {findItemById, findIndexById} from 'utils/store-utils';
 import PagesActions from 'actions/pages-actions';
 
+if(!process.env.BROWSER) {
+	var socket = require('socket.io-client')('http://localhost');
+} else {
+	var socket = io();
+}
+
 class PagesStore {
 	constructor() {
 		this.bindActions(PagesActions);
 		this.pages = [];
 		this.currentPageId = 'all';
+		socket.on('connect', () => {
+			console.log('Uhh, connected!');
+			/*socket.on('progress', (data) => {
+				console.log(data);
+				//this.onProgress(data.progress, data.id);
+			});*/
+		});
 	}
 	onAdd(item) {
 		this.pages.push(item);
@@ -34,6 +47,9 @@ class PagesStore {
 	}
 	onCheckURL(data) {
 	}
+	onTriggerURLCheck(data) {
+		console.log('Currently checking a page!');
+	}
 	onChecking(id) {
 		let page = findItemById(this.pages, id);
 		page.isChecking = true;
@@ -45,6 +61,13 @@ class PagesStore {
 		assign(findItemById(this.pages, id), page);
 	}
 	onCreateBackground(data) {
+	}
+	onProgress(data) {
+		console.log(data);
+		let page = findItemById(this.pages, data.pageId);
+		//console.log(page);
+		page.progress = data.progress;
+		assign(findItemById(this.pages, data.pageId), page);
 	}
 }
 

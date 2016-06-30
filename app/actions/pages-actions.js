@@ -8,9 +8,15 @@ import {agents} from 'utils/user-agents';
 import axios from 'axios';
 import StatusActions from 'actions/status-actions';
 
+if(!process.env.BROWSER) {
+    var socket = require('socket.io-client')('http://localhost');
+} else {
+    var socket = io();
+}
+
 class PagesActions {
     constructor() {
-        this.generateActions('removeCurrent', 'selectPage', 'checking', 'checked');
+        this.generateActions('removeCurrent', 'selectPage', 'checking', 'checked', 'progress');
     }
     fetch() {
         return async (dispatch) => {
@@ -46,6 +52,34 @@ class PagesActions {
             this.update(page._id, page);
         }
     }
+    triggerURLCheck(page) {
+        return async (dispatch) => {
+            StatusActions.started();
+            this.checking(page._id);
+
+            const store = alt.stores.BrowsersStore.state;
+            const scope = store.currentScope;
+            const browsers = store.browserscopes[scope].browsers;
+
+            socket.emit('triggerURL', { url: page.url, browsers: browsers, id: page._id }, function (err) {
+                    if (err) {
+                        console.error('Error deleting user:', err);
+                        dispatch({ok: false, err: err});
+                    } else {
+                        dispatch({ok: true, id: page._id});
+                    }
+                }.bind(this)
+            );
+        }
+    }
+    checkComplete(snapshot) {
+        this.checked(snapshot.pageId);
+        let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId)
+        page.snapshots.push(snapshot);
+        page.latestSupport = snapshot.pageSupport;
+        this.update(snapshot.pageId, page);
+        return {ok: true, id: page._id, data: snapshot};
+    }
     checkURL(page) {
 
         return async (dispatch) => {
@@ -57,6 +91,8 @@ class PagesActions {
                 const store = alt.stores.BrowsersStore.state;
                 const scope = store.currentScope;
                 const browsers = store.browserscopes[scope].browsers;
+
+
                 const response = await axios.post('/check', { url: page.url, browsers: browsers });
                 const snapshot = {
                     pageSupport: response.data.pageSupport,
