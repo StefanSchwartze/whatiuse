@@ -76,11 +76,11 @@ export default class Configurator extends React.Component {
 						data={fields} 
 						onRemove={this.removeField.bind(this)} />
 					<button 
-						className="button button--wide button--yellow button--add" 
+						className="button button--wide button--accent button--add" 
 						onClick={this.addField.bind(this)}>+ Add browser</button>
 					<button 
 						disabled={!this.state.canSubmit} 
-						className="button button--full button--yellow" 
+						className="button button--full button--accent" 
 						onClick={this.send.bind(this)}>
 						Save settings
 					</button>

@@ -42,14 +42,12 @@ export default class Dashboard extends React.Component {
 	componentDidMount() {
 		let socket = io.connect();
 		socket.on('connect', function() {
-			console.log('connected!');
-		});
-		socket.on('progress', function(data) {
-			PagesActions.progress({ progress: data.progress, pageId: data.pageId});
-		}); 
-		socket.on('triggerComplete', function(data) {
-			console.log('complete', data);
-			PagesActions.checkComplete(data.data);
+			socket.on('progress', function(data) {
+				PagesActions.progress({ progress: data.progress, pageId: data.pageId});
+			}); 
+			socket.on('triggerComplete', function(data) {
+				PagesActions.checkComplete(data.data);
+			});
 		});
 	}
 	calcElementSum(pages) {

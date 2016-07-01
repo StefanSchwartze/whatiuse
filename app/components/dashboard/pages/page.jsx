@@ -38,9 +38,9 @@ export default class Page extends React.Component {
 		state = <span>{support}</span>;
 		if(this.props.page.isChecking) {
 			if(this.props.page.progress) {
-				progress = floor(this.props.page.progress * 100, 1) + '%';
+				progress = floor(this.props.page.progress * 100, 0) + '%';
 			}
-			state = <span><i className="icon icon-spinner8 animate rotate"></i>Loading…{progress}</span>;
+			state = <span><i className="icon icon-spinner8 animate rotate"></i>{progress}</span>;
 		}
 		let preview = this.props.page.imgSrc ? 
 			<img src={this.props.page.imgSrc} width="100%" /> : 
@@ -57,7 +57,7 @@ export default class Page extends React.Component {
 					</div>
 					<div className="open">
 						{
-							!this.props.isActive ? <button onClick={this.setActive.bind(this)} className="button button--wide button--strong button--yellow" >Open</button> : ""
+							!this.props.isActive ? <button onClick={this.setActive.bind(this)} className="button button--wide button--strong button--accent" >Open</button> : ""
 						}
 						<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >CHECK</button>
 					</div>

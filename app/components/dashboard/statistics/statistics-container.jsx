@@ -5,6 +5,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line} from 'recharts';
 import HistoryTooltip from '../../shared/history-tooltip';
 
+import moment from 'moment';
 import {findItemById} from 'utils/store-utils';
 import {sortBy, orderBy, flatten, reduce, forEach} from 'lodash';
 
@@ -61,18 +62,19 @@ export default class StatisticsContainer extends React.Component {
 			const page = this.props.page;
 			let snapshots = page.snapshots || [];
 			let elements = page.snapshots[page.snapshots.length - 1].elementCollection || [];
+			let lastCheck = page.isChecking ? (<span><i className="icon icon-spinner8 animate rotate"></i>Currently checking…</span>) : moment(page.snapshots[page.snapshots.length - 1].captured).calendar();
 
 			if(page.snapshots.length > 1) {
 				timeline = <div className="history-container">
 								<div className="description">
 									<span>Timeline</span>
-									<span>Last check: {page.snapshots[page.snapshots.length - 1].captured}</span>
+									<span>Last check: {lastCheck}</span>
 								</div>
 								<HistoryTooltip/>
 								<div className="chart">
 									<ResponsiveContainer>
 										<LineChart data={snapshots} height={100} width={1000}>
-											<Line type='monotone' dataKey='pageSupport' stroke='#8884d8' strokeWidth={1} />
+											<Line type='monotone' dataKey='pageSupport' stroke='#30c8d6' strokeWidth={1} />
 											<Tooltip content={<HistoryTooltip/>}/>
 										</LineChart>
 									</ResponsiveContainer>
@@ -103,8 +105,7 @@ export default class StatisticsContainer extends React.Component {
 										<YAxis/>
 										<CartesianGrid />
 										<Tooltip/>
-										<Legend />
-										<Bar dataKey="count" fill="#82ca9d" />
+										<Bar dataKey="count" fill="#25bcca" />
 									</BarChart>
 								</ResponsiveContainer>
 							</div>

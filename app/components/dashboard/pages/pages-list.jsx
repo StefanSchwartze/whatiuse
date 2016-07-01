@@ -44,7 +44,7 @@ export default class PagesList extends React.Component {
 									<span>{this.props.completeSupport || '- '}%</span>
 								</div>
 								<div className="open">
-									<button onClick={this.setCurrentPageId.bind(this)} className="button button--wide button--strong button--yellow">Open</button>
+									<button onClick={this.setCurrentPageId.bind(this)} className="button button--wide button--strong button--accent">Open</button>
 								</div>
 								<div className="title">
 									<span>All</span>
@@ -71,12 +71,12 @@ export default class PagesList extends React.Component {
 					<PageForm onSend={this.closeModal.bind(this)} />
 				</Modal>
 				<div className="pages-head">
-					<div className="count">{this.props.pages.length} pages</div>
+					<div className="count">{this.props.pages.length} page{this.props.pages.length > 1 ? 's' : ''}</div>
 					<div className="order-switch">
 						<span onClick={this.toggleOrder.bind(this, false)} className="icon-keyboard_arrow_down"></span>
 						<span onClick={this.toggleOrder.bind(this, true)} className="icon-keyboard_arrow_up"></span>
 					</div>
-					<button className="button button--yellow" onClick={this.showModal.bind(this)}><span className="icon-add"></span>Add page</button>
+					<button className="button button--accent" onClick={this.showModal.bind(this)}><span className="icon-add"></span>Add page</button>
 				</div>
 				<div className={classnames('slider', this.state.rtl ? 'orderReverse' : '')}>
 					{globalTile}

@@ -82,6 +82,7 @@ export default class Navbar extends React.Component {
 		let errorComponent;
 		let retryComponent;
 		let busyComponent;
+		let currentProject = findItemById(this.props.projects, this.props.currentProjectId) || '';
 		if (this.props.error) {
 			if (this.props.retryData) {
 				retryComponent = <li className="nav-list-item"><button onClick={this.retry} className="">Retry</button></li>;
@@ -99,10 +100,12 @@ export default class Navbar extends React.Component {
 					<nav className="navigation">
 						<ul className="nav-list">
 							<li className="nav-list-item">
-								<Link to='app' className="link">Dashboard</Link>
-							</li>
-							<li className="nav-list-item">
-								<button className="button button--yellow" onClick={() => this.setState({showProjectModal: true})}><span className="icon-add"></span>Add project</button>
+								<button className="button button--accent" onClick={() => this.setState({showProjectModal: true})}>
+									{currentProject.title}
+								</button>
+								<button className="button button--accent" onClick={() => this.setState({showProjectModal: true})}>
+									<span className="icon-add"></span>
+								</button>
 								<Modal 
 									transitionSpeed={250}
 									className="modal"
@@ -116,6 +119,20 @@ export default class Navbar extends React.Component {
 									</div>
 									<ProjectForm onSend={this.closeProjectModal.bind(this)} />
 								</Modal>
+							</li>
+							<li className="nav-list-item">
+								<Link to='app' className="link">Dashboard</Link>
+							</li>
+							<li className="nav-list-item">
+								<div className="toggle">
+								{this.props.browserscopes && Object.keys(this.props.browserscopes).map(
+									(item, key) => 
+									<div key={key}
+										className={classnames('toggle-button', this.props.browserScope == item ? 'active' : '')}
+										onClick={this.selectBrowserScope.bind(this, item)}><span className={"icon-" + item}></span> {item}</div>
+									)
+								}
+								</div>
 							</li>
 							<Tooltip 
 								overlayClassName="tooltip--local"
@@ -151,17 +168,6 @@ export default class Navbar extends React.Component {
 									Browsers
 								</li>
 					        </Tooltip>
-							<li className="nav-list-item">
-								<div className="toggle">
-								{this.props.browserscopes && Object.keys(this.props.browserscopes).map(
-									(item, key) => 
-									<div key={key}
-										className={classnames('toggle-button', this.props.browserScope == item ? 'active' : '')}
-										onClick={this.selectBrowserScope.bind(this, item)}><span className={"icon-" + item}></span> {item}</div>
-									)
-								}
-								</div>
-							</li>
 							<Tooltip 
 								overlayClassName="tooltip--local"
 								visible={this.state.showModal}

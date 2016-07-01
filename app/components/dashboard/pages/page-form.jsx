@@ -64,7 +64,7 @@ export default class PageForm extends React.Component {
 						validations="isUrl"
 						validationError={'Must be a valid URL'} />
 				</Form>
-				<button disabled={!this.state.canSubmit} className="button button--full button--yellow" onClick={this.send.bind(this)}>Add page</button>
+				<button disabled={!this.state.canSubmit} className="button button--full button--accent" onClick={this.send.bind(this)}>Add page</button>
 			</div>
 		);
 	}

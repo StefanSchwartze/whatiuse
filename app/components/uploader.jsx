@@ -85,13 +85,13 @@ export default class Uploader extends React.Component {
 			if(file.isValid) {
 				button = <button 
 							disabled={!file.isValid} 
-							className="button button--full button--yellow"
+							className="button button--full button--accent"
 							onClick={this.uploadFile.bind(this)}>
 							Upload
 						</button>
 			} else {
 				button = <button 
-							className="button button--full button--yellow"
+							className="button button--full button--accent"
 							onClick={this.removeFile.bind(this)}>
 							File is not valid JSON. Remove.
 						</button>
@@ -102,7 +102,7 @@ export default class Uploader extends React.Component {
 						<span className="icon-cloud-upload"></span>
 					</div>
 			button = <button
-						className="button button--full button--yellow"
+						className="button button--full button--accent"
 						onClick={this.onOpenClick.bind(this)}>
 						Select file
 					</button>
