@@ -300,13 +300,13 @@ a {
 *	Component: Page-List
 */
 .page-slider {
-	max-width: 1280px;
-    margin: auto;
 	.pages-head {
 		display: flex;
 		justify-content: space-between;
 		padding: $spacing-extra-small $spacing-medium;
 		align-items: center;
+		max-width: 1280px;
+		margin: auto;
 		.count {
 			color: $grey-light;
 		}
@@ -331,7 +331,7 @@ a {
 		-webkit-transform: translate3d(0, 0, 0);
 		width: 100%;
 		position: relative;
-		padding: $spacing-small 0 $spacing-medium 0;
+		padding: $spacing-small 0 $spacing-large 0;
 		&.orderReverse {
 			direction: rtl;
 			> *:first-child {
@@ -343,6 +343,9 @@ a {
 		}
 		> *:first-child {
 			margin-left: $spacing-medium;
+			@media only screen and (min-width: 1280px) {
+				margin-left: calc( (100% - 1280px) / 2);	
+			}
 		}
 		> .hint--empty {
 			font-size: $font-size-xlarge;
@@ -394,11 +397,11 @@ a {
 		transition: margin .25s;
 		z-index: 2;
 		left: 50%;
-		top: 100%;
+		top: 160px;
 	}
 	&.active {
 		&:after {
-			margin-top: -10px;
+			margin-top: -24px;
 		}
 		.page-overlay {
 			border: solid 5px;
