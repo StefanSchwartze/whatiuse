@@ -283,13 +283,13 @@ io.on('connection', function(socket){
 
 			for (var i = 0; i < elements.length; i++) {
 				elements[i].missing = sumObjectArrayByProp(elements[i].missing, 'alias', 'versions');
-				elements[i].impact = getPercentage(getMissingBrowserVersions([elements[i]]), browsers);
+				elements[i].impact = (getPercentage(getMissingBrowserVersions([elements[i]]), browsers)) * 100;
 			}
 
 			let send = {
 				elementCollection: elements,
 				browserCollection: browsers,
-				pageSupport: (100 - getPercentage(getMissingBrowserVersions(elements), browsers)),
+				pageSupport: (1 - getPercentage(getMissingBrowserVersions(elements), browsers)) * 100,
 				pageId: id
 			}
 
