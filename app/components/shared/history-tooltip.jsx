@@ -7,7 +7,7 @@ export default class HistoryTooltip extends React.Component {
 	static propTypes = {
 		type: React.PropTypes.string,
 		payload: React.PropTypes.array,
-		label: React.PropTypes.string || React.PropTypes.number
+		label: React.PropTypes.oneOfType([ React.PropTypes.number, React.PropTypes.string ])
 	}
 	render() {
 		if (this.props.active) {
