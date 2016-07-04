@@ -114,8 +114,11 @@ class BrowsersStore {
 	onFetchConfig(config) {
 		this.browserscopes.custom = config;
 	}
+	onFetchCustom(config) {
+		this.browserscopes.fdx = config;
+	}
 	onValidateBrowserset(data) {
-		this.browserscopes.fdx = data;
+		this.browserscopes.fdx = data.data;
 	}
 	onSelectScope(scope) {
 		this.currentScope = scope;

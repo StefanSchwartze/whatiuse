@@ -15,7 +15,14 @@ class BrowsersActions {
     	const project = findItemById(projectStore.projects, projectStore.currentProjectId);
     	return project.browserscopes.config;
     }
+    fetchCustom() {
+        const projectStore = alt.stores.ProjectsStore.state;
+        const project = findItemById(projectStore.projects, projectStore.currentProjectId);
+        return project.browserscopes.fdx;
+    }
     selectScope(scope) {
+        this.fetchCustom();
+        this.fetchConfig();
         return scope;
     }
     validateBrowserset(browsers) {
@@ -30,7 +37,7 @@ class BrowsersActions {
                 let project = findItemById(projectStore.projects, projectStore.currentProjectId);
                 project.browserscopes.fdx = response.data.browsers;
                 ProjectsActions.update(projectStore.currentProjectId, project);
-                dispatch({ok: true, data: response.data.data });
+                dispatch({ok: true, data: response.data.browsers });
             } catch (err) {
                 console.error(err);
                 dispatch({ok: false, error: err.data});
