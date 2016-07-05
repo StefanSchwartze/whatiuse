@@ -98,24 +98,49 @@ module.exports = function evaluate(args) {
 				    const transformBrowserVersion = (features) => {
 
 			            for (var i = 0; i < features.length; i++) {
-				            features[i].missing = flatten(features[i].missing).reduce((prev, current, index, array) => {
-				                let nextVersions = typeof current.versions === 'string' ? current.versions.replace(/[()]/g, '').replace(/,\s*$/, "").split(',') : current.versions;
-				                if(!(current.browser in prev.keys)) {
-				                    prev.keys[current.browser] = index;
-				                    prev.result.push({
-				                        browser: current.browser.trim(),
-				                        versions: nextVersions,
-				                        alias: findKey(agents, (o) => { return o.browser === current.browser.trim(); })
-				                    });
-				                } 
-				               else {
-				                    if(prev.result[prev.keys[current.browser]]) {
-				                        prev.result[prev.keys[current.browser]].versions.concat(nextVersions);
-				                    }
-				               }  
+			            	if(features[i].missing) {
+					            features[i].missing = flatten(features[i].missing).reduce((prev, current, index, array) => {
+					                let nextVersions = typeof current.versions === 'string' ? current.versions.replace(/[()]/g, '').replace(/,\s*$/, "").split(',') : current.versions;
+					                if(!(current.browser in prev.keys)) {
+					                    prev.keys[current.browser] = index;
+					                    prev.result.push({
+					                        browser: current.browser.trim(),
+					                        versions: nextVersions,
+					                        alias: findKey(agents, (o) => { return o.browser === current.browser.trim(); })
+					                    });
+					                } 
+					               else {
+					                    if(prev.result[prev.keys[current.browser]]) {
+					                        prev.result[prev.keys[current.browser]].versions.concat(nextVersions);
+					                    }
+					               }  
 
-				               return prev;
-				            },{result: [], keys: {}}).result;
+					               return prev;
+					            },{result: [], keys: {}}).result;
+				            }
+
+				            if(features[i].partial) {
+					            features[i].partial = flatten(features[i].partial).reduce((prev, current, index, array) => {
+					                let nextVersions = typeof current.versions === 'string' ? current.versions.replace(/[()]/g, '').replace(/,\s*$/, "").split(',') : current.versions;
+					                if(!(current.browser in prev.keys)) {
+					                    prev.keys[current.browser] = index;
+					                    prev.result.push({
+					                        browser: current.browser.trim(),
+					                        versions: nextVersions,
+					                        alias: findKey(agents, (o) => { return o.browser === current.browser.trim(); })
+					                    });
+					                } 
+					               else {
+					                    if(prev.result[prev.keys[current.browser]]) {
+					                        prev.result[prev.keys[current.browser]].versions.concat(nextVersions);
+					                    }
+					               }  
+
+					               return prev;
+					            },{result: [], keys: {}}).result;
+				        	}
+
+
 			            }
 			            return features;
 				    }

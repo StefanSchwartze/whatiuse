@@ -209,7 +209,23 @@ io.on('connection', function(socket){
 
 		const url = data.url;
 		const id = data.id;
-		let browsers = data.browsers;
+		//let browsers = data.browsers;
+		let browsers = [{ 
+						name: 'ie 8',
+						share: 0.14 
+					}, 
+					{ 
+						name: 'ie 9',
+						share: 0.3 
+					}, 
+					{ 
+						name: 'ie 7',
+						share: 0.56 
+					}/*,
+					{ 
+						name: 'chrome 45',
+						share: 0.56 
+					}*/];
 		let progress = 0;
 
     	const doit = (item, index, that) => {
