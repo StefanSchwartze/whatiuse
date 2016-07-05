@@ -6,6 +6,8 @@ import Tooltip from 'rc-tooltip';
 import classnames from 'classnames';
 import { findItemById } from 'utils/store-utils';
 
+import { agents } from 'utils/user-agents';
+
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Configurator from './configurator';
 import Uploader from './uploader';
@@ -149,11 +151,11 @@ export default class Navbar extends React.Component {
 											<span>Browser set</span>
 											<button className="icon-close button button--close" onClick={this.closeBrowserModal.bind(this)}></button>
 										</div>
-										<div className="">
+										<div className="browsers">
 											{this.props.browserscopes[this.props.browserScope] && this.props.browserscopes[this.props.browserScope].browsers.map(
 												(item, key) => 
-												<div key={key}>
-													{item.name} | {item.version} | {item.share}
+												<div className="justify" key={key}>
+													{agents[item.name] ? agents[item.name].browser : item.name} | {item.version} | {item.share}
 												</div>
 												)
 											}

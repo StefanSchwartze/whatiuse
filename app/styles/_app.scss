@@ -343,8 +343,8 @@ a {
 		}
 		> *:first-child {
 			margin-left: $spacing-medium;
-			@media only screen and (min-width: 1280px) {
-				margin-left: calc( (100% - 1280px) / 2);	
+			@media only screen and (min-width: 1281px) {
+				margin-left: calc( (100% - 1280px) / 2 + $spacing-medium);	
 			}
 		}
 		> .hint--empty {
@@ -536,23 +536,35 @@ a {
 		font-size: $font-size-xlarge;
 	}
 }
-	.file-tile {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		background: rgba(214, 225, 228, 0.5);
-		padding: $spacing-medium;
-		border-radius: $border-radius-large;
-		.icon-file {
-			font-size: 4rem;
-			margin-right: $spacing-small;
-		}
-		.desc {
-			display: flex;
-			flex-direction: column;
-			text-align: left;
-		}
+.file-tile {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background: rgba(214, 225, 228, 0.5);
+	padding: $spacing-medium;
+	border-radius: $border-radius-large;
+	.icon-file {
+		font-size: 4rem;
+		margin-right: $spacing-small;
 	}
+	.desc {
+		display: flex;
+		flex-direction: column;
+		text-align: left;
+	}
+}
+
+/*
+*	Component: Browsers
+*/
+.browsers {
+	max-height: 400px;
+	overflow-y: scroll;
+	.justify {
+		display: flex;
+		justify-content: space-between;
+	}
+}
 
 /*
 *	Component: Chartcontainer
@@ -610,8 +622,28 @@ a {
 	}
 }
 
-
-
+/*
+*	Component: ReactTabs
+*/
+.react-tabs [role=tablist] {
+	border-bottom-color: $grey-light;
+}
+.react-tabs [role=tab] {
+	border: solid 1px $accent-50;
+    bottom: auto;
+    background: white;
+    color: $accent-50;
+    border-radius: $border-radius-rounded;
+    margin-bottom: $spacing-medium;
+    margin-right: $spacing-medium;
+}
+.react-tabs [role=tab][aria-selected=true] {
+	border: solid 1px $accent-50;
+	background: $accent-50;
+	color: white;
+	border-radius: $border-radius-rounded;
+    margin-bottom: $spacing-medium;
+}
 
 /*
 *	Component: Tooltip
