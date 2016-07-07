@@ -20,27 +20,43 @@ function pruneFeatureUsage (usageInfo, enc, next) {
     source = false
   }
 
-  // not ideal: manually parsing the human-readable string of (selected)
-  // browsers that are missing support for this feature (e.g. "IE (8, 9)").
-  var missing = usageInfo.featureData.missing.match(/[^\(]*\([^\)]*\),?/g)
-  if (missing) {
-    missing = missing.map(function (s) {
-      var v = s.indexOf('(')
-      return {
-        browser: s.slice(0, v),
-        versions: s.slice(v)
-      }
-    })
-  }
-  
   var data = {
     message: usageInfo.message,
     error: usageInfo.error,
     feature: usageInfo.feature,
     title: usageInfo.featureData.title,
-    missing: missing,
     source: source
   }
+
+  // not ideal: manually parsing the human-readable string of (selected)
+  // browsers that are missing support for this feature (e.g. "IE (8, 9)").
+  if (usageInfo.featureData.missing) {
+    var missing = usageInfo.featureData.missing.match(/[^\(]*\([^\)]*\),?/g)
+    if(missing) {
+      missing = missing.map(function (s) {
+        var v = s.indexOf('(')
+        return {
+          browser: s.slice(0, v),
+          versions: s.slice(v)
+        }
+      })
+      data.missing = missing;
+    }
+  }
+  if (usageInfo.featureData.partial) {
+    var partial = usageInfo.featureData.partial.match(/[^\(]*\([^\)]*\),?/g)
+    if(partial) {
+      partial = partial.map(function (s) {
+        var v = s.indexOf('(')
+        return {
+          browser: s.slice(0, v),
+          versions: s.slice(v)
+        }
+      })
+      data.partial = partial;
+    }
+  }
+  
   debug('usage', data)
   next(null, data)
 }

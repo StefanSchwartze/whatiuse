@@ -42,8 +42,15 @@ module.exports = function evaluate(args) {
 				streams = streams.concat([
 					limit,
 					doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
+					.on('data', function (usageInfo) {
+					    /*console.log('Feature: ', JSON.stringify(usageInfo.featureData.title));
+					    if(usageInfo.featureData.missing) console.log('Missing: ', JSON.stringify(usageInfo.featureData.missing));
+					    if(usageInfo.featureData.partial) console.log('Partial: ', JSON.stringify(usageInfo.featureData.partial));
+					*/})
 					.on('warning', function (warn) { 
-						errorsAndWarnings.push(warn) 
+						console.log('WARNING!!!!!');
+						console.log(warn);
+						errorsAndWarnings.push(warn);
 					}),
 					uniqe.features,
 					features
@@ -93,8 +100,8 @@ module.exports = function evaluate(args) {
 				});
 				finalStream.on('end', (err) => {
 
-								
-
+					console.log('I am ready!');
+							
 				    const transformBrowserVersion = (features) => {
 
 			            for (var i = 0; i < features.length; i++) {

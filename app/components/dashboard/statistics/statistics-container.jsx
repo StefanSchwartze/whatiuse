@@ -74,7 +74,7 @@ export default class StatisticsContainer extends React.Component {
 								<div className="chart">
 									<ResponsiveContainer>
 										<LineChart data={snapshots} height={100} width={1000}>
-											<Line type='monotone' dataKey='pageSupport' stroke='#30c8d6' strokeWidth={1} />
+											<Line type='monotone' dataKey='pageSupport' stroke='#25bcca' strokeWidth={1} />
 											<Tooltip content={<HistoryTooltip/>}/>
 										</LineChart>
 									</ResponsiveContainer>

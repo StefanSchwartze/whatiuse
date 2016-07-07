@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {floor} from 'lodash';
 import Tooltip from 'rc-tooltip';
 
 export default class ElementsList extends React.Component {
@@ -32,7 +31,7 @@ export default class ElementsList extends React.Component {
 								</div>
 							}
 						>
-							<span><span>{floor(item[this.props.orderProp], 1)}{this.props.unit}</span><span>|</span><span>{item.name}</span></span>
+							<span><span>{item[this.props.orderProp]}{this.props.unit}</span><span>|</span><span>{item.name}</span></span>
 				        </Tooltip>
 					</div>
 				)}

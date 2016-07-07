@@ -11,7 +11,7 @@ import serve from "koa-static";
 import responseTime from "koa-response-time";
 import bodyParser from "koa-bodyparser";
 import koaRouter from "koa-router";
-import {clone, camelCase, flatten, values, find, forEach, uniq} from "lodash";
+import {clone, camelCase, flatten, values, find, forEach, uniq, merge, sumBy, groupBy, value, map as _map} from "lodash";
 import http from "http";
 
 import router from "./router";
@@ -209,23 +209,7 @@ io.on('connection', function(socket){
 
 		const url = data.url;
 		const id = data.id;
-		//let browsers = data.browsers;
-		let browsers = [{ 
-						name: 'ie 8',
-						share: 0.14 
-					}, 
-					{ 
-						name: 'ie 9',
-						share: 0.3 
-					}, 
-					{ 
-						name: 'ie 7',
-						share: 0.56 
-					}/*,
-					{ 
-						name: 'chrome 45',
-						share: 0.56 
-					}*/];
+		let browsers = data.browsers;
 		let progress = 0;
 
     	const doit = (item, index, that) => {
@@ -238,34 +222,55 @@ io.on('connection', function(socket){
 		}
 
 		Promise.all(browsers.map(doit)).then(data => {
-			console.log('Ready..');
 			let elementCollection = [];
 			for (var i = 0; i < data.length; i++) {
 				elementCollection.push(data[i].elementCollection);
 			}
 			let newElems = flatten(elementCollection);
 
-			const sumObjectArrayByProp = (array, reduceProp, unifiedProp) => {
-				let newArray = values(array.reduce((prev, current, index, array) => {
+			const sumObjectArrayByProp = (array, reduceProp, unifyingProps) => {
+
+				return values(array.reduce((prev, current, index, array) => {
 	                if(!(current[reduceProp] in prev.result)) {
 	                    prev.result[current[reduceProp]] = current;
 	                }
 					else if(prev.result[current[reduceProp]]) {
-						if(typeof prev.result[current[reduceProp]] === "object") {
-							prev.result[current[reduceProp]][unifiedProp] = prev.result[current[reduceProp]][unifiedProp].concat(current[unifiedProp]);
+
+						for (var i = 0; i < unifyingProps.length; i++) {
+							const currProp = unifyingProps[i];
+							const additionalElementsOfProp = current[currProp];
+
+							if(additionalElementsOfProp) {
+							
+								let additionalElements = current[currProp];
+
+								if(prev.result[current[reduceProp]][currProp]) {
+									if(typeof additionalElements === 'string') {
+										prev.result[current[reduceProp]][currProp] += ('\n' + additionalElements);
+									} else {
+										for (var j = 0; j < additionalElements.length; j++) {
+											prev.result[current[reduceProp]][currProp].push(additionalElements[j]);
+										}
+									}
+								} else {
+									prev.result[current[reduceProp]][currProp] = additionalElements;
+								}
+							}
+
 						}
+
 					}
 	               return prev;
 	            },{result: {}}).result);
 
-
-				return newArray;
 			}
 			const getMissingBrowserVersions = (features) => {
 	            let browsers = [];
 
 	            for (var i = 0; i < features.length; i++) {
-	                browsers.push.apply(browsers, flatten(features[i].missing));
+	            	if(features[i].missing) {
+		                browsers.push.apply(browsers, flatten(features[i].missing));
+	            	}
 	            }
 	            return sumBrowserVersions(browsers);
 	        }
@@ -288,24 +293,29 @@ io.on('connection', function(socket){
 		                let obje = find(browsersWithPercentages, function(o) {
 		                    return (o.name === browser.alias + ' ' + value) || (o.name === browser.alias); 
 		                });
-		                if(obje) sum += parseFloat(obje.share);
+		                if(obje) {
+		                	sum += parseFloat(obje.share);
+		            	}
 		            })
 		        })
 
 		        return sum;
 		    }
 
-			let elements = sumObjectArrayByProp(newElems, 'feature', 'missing', 'array');
+			let elements = sumObjectArrayByProp(newElems, 'feature', ['missing', 'partial', 'message']);
 
 			for (var i = 0; i < elements.length; i++) {
-				elements[i].missing = sumObjectArrayByProp(elements[i].missing, 'alias', 'versions');
-				elements[i].impact = (getPercentage(getMissingBrowserVersions([elements[i]]), browsers)) * 100;
+				if(elements[i].missing) elements[i].missing = sumObjectArrayByProp(elements[i].missing, 'alias', ['versions']);
+				if(elements[i].partial) elements[i].partial = sumObjectArrayByProp(elements[i].partial, 'alias', ['versions']);
+				const missingBrowserss = getMissingBrowserVersions([elements[i]]);
+				elements[i].impact = (getPercentage(missingBrowserss, browsers)).toFixed(2);
 			}
 
+			const missingBrowserss = getMissingBrowserVersions(elements);
 			let send = {
 				elementCollection: elements,
 				browserCollection: browsers,
-				pageSupport: (1 - getPercentage(getMissingBrowserVersions(elements), browsers)) * 100,
+				pageSupport: (100 - getPercentage(missingBrowserss, browsers)).toFixed(2),
 				pageId: id
 			}
 
