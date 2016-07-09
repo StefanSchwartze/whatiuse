@@ -42,11 +42,6 @@ module.exports = function evaluate(args) {
 				streams = streams.concat([
 					limit,
 					doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
-					.on('data', function (usageInfo) {
-					    /*console.log('Feature: ', JSON.stringify(usageInfo.featureData.title));
-					    if(usageInfo.featureData.missing) console.log('Missing: ', JSON.stringify(usageInfo.featureData.missing));
-					    if(usageInfo.featureData.partial) console.log('Partial: ', JSON.stringify(usageInfo.featureData.partial));
-					*/})
 					.on('warning', function (warn) { 
 						console.log('WARNING!!!!!');
 						console.log(warn);
