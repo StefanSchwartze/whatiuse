@@ -13,11 +13,12 @@ export default (
 		<Route
 			name='login'
 			handler={Login} />
-		<Route
+		<DefaultRoute
 			name='projects'
 			handler={Projects} />
-		<DefaultRoute
+		<Route
 			name='dashboard'
+			path='projects/:id'
 			handler={Dashboard} />
 		<NotFoundRoute handler={require('./pages/not-found')} />
 	</Route>

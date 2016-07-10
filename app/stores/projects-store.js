@@ -7,6 +7,7 @@ class ProjectsStore {
 	constructor() {
 		this.bindActions(ProjectsActions);
 		this.projects = [];
+    	this.projectsHash = {};
 		this.currentProjectId = "";
 	}
 	onAdd(item) {
@@ -14,6 +15,10 @@ class ProjectsStore {
 	}
 	onFetch(projects) {
 		this.projects = projects;
+		this.projectsHash = this.projects.reduce((hash, item) => {
+	      hash[item._id] = item;
+	      return hash;
+	    }, {});
 	}
 	onGet(project) {
 		this.currentProjectId = project._id;

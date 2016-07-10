@@ -16,15 +16,23 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 @authDecorator
 @connectToStores
 export default class Projects extends React.Component {
+	static contextTypes = {
+		router: React.PropTypes.func
+	}
 	static propTypes = {
 		projects: React.PropTypes.array,
-		currentPageId: React.PropTypes.string
+		projectsHash: React.PropTypes.object,
+		currentPageId: React.PropTypes.string,
+    	showRoute: React.PropTypes.string
 	}
 	static getStores(props) {
 		return [ProjectsStore];
 	}
 	static getPropsFromStores(props) {
 		return ProjectsStore.getState();
+	}
+	static willTransitionTo(transition) {
+	    console.log(transition);
 	}
 	constructor(props) {
 		super(props);
@@ -41,7 +49,7 @@ export default class Projects extends React.Component {
 				<div className="content-container content">
 					<div className="projects-list">
 						{this.props.projects && this.props.projects.map((item, index) =>
-							<Link to='dashboard' className="link">
+							<Link key={item._id} to={'/projects/' + item._id + ''} className="link">
 								<div className="project" key={index} >
 									<h2 className="">{item.title}</h2>
 									<p className="">{item.url}</p>

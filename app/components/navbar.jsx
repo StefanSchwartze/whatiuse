@@ -24,6 +24,9 @@ import ProjectActions from 'actions/projects-actions';
 
 @connectToStores
 export default class Navbar extends React.Component {
+	static contextTypes = {
+		router: React.PropTypes.func
+	}
 	constructor(props) {
 		super();
 		this.state = { showModal: false };
@@ -48,9 +51,10 @@ export default class Navbar extends React.Component {
 			currentProjectId: ProjectsStore.getState().currentProjectId
 		}
 	}
-	componentDidMount() {
+	componentWillMount() {
+		const id = this.context.router.getCurrentParams().id;
 		ProjectActions.fetch();
-		ProjectActions.get('576922ea9fbb95093996d29b');
+		ProjectActions.get(id);
 	}
 	retry() {
 		StatusActions.retry();
@@ -121,9 +125,6 @@ export default class Navbar extends React.Component {
 									</div>
 									<ProjectForm onSend={this.closeProjectModal.bind(this)} />
 								</Modal>
-							</li>
-							<li className="nav-list-item">
-								<Link to='app' className="link">Dashboard</Link>
 							</li>
 							<li className="nav-list-item">
 								<div className="toggle">
