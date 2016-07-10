@@ -42,8 +42,7 @@ module.exports = function evaluate(args) {
 				streams = streams.concat([
 					limit,
 					doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
-					.on('warning', function (warn) { 
-						console.log('WARNING!!!!!');
+					.on('warning', function (warn) {
 						console.log(warn);
 						errorsAndWarnings.push(warn);
 					}),
@@ -94,9 +93,7 @@ module.exports = function evaluate(args) {
 					reject(err);
 				});
 				finalStream.on('end', (err) => {
-
-					console.log('I am ready!');
-							
+					
 				    const transformBrowserVersion = (features) => {
 
 			            for (var i = 0; i < features.length; i++) {
