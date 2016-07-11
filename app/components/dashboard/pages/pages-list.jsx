@@ -71,7 +71,7 @@ export default class PagesList extends React.Component {
 					<PageForm onSend={this.closeModal.bind(this)} />
 				</Modal>
 				<div className="pages-head">
-					<div className="count">{this.props.pages.length} page{this.props.pages.length > 1 ? 's' : ''}</div>
+					<div className="count">{this.props.pages.length} page{this.props.pages.length === 1 ? '' : 's'}</div>
 					<div className="order-switch">
 						<span onClick={this.toggleOrder.bind(this, false)} className="icon-keyboard_arrow_down"></span>
 						<span onClick={this.toggleOrder.bind(this, true)} className="icon-keyboard_arrow_up"></span>

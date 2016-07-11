@@ -92,10 +92,6 @@ export default class StatisticsContainer extends React.Component {
 							<p>Most crashing elements:</p>
 						</div>
 						<ElementsList elements={elements} orderProp="impact" unit="%" />
-						<div className="description">
-							<p>Your site works out of the box with:</p>
-						</div>
-						<BrowsersList browsers={browsers} />
 						<div className="charts-container">
 							<div className="chart-container">
 								<ResponsiveContainer>

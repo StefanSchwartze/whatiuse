@@ -109,9 +109,6 @@ export default class Navbar extends React.Component {
 								<button className="button button--accent" onClick={() => this.setState({showProjectModal: true})}>
 									{currentProject.title}
 								</button>
-								<button className="button button--accent" onClick={() => this.setState({showProjectModal: true})}>
-									<span className="icon-add"></span>
-								</button>
 								<Modal 
 									transitionSpeed={250}
 									className="modal"
