@@ -1,5 +1,6 @@
 import path from "path";
 import webpack from "webpack";
+import autoprefixer from "autoprefixer";
 
 import writeStats from "./utils/write-stats";
 import startKoa from "./utils/start-koa";
@@ -72,18 +73,15 @@ export default {
 					loaders: ["react-hot", "babel"]
 				},
 				{
-					test: /\.scss$/,
-					loader: "style!css?sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap"
-				},
-				{
-					test: /\.less$/,
-					loader: "style!css?sourceMap!autoprefixer?browsers=last 2 version!less?outputStyle=expanded&sourceMap"
+					test: /\.scss?/, 
+					loaders: ['style', 'css', 'postcss', 'sass']
 				},
 				{ test: /\.css$/,
 					loader: "style-loader!css-loader"
 				}
 			]
 		},
+    	postcss: [ autoprefixer({ browsers: ['last 3 versions'] }) ],
 
 		// jscs: {
 		// 	emitErrors: false,

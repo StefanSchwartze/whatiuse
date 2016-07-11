@@ -8,6 +8,7 @@ require('babel/register');
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var autoprefixer = require('autoprefixer');
 
 var writeStats = require('./utils/write-stats');
 
@@ -65,14 +66,15 @@ module.exports = {
         loader: 'babel'
       },
       {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style', 'css!autoprefixer?browsers=last 2 version!sass')
+        test: /\.scss?/, 
+        loaders: ['style', 'css', 'postcss', 'sass']
       },
       { test: /\.css$/,
-          loader: 'style-loader!css-loader'
+        loader: "style-loader!css-loader"
       }
     ]
   },
+  postcss: [ autoprefixer({ browsers: ['last 3 versions'] }) ],
   plugins: [
 
     // extract css
