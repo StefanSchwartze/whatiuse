@@ -17,14 +17,6 @@ import alt from 'utils/alt';
 export default function *() {
   const isCashed = this.cashed ? yield *this.cashed() : false;
   if (!isCashed) {
-/*
-    var getHandler = function(routes, url) {
-      return new Promise(function(resolve) {
-        Router.run(routes, url, function (Handler) {
-          resolve(Handler);
-        });
-      });
-    };*/
 
     // We seed our stores with data
     alt.bootstrap(JSON.stringify({}));
@@ -33,7 +25,6 @@ export default function *() {
     const history = createMemoryHistory(this.request.url);
 
     // We use react-router to run the URL that is provided in routes.jsx
-    //const handler = yield getHandler(routes, this.request.url);
     const node = ReactDOM.renderToString(<Router history={history}>{routes}</Router>);
 
     iso.add(node, alt.flush());

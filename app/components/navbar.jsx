@@ -45,9 +45,8 @@ export default class Navbar extends React.Component {
 		}
 	}
 	componentWillMount() {
-		//const id = this.context.router.getCurrentParams().id;
 		ProjectActions.fetch();
-		ProjectActions.get('5783568dde248b201cbdf1c9');
+		ProjectActions.get(this.props.params.id);
 	}
 	retry() {
 		StatusActions.retry();

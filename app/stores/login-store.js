@@ -61,6 +61,7 @@ class LoginStore {
 	}
 
 	redirectToLogin() {
+		this.clearUser.bind(this);
 		defer(browserHistory.push.bind(this, `/login`));
 	}
 
