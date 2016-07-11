@@ -43,7 +43,7 @@ export default class Page extends React.Component {
 			state = <span><i className="icon icon-spinner8 animate rotate"></i>{progress}</span>;
 		}
 		let preview = this.props.page.imgSrc ? 
-			<img src={this.props.page.imgSrc} width="100%" /> : 
+			<img src={'/' + this.props.page.imgSrc} width="100%" /> : 
 			<iframe ref="iframe" className="page-thumb" src={this.props.page.url} width="1200" height="700"></iframe>; 
 		return (
 			<div className={classnames(
