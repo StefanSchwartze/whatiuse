@@ -89,16 +89,15 @@ export default class Navbar extends React.Component {
 		let retryComponent;
 		let busyComponent;
 		let currentProject = findItemById(this.props.projects, this.props.currentProjectId) || '';
-		if (this.props.error) {
+		if (this.props.status.error) {
 			if (this.props.retryData) {
 				retryComponent = <li className="nav-list-item"><button onClick={this.retry} className="">Retry</button></li>;
 			}
-			errorComponent = (
-				<p><strong>Network Error!</strong>{retryComponent}</p>);
+			errorComponent = (<p><strong>Network Error!</strong>{retryComponent}</p>);
 		}
 		// Prerender busy on server as not to lose markup state on client
-		if (this.props.busy || !process.env.BROWSER) {
-			busyComponent = <div className=""><i className="fa fa-refresh fa-spin"></i></div>;
+		if (this.props.status.busy || !process.env.BROWSER) {
+			busyComponent = <i className="fa fa-refresh fa-spin"></i>;
 		}
 		return (
 			<header className="header">
