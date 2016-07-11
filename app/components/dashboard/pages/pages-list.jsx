@@ -1,11 +1,9 @@
 import React from 'react';
 import Modal, {closeStyle} from 'simple-react-modal';
 import classnames from 'classnames';
-
-import PagesActions from 'actions/pages-actions';
-
 import PageForm from './page-form';
 import Page from './page';
+import PagesActions from 'actions/pages-actions';
 
 export default class PagesList extends React.Component {
 	static propTypes = {

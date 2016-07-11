@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import PureRenderMixin from 'react-addons-pure-render-mixin';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line} from 'recharts';
 import HistoryTooltip from '../../shared/history-tooltip';
@@ -22,40 +22,11 @@ export default class StatisticsContainer extends React.Component {
 	}
 	constructor(props) {
 		super(props);
-		//this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
 		let pageElem;
 		let timeline;
-
-		let browsers = [
-			{
-				title: 'Firefox',
-				slug: 'firefox',
-				version: 32
-			},
-			{
-				title: 'Chrome',
-				slug: 'chrome',
-				version: 42
-			},
-			{
-				title: 'IE',
-				slug: 'internet-explorer',
-				version: 10
-			},
-			{
-				title: 'Opera',
-				slug: 'opera',
-				version: 12
-			},
-			{
-				title: 'Safari',
-				slug: 'safari',
-				version: 4.5
-			}
-
-		];
 
 		if(Object.keys(this.props.page).length > 0) {
 			

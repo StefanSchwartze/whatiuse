@@ -1,18 +1,14 @@
 import React from 'react';
 import AltContainer from 'alt-container';
-
-import ProjectForm from './project-form';
-import ProjectsList from './projects-list';
-import {Link} from 'react-router';
-
-import ProjectsStore from 'stores/projects-store';
-import ProjectsActions from 'actions/projects-actions';
-
-import {findItemById} from 'utils/store-utils';
-import {sortBy, orderBy, flatten, reduce, forEach, floor, map, values, head} from 'lodash';
-
 import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
+import {Link} from 'react-router';
+import {sortBy, orderBy, flatten, reduce, forEach, floor, map, values, head} from 'lodash';
+import {findItemById} from 'utils/store-utils';
+import ProjectForm from './project-form';
+import ProjectsList from './projects-list';
+import ProjectsStore from 'stores/projects-store';
+import ProjectsActions from 'actions/projects-actions';
 
 @authDecorator
 @connectToStores
