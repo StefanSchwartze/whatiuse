@@ -60,11 +60,11 @@ class LoginStore {
 	}
 
 	redirectToHome() {
-		defer(router.transitionTo.bind(this, "/"));
+		defer(router.props.history.pushState.bind(this, null, `/`, null));
 	}
 
 	redirectToLogin() {
-		defer(router.transitionTo.bind(this, "login"));
+		defer(router.props.history.pushState.bind(this, null, `/login`, null));
 	}
 
 	onLogin(data) {

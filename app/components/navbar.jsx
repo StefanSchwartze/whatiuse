@@ -11,7 +11,6 @@ import { agents } from 'utils/user-agents';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Configurator from './configurator';
 import Uploader from './uploader';
-import ProjectForm from './shared/forms/project-form';
 
 import StatusStore from 'stores/status-store';
 import BrowsersStore from 'stores/browsers-store';
@@ -24,15 +23,9 @@ import ProjectActions from 'actions/projects-actions';
 
 @connectToStores
 export default class Navbar extends React.Component {
-	static contextTypes = {
-		router: React.PropTypes.func
-	}
 	constructor(props) {
 		super();
 		this.state = { showModal: false };
-	}
-	static contextTypes = {
-		router: React.PropTypes.func
 	}
 	static getStores() {
 		return [
@@ -52,9 +45,9 @@ export default class Navbar extends React.Component {
 		}
 	}
 	componentWillMount() {
-		const id = this.context.router.getCurrentParams().id;
+		//const id = this.context.router.getCurrentParams().id;
 		ProjectActions.fetch();
-		ProjectActions.get(id);
+		ProjectActions.get('5783568dde248b201cbdf1c9');
 	}
 	retry() {
 		StatusActions.retry();
@@ -108,19 +101,6 @@ export default class Navbar extends React.Component {
 								<button className="button button--accent" onClick={() => this.setState({showProjectModal: true})}>
 									{currentProject.title}
 								</button>
-								<Modal 
-									transitionSpeed={250}
-									className="modal"
-									containerClassName={classnames('animate', 'modal-container', 'checked')}
-									closeOnOuterClick={true}
-									show={this.state.showProjectModal}
-									onClose={this.closeProjectModal.bind(this)} >
-									<div className="modal-head">
-										<span>Add new project</span>
-										<button className="icon-close button button--close" onClick={this.closeProjectModal.bind(this)}></button>
-									</div>
-									<ProjectForm onSend={this.closeProjectModal.bind(this)} />
-								</Modal>
 							</li>
 							<li className="nav-list-item">
 								<div className="toggle">

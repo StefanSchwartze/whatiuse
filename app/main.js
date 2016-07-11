@@ -33,10 +33,6 @@ const boostrap = () => {
   const boot = await boostrap();
   alt.bootstrap(boot.initialState);
 
-  router.run(
-    (Handler) => {
-      const app = React.createElement(Handler);
-      ReactDOM.render(app, boot.container);
-    });
+  ReactDOM.render(router, boot.container);
 
 })();

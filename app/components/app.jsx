@@ -8,7 +8,7 @@ import Router from 'react-router';
 import reactMixin from 'react-mixin';
 import LoginActions from 'actions/login-actions';
 
-@reactMixin.decorate(Router.State)
+//@reactMixin.decorate(Router.State)
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -16,14 +16,14 @@ export default class App extends React.Component {
   }
   render() {
     var navbar;
-    if (this.getPathname() !== '/login' &&
-        this.getPathname() !== '/') {
-      navbar = <Navbar />;
+    if (this.props.location.pathname !== '/login' &&
+        this.props.location.pathname !== '/') {
+      navbar = <Navbar {...this.props}/>;
     }
     return (
       <div className="content">
         {navbar}
-        <RouteHandler />
+        {this.props.children}
       </div>
     );
   }

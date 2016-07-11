@@ -106,24 +106,16 @@ export default class Dashboard extends React.Component {
 		const currentPageId = this.props.currentPageId;
 		let statistics = <div></div>
 		if(pages.length > 0) {
-			statistics = <div className="content-container content statistics-container">
-							<StatisticsContainer
-								page={this.currentPage(pages, currentPageId)} />
-						</div>
+			statistics = <StatisticsContainer page={this.currentPage(pages, currentPageId)} />
 		}
 		return (
-			<AltContainer
-				stores={{
-					PagesStore: PagesStore
-				}}>
-				<div className="content-container edged content slider-container">
-					<PagesList 
-						completeSupport={this.calcCompleteSupport(pages)}
-						pages={pages}
-						currentPageId={currentPageId} />
-				</div>
+			<div>
+				<PagesList 
+					completeSupport={this.calcCompleteSupport(pages)}
+					pages={pages}
+					currentPageId={currentPageId} />
 				{statistics}
-			</AltContainer>
+			</div>
 		);
 	}
 }

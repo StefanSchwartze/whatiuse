@@ -9,9 +9,9 @@ import Page from './page';
 
 export default class PagesList extends React.Component {
 	static propTypes = {
-		pages: React.PropTypes.array,
-		currentPageId: React.PropTypes.string,
-		completeSupport: React.PropTypes.string
+		pages: React.PropTypes.array.isRequired,
+		currentPageId: React.PropTypes.string.isRequired,
+		completeSupport: React.PropTypes.string.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -56,35 +56,37 @@ export default class PagesList extends React.Component {
 			globalTile = <h2 className="hint--empty">No pages added yet.</h2>
 		}
 		return (
-			<div className="page-slider">
-				<Modal 
-					transitionSpeed={250}
-					className="modal"
-					containerClassName={classnames('animate', 'modal-container', 'checked')}
-					closeOnOuterClick={true}
-					show={this.state.showModal}
-					onClose={this.closeModal.bind(this)} >
-					<div className="modal-head">
-						<span>Add new page</span>
-						<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
+			<div className="content-container edged content slider-container">
+				<div className="page-slider">
+					<Modal 
+						transitionSpeed={250}
+						className="modal"
+						containerClassName={classnames('animate', 'modal-container', 'checked')}
+						closeOnOuterClick={true}
+						show={this.state.showModal}
+						onClose={this.closeModal.bind(this)} >
+						<div className="modal-head">
+							<span>Add new page</span>
+							<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
+						</div>
+						<PageForm onSend={this.closeModal.bind(this)} />
+					</Modal>
+					<div className="pages-head">
+						<div className="count">{this.props.pages.length} page{this.props.pages.length === 1 ? '' : 's'}</div>
+						<div className="order-switch">
+							<span onClick={this.toggleOrder.bind(this, false)} className="icon-keyboard_arrow_down"></span>
+							<span onClick={this.toggleOrder.bind(this, true)} className="icon-keyboard_arrow_up"></span>
+						</div>
+						<button className="button button--accent" onClick={this.showModal.bind(this)}><span className="icon-add"></span>Add page</button>
 					</div>
-					<PageForm onSend={this.closeModal.bind(this)} />
-				</Modal>
-				<div className="pages-head">
-					<div className="count">{this.props.pages.length} page{this.props.pages.length === 1 ? '' : 's'}</div>
-					<div className="order-switch">
-						<span onClick={this.toggleOrder.bind(this, false)} className="icon-keyboard_arrow_down"></span>
-						<span onClick={this.toggleOrder.bind(this, true)} className="icon-keyboard_arrow_up"></span>
+					<div className={classnames('slider', this.state.rtl ? 'orderReverse' : '')}>
+						{globalTile}
+						{this.props.pages && this.props.pages
+								/*.sort((a, b) => b.latestSupport - a.latestSupport)*/
+								.map((item, index) =>
+							<Page key={index} page={item} isActive={this.props.currentPageId === item._id} />)
+						}
 					</div>
-					<button className="button button--accent" onClick={this.showModal.bind(this)}><span className="icon-add"></span>Add page</button>
-				</div>
-				<div className={classnames('slider', this.state.rtl ? 'orderReverse' : '')}>
-					{globalTile}
-					{this.props.pages && this.props.pages
-							/*.sort((a, b) => b.latestSupport - a.latestSupport)*/
-							.map((item, index) =>
-						<Page key={index} page={item} isActive={this.props.currentPageId === item._id} />)
-					}
 				</div>
 			</div>
 		);

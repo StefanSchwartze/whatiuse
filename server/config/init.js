@@ -1,7 +1,7 @@
 'use strict';
 
 import debug from 'debug';
-import objectAssign from 'react/lib/Object.assign';
+import objectAssign from 'object-assign';
 
 const env = process.env.NODE_ENV || 'development';
 let config;

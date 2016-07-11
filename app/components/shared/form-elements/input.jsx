@@ -58,7 +58,7 @@ export default class TextInput extends React.Component {
 					placeholder={this.props.placeholder}
 					type={this.props.type}
 					onChange={(e) => this.props.setValue(e.target.value)} 
-					value={this.props.getValue()}
+					value={this.props.getValue() || ''}
 					onFocus={() => this.setState({ canError: true })}
 					onBlur={() => this.setState({ canError: false })}/>
 				{error}

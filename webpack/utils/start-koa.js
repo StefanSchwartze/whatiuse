@@ -6,7 +6,7 @@ import debug from 'debug';
 import browserSync from 'browser-sync';
 import watch from 'node-watch';
 
-import assign from 'react/lib/Object.assign';
+import assign from 'object-assign';
 
 let server;
 let started;

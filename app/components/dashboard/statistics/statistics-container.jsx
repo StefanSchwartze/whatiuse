@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
+//import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line} from 'recharts';
 import HistoryTooltip from '../../shared/history-tooltip';
@@ -22,7 +22,7 @@ export default class StatisticsContainer extends React.Component {
 	}
 	constructor(props) {
 		super(props);
-		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+		//this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
 		let pageElem;
@@ -116,7 +116,7 @@ export default class StatisticsContainer extends React.Component {
 			pageElem = <span>No page selected…</span>;
 		}
 		return (
-			<div className="">
+			<div className="content-container content statistics-container">
 				{pageElem}
 			</div>
 		);

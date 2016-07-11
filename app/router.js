@@ -1,10 +1,15 @@
-var Router = require("react-router");
-var routes = require("routes");
+import React from 'react';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+import createMemoryHistory from 'history/lib/createMemoryHistory';
+import { Router } from 'react-router';
+import routes from 'routes';
 
-var config = {routes};
+let history;
+
 if (process.env.BROWSER) {
-	config.location = Router.HistoryLocation;
+	history = createBrowserHistory();
+} else {
+	history = createMemoryHistory();
 }
-var router = Router.create(config);
 
-export default router;
+export default (<Router history={history}>{routes}</Router>);

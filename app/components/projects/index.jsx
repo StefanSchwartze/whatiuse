@@ -1,7 +1,8 @@
 import React from 'react';
 import AltContainer from 'alt-container';
 
-import ProjectForm from 'components/shared/forms/project-form';
+import ProjectForm from './project-form';
+import ProjectsList from './projects-list';
 import {Link} from 'react-router';
 
 import ProjectsStore from 'stores/projects-store';
@@ -16,6 +17,9 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 @authDecorator
 @connectToStores
 export default class Projects extends React.Component {
+	static contextTypes: {
+		location: React.PropTypes.object
+	}
 	static propTypes = {
 		projects: React.PropTypes.array,
 		projectsHash: React.PropTypes.object,
@@ -35,25 +39,8 @@ export default class Projects extends React.Component {
 	}
 	render() {
 		return (
-			<AltContainer
-				stores={{
-					ProjectsStore: ProjectsStore
-				}}>
-				<div className="content-container content">
-					<div className="projects-list">
-						{this.props.projects && this.props.projects.map((item, index) =>
-							<Link key={item._id} to={'/projects/' + item._id + ''} className="link">
-								<div className="project" key={index} >
-									<h2 className="">{item.title}</h2>
-									<p className="">{item.url}</p>
-								</div>
-							</Link>)
-						}
-						<div className="project">
-							<ProjectForm />
-						</div>
-					</div>
-				</div>
+			<AltContainer store={ProjectsStore}>
+				<ProjectsList />
 			</AltContainer>
 		);
 	}
