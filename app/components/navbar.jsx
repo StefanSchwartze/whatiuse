@@ -96,10 +96,9 @@ export default class Navbar extends React.Component {
 				<div className="header-content content-container">
 					<nav className="navigation">
 						<ul className="nav-list">
-							<li className="nav-list-item">
-								<button className="button button--accent" onClick={() => this.setState({showProjectModal: true})}>
-									{currentProject.title}
-								</button>
+							<li className="nav-list-item button button--accent">
+								{currentProject.title}
+								<Link to='/' className="link"><span className="icon-menu"></span></Link>
 							</li>
 							<li className="nav-list-item">
 								<div className="toggle">
