@@ -2,10 +2,7 @@ import alt from "utils/alt";
 import {defer} from "lodash";
 import api from "utils/api";
 import LoginActions from "actions/login-actions";
-
-// import {routerObject} from "utils/store-utils";
-// var router = require("router");
-import router from "router";
+import { browserHistory } from 'react-router'
 
 const USER_STORAGE_KEY = "appUser";
 
@@ -60,11 +57,11 @@ class LoginStore {
 	}
 
 	redirectToHome() {
-		defer(router.props.history.pushState.bind(this, null, `/`, null));
+		defer(browserHistory.push.bind(this, `/`));
 	}
 
 	redirectToLogin() {
-		defer(router.props.history.pushState.bind(this, null, `/login`, null));
+		defer(browserHistory.push.bind(this, `/login`));
 	}
 
 	onLogin(data) {

@@ -4,10 +4,9 @@ import fs from 'fs';
 import path from 'path';
 import debug from 'debug';
 
-import { Router } from 'react-router';
+import { Router, createMemoryHistory } from 'react-router';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import createMemoryHistory from 'history/lib/createMemoryHistory';
 
 // Paths are relative to `app` directory
 import routes from 'routes';

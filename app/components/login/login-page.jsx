@@ -16,9 +16,6 @@ export default class LoginPage extends React.Component {
 			login: {}
 		};
 	}
-	static contextTypes = {
-		router: React.PropTypes.func
-	}
 	static propTypes = {
 		error: React.PropTypes.string,
 		LoginStore: React.PropTypes.object

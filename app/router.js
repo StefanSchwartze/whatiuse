@@ -1,13 +1,11 @@
 import React from 'react';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
-import createMemoryHistory from 'history/lib/createMemoryHistory';
-import { Router } from 'react-router';
+import { Router, browserHistory, createMemoryHistory } from 'react-router'
 import routes from 'routes';
 
 let history;
 
 if (process.env.BROWSER) {
-	history = createBrowserHistory();
+	history = browserHistory;
 } else {
 	history = createMemoryHistory();
 }
