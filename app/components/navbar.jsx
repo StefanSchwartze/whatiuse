@@ -192,12 +192,18 @@ export default class Navbar extends React.Component {
 												<Tab>Upload</Tab>
 											</TabList>
 											<TabPanel>
-												<Configurator 
-													currentProject={findItemById(this.props.projects, this.props.currentProjectId)} 
-													browsers={this.props.browserscopes.custom.browsers} 
-													agents={this.props.agents} 
-													onSend={this.closeModal.bind(this)} 
-												/>
+												{ (() => {
+													if(currentProject !== '') {
+														return (
+															<Configurator 
+																currentProject={currentProject} 
+																browsers={this.props.browserscopes.custom.browsers} 
+																agents={this.props.agents} 
+																onSend={this.closeModal.bind(this)} 
+															/>
+														)
+													}													
+												})()}
 											</TabPanel>
 											<TabPanel>
 												<Uploader
@@ -218,8 +224,8 @@ export default class Navbar extends React.Component {
 							<li className="nav-list-item" onClick={this.logout.bind(this)}>
 								<a href="#" className="link"><span className="icon-enter"></span></a>
 							</li>
-							{busyComponent}
 						</ul>
+						{busyComponent}
 					</nav>
 				</div>
 				{errorComponent}

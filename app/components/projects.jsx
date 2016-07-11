@@ -16,23 +16,16 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 @authDecorator
 @connectToStores
 export default class Projects extends React.Component {
-	static contextTypes = {
-		router: React.PropTypes.func
-	}
 	static propTypes = {
 		projects: React.PropTypes.array,
 		projectsHash: React.PropTypes.object,
-		currentPageId: React.PropTypes.string,
-    	showRoute: React.PropTypes.string
+		currentPageId: React.PropTypes.string
 	}
 	static getStores(props) {
 		return [ProjectsStore];
 	}
 	static getPropsFromStores(props) {
 		return ProjectsStore.getState();
-	}
-	static willTransitionTo(transition) {
-	    console.log(transition);
 	}
 	constructor(props) {
 		super(props);

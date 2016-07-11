@@ -13,7 +13,7 @@ class PagesStore {
 	constructor() {
 		this.bindActions(PagesActions);
 		this.pages = [];
-		this.currentPageId = 'all';
+		this.currentPageId = '';
 		socket.on('connect', () => {
 			console.log('Uhh, connected!');
 			/*socket.on('progress', (data) => {
@@ -38,7 +38,7 @@ class PagesStore {
 		this.pages.splice(findIndexById(this.pages, item._id), 1);
 	}
 	onRemoveCurrent() {
-		this.currentPageId = 'all';
+		this.currentPageId = '';
 	}
 	onSelectPage(id) {
 		if(this.currentPageId !== id) {

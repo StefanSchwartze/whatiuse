@@ -17,7 +17,6 @@ class ProjectsActions {
     }
     get(id) {
         return async (dispatch) => {
-            console.log(id);
             networkAction(dispatch, this, api.projects.get, id);
         }
     }
