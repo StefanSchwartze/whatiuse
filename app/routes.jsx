@@ -7,6 +7,7 @@ import App from './components/app';
 import Login from './components/login/index';
 import Dashboard from './components/dashboard';
 import Projects from './components/projects';
+import Browsers from './components/browsers';
 
 export default (
 	<Route path='/' component={App}>
@@ -18,6 +19,9 @@ export default (
 		<Route
 			path='projects/:id'
 			component={Dashboard} />
+		<Route
+			path='projects/:id/browsers'
+			component={Browsers} />
 		<Route patch="*" component={require('./pages/not-found')} />
 	</Route>
 );
