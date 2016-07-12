@@ -81,15 +81,14 @@ export default class Navbar extends React.Component {
 		}
 		return (
 			<header className="header">
-				<div className="header-content content-container">
-					<nav className="navigation">
+				<div className="header-content content-container edged">
+					<nav className="navigation navigation--first">
 						<ul className="nav-list">
 							<li className="nav-list-item button button--accent">
 								{currentProject.title}
 								<Link to='/' className="link"><span className="icon-menu"></span></Link>
 							</li>
-							<li className="nav-list-item">
-								<div className="toggle">
+							<li className="nav-list-item toggle">
 								{this.props.browserscopes && Object.keys(this.props.browserscopes).map(
 									(item, key) => 
 									<div key={key}
@@ -97,7 +96,6 @@ export default class Navbar extends React.Component {
 										onClick={this.selectBrowserScope.bind(this, item)}><span className={"icon-" + item}></span> {item}</div>
 									)
 								}
-								</div>
 							</li>
 							<Tooltip 
 								overlayClassName="tooltip--local"
@@ -192,13 +190,23 @@ export default class Navbar extends React.Component {
 						</ul>
 						{busyComponent}
 					</nav>
-					<nav className="navigation">
+					<nav className="navigation navigation--second">
 						<ul className="nav-list">
-							<li className="nav-list-item button button--accent">
-								<Link to={'/projects/' + currentProject._id} className="link"><span className="icon-home"></span>Dashboard</Link>
+							<li className="nav-list-item">
+								<Link 
+									to={'/projects/' + currentProject._id} 
+									activeClassName="active"
+									className="link">
+									<span className="icon-home"></span>Dashboard
+								</Link>
 							</li>
-							<li className="nav-list-item button button--accent">
-								<Link to={'/projects/' + currentProject._id + '/browsers'} className="link"><span className="icon-pie-chart"></span>Browsers</Link>
+							<li className="nav-list-item">
+								<Link 
+									to={'/projects/' + currentProject._id + '/browsers'} 
+									activeClassName="active"
+									className="link">
+									<span className="icon-pie-chart"></span>Browsers
+								</Link>
 							</li>
 						</ul>
 						{busyComponent}
