@@ -264,12 +264,12 @@ io.on('connection', function(socket){
 	            },{result: {}}).result);
 
 			}
-			const getMissingBrowserVersions = (features) => {
+			const getMissingBrowserVersions = (features, type) => {
 	            let browsers = [];
 
 	            for (var i = 0; i < features.length; i++) {
-	            	if(features[i].missing) {
-		                browsers.push.apply(browsers, flatten(features[i].missing));
+	            	if(features[i][type]) {
+		                browsers.push.apply(browsers, flatten(features[i][type]));
 	            	}
 	            }
 	            return sumBrowserVersions(browsers);
@@ -302,16 +302,29 @@ io.on('connection', function(socket){
 		        return sum;
 		    }
 
-			let elements = sumObjectArrayByProp(newElems, 'feature', ['missing', 'partial', 'message']);
+			let elements = sumObjectArrayByProp(newElems, 'feature', ['missing', 'partial']);
 
 			for (var i = 0; i < elements.length; i++) {
-				if(elements[i].missing) elements[i].missing = sumObjectArrayByProp(elements[i].missing, 'alias', ['versions']);
-				if(elements[i].partial) elements[i].partial = sumObjectArrayByProp(elements[i].partial, 'alias', ['versions']);
-				const missingBrowserss = getMissingBrowserVersions([elements[i]]);
-				elements[i].impact = (getPercentage(missingBrowserss, browsers)).toFixed(2);
+
+				let element = elements[i];
+				let messages = [];
+
+				if(element.missing) {
+					element.missing = sumObjectArrayByProp(element.missing, 'alias', ['versions']);
+					messages.push('not supported by: ' + element.missing.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
+				}
+				if(element.partial) {
+					element.partial = sumObjectArrayByProp(element.partial, 'alias', ['versions']);
+					messages.push('only partially supported by: ' + element.partial.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
+				}
+				element.message = element.title + ' ' + messages.join(' and ');
+
+				const missingBrowserss = getMissingBrowserVersions([element], 'missing');
+				element.impact = (getPercentage(missingBrowserss, browsers)).toFixed(2);
+
 			}
 
-			const missingBrowserss = getMissingBrowserVersions(elements);
+			const missingBrowserss = getMissingBrowserVersions(elements, 'missing');
 			let send = {
 				elementCollection: elements,
 				browserCollection: browsers,

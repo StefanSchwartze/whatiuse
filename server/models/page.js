@@ -14,9 +14,12 @@ const PageSchema = new mongoose.Schema({
 		browserCollection: [],
 		elementCollection: [{
 			name: 	String,
+			title: String,
 			count: 	Number,
 			impact: Number,
-			message: String
+			message: String,
+			partial: [],
+			missing: []
 		}],
 		scope: String
 	}],

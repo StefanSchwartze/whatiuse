@@ -150,6 +150,7 @@ module.exports = function evaluate(args) {
 			            let feature = value;
 			            feature.count = usageData.counts[feature.feature];
 			            feature.name = feature.feature;
+			            feature.title = feature.title;
 			            feature.message = feature.message;
 			            return feature;
 			        });
