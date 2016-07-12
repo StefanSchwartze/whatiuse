@@ -59,19 +59,7 @@ export default class Navbar extends React.Component {
 	}
 	showModal(){
 		BrowserActions.fetchConfig();
-		this.setState({showModal: true})
-	}
-	showBrowserModal(){
-		this.setState({showBrowserModal: true})
-	}
-	closeModal(){
-		this.setState({showModal: false})
-	}
-	closeProjectModal(){
-		this.setState({showProjectModal: false})
-	}
-	closeBrowserModal(){
-		this.setState({showBrowserModal: false})
+		this.setState({showModal: !this.state.showModal});
 	}
 	handleTabSelect(index) {
 		this.setState({tabIndex: index})
@@ -124,7 +112,7 @@ export default class Navbar extends React.Component {
 
 										<div className="modal-head">
 											<span>Browser set</span>
-											<button className="icon-close button button--close" onClick={this.closeBrowserModal.bind(this)}></button>
+											<button className="icon-close button button--close" onClick={() => this.setState({ showBrowserModal: false })}></button>
 										</div>
 										<div className="browsers">
 											{this.props.browserscopes[this.props.browserScope] && this.props.browserscopes[this.props.browserScope].browsers.map(
@@ -140,7 +128,7 @@ export default class Navbar extends React.Component {
 							>
 								<li 
 									className={classnames('nav-list-item withOverlay', this.state.showBrowserModal ? 'active' : '')} 
-									onClick={this.showBrowserModal.bind(this)}
+									onClick={() => this.setState({ showBrowserModal: !this.state.showBrowserModal })}
 								>
 									Browsers
 								</li>
@@ -158,10 +146,10 @@ export default class Navbar extends React.Component {
 
 										<div className="modal-head">
 											<span>Browser settings</span>
-											<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
+											<button className="icon-close button button--close" onClick={() => this.setState({ showModal: false })}></button>
 										</div>
 										<Tabs
-											onSelect={this.handleTabSelect.bind(this)}
+											onSelect={(index) => this.setState({ tabIndex: index })}
 											selectedIndex={this.state.tabIndex}
 										>
 											<TabList>
@@ -176,7 +164,7 @@ export default class Navbar extends React.Component {
 																currentProject={currentProject} 
 																browsers={this.props.browserscopes.custom.browsers} 
 																agents={this.props.agents} 
-																onSend={this.closeModal.bind(this)} 
+																onSend={() => this.setState({ showModal: false })} 
 															/>
 														)
 													}													
@@ -184,7 +172,7 @@ export default class Navbar extends React.Component {
 											</TabPanel>
 											<TabPanel>
 												<Uploader
-													onSend={this.closeModal.bind(this)}
+													onSend={() => this.setState({ showModal: false })}
 												/>	
 											</TabPanel>
 										</Tabs>
