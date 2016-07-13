@@ -11,94 +11,102 @@ class BrowsersStore {
 		this.browserscopes = {
 			global: {
 				browsers: [
-					{ 
-						name: 'and_chr 50',
-						share: 17.0049 
+					{
+						"alias":"ie",
+						"browser":"IE",
+						"version_usage":{
+							"8":0.629643,
+							"9":0.427062,
+							"11":4.87837
+						}
 					},
-					{ 
-						name: 'and_uc 9.9',
-						share: 9.16597 
+					{
+						"alias":"and_chr",
+						"browser":"Chrome for Android",
+						"version_usage":{
+							"51":19.4722
+						}
 					},
-					{ 
-						name: 'android 4.4',
-						share: 1.68994 
+					{
+						"alias":"and_uc",
+						"browser":"UC Browser for Android",
+						"version_usage":{
+							"9.9":6.6515
+						}
 					},
-					{ 
-						name: 'android 4.4.3-4.4.4',
-						share: 2.621749 
+					{
+						"alias":"android",
+						"browser":"Android Browser",
+						"version_usage":{
+							"4.2-4.3":0.626031,
+							"4.4.3-4.4.4":0.98683,
+							"4.4":1.65044
+						}
 					},
-					{ 
-						name: 'android 4.2-4.3',
-						share: 0.778934 
+					{
+						"alias":"chrome",
+						"browser":"Chrome",
+						"version_usage":{
+							"29":1.02336,
+							"48":0.4264,
+							"49":2.42515,
+							"50":6.81707,
+							"51":17.2852,
+							"52":0.09594
+						}
 					},
-					{ 
-						name: 'chrome 50',
-						share: 1.99318 
+					{
+						"alias":"edge",
+						"browser":"Edge",
+						"version_usage":{
+							"13":1.35382
+						}
 					},
-					{ 
-						name: 'chrome 49',
-						share: 24.0789 
+					{
+						"alias":"firefox",
+						"browser":"Firefox",
+						"version_usage":{
+							"39":0.06396,
+							"45":0.27183,
+							"46":2.30256,
+							"47":3.78963,
+							"48":0.12259
+						}
 					},
-					{ 
-						name: 'chrome 48',
-						share: 0.889428 
+					{
+						"alias":"ios_saf",
+						"browser":"iOS Safari",
+						"version_usage":{
+							"8.1-8.4":0.466736,
+							"9.0-9.2":1.00746,
+							"9.3":7.14444
+						}
 					},
-					{ 
-						name: 'chrome 45',
-						share: 0.56259 
+					{
+						"alias":"op_mini",
+						"browser":"Opera Mini",
+						"version_usage":{
+							"5.0-8.0":4.69025
+						}
 					},
-					{ 
-						name: 'chrome 29',
-						share: 0.680466 
+					{
+						"alias":"opera",
+						"browser":"Opera",
+						"version_usage":{
+							"36":0.05863,
+							"37":0.19188,
+							"38":0.3198
+						}
 					},
-					{ 
-						name: 'edge 13',
-						share: 1.08232 
+					{
+						"alias":"safari",
+						"browser":"Safari",
+						"version_usage":{
+							"8":0.20787,
+							"9":0.36244,
+							"9.1":1.53504
+						}
 					},
-					{ 
-						name: 'firefox 45',
-						share: 5.71699 
-					},
-					{ 
-						name: 'ie 11',
-						share: 5.42872 
-					},
-					{ 
-						name: 'ie 9',
-						share: 0.514125 
-					},
-					{ 
-						name: 'ie 8',
-						share: 0.768423 
-					},
-					{ 
-						name: 'ios_saf 9.3',
-						share: 5.21039 
-					},
-					{ 
-						name: 'ios_saf 9.0-9.2',
-						share: 2.01021 
-					},
-					{ 
-						name: 'ios_saf 8.1-8.4',
-						share: 0.621755 
-					},
-					{ 
-						name: 'op_mini 5.0-8.0',
-						share: 5.04151 
-					},
-					{ 
-						name: 'opera 36',
-						share: 0.675108 
-					},
-					{ 
-						name: 'safari 9.1',
-						share: 0.96444 
-					},
-					{ 
-						name: 'safari 9',
-						share: 0.787626
-					}
 				]
 			},
 			custom: {

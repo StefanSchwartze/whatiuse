@@ -16,16 +16,11 @@ module.exports = function evaluate(args) {
 	return new Promise((resolve, reject) => {
 
 		const url = args.url || '';
-		let browsers = args.browsers || '';
-			browsers = browsers.map((obj) => obj.version ? (obj.name + ' ' + obj.version) : obj.name);
-		const currentBrowser = browsers[0];
-		const name = currentBrowser.split(' ')[0];
-		const version = currentBrowser.split(' ')[1];
-		const fullName = agents[name].browser + ' ' + version;
+		const browser = args.browser || '';
 		const options = {
 			timeout: 5000,
 			headers: { 
-				'User-Agent': fullName 
+				'User-Agent': browser 
 			}
 		};
 
@@ -41,7 +36,7 @@ module.exports = function evaluate(args) {
 
 				streams = streams.concat([
 					limit,
-					doiuse({ browsers: browsers, skipErrors: true }, url.trim().length ? url : 'pasted content')
+					doiuse({ browsers: browser, skipErrors: true }, url.trim().length ? url : 'pasted content')
 					.on('warning', function (warn) {
 						console.log(warn);
 						errorsAndWarnings.push(warn);

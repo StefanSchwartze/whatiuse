@@ -210,18 +210,24 @@ io.on('connection', function(socket){
 		const url = data.url;
 		const id = data.id;
 		let browsers = data.browsers;
+		let browserNames = [];
+		for (var i = 0; i < browsers.length; i++) {
+			const browserName = browsers[i].alias;
+			const versions = browsers[i].version_usage;
+			browserNames = browserNames.concat(Object.keys(versions).map((version) => browserName + ' ' + version));
+		}
 		let progress = 0;
 
     	const doit = (item, index, that) => {
 			return new Promise((resolve, reject) => {
-				evaluate({ url : url, browsers: [item] }).then(function(results) {
+				evaluate({ url : url, browser: item }).then(function(results) {
 					io.emit('progress', { progress: (++progress) / that.length, pageId: id });
 					resolve(results);
 				});
 			});
 		}
 
-		Promise.all(browsers.map(doit)).then(data => {
+		Promise.all(browserNames.map(doit)).then(data => {
 			let elementCollection = [];
 			for (var i = 0; i < data.length; i++) {
 				elementCollection.push(data[i].elementCollection);
