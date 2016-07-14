@@ -15,7 +15,6 @@ export default class BrowsersBox extends React.Component {
 		};
 	}
 	render() {
-		console.log(this.props);
 		let width = (this.props.browser.completeShare / this.props.maxVal) * 100 + '%';
 		return (
 			<div>

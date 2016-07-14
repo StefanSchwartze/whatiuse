@@ -7,7 +7,6 @@ import BrowserBox from './browserbox';
 import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
 
-
 import {clone, camelCase, flatten, values, find, forEach, uniq, merge, sumBy, groupBy, value, map as _map} from "lodash";
 import classnames from 'classnames';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
@@ -24,27 +23,6 @@ export default class Browsers extends React.Component {
 	constructor(props) {
 		super(props);
 	}
-	sumBrowserVersions(browsers) {
-		let newBrowsers = [];
-		for (var i = 0; i < browsers.length; i++) {
-			const name = browsers[i].name.split(' ')[0];
-			const versions = [browsers[i].name.split(' ')[1]];
-			newBrowsers.push({
-				name: name,
-				versions: versions,
-				share: browsers[i].share
-			});
-		}
-    	return values(newBrowsers.reduce((prev, current, index, array) => {
-            if(!(current.name in prev.result)) {
-                prev.result[current.name] = current;
-            } 
-           else if(prev.result[current.name]) {
-                prev.result[current.name].versions = uniq(prev.result[current.name].versions.concat(current.versions));
-            }
-           return prev;
-        },{result: {}}).result);
-    }
 	componentWillMount() {
 	}
 	componentDidMount() {
@@ -63,13 +41,16 @@ export default class Browsers extends React.Component {
 				browsers[i] = newBrowser;
 
 			}
+			browsers = browsers.sort((a, b) => { 
+				return a.completeShare < b.completeShare ? 1 : -1;
+			});
 		}
 		return (
 			<div>
 				<div className="content-container edged browser-container">
 					<ResponsiveContainer>
 						<BarChart 
-							data={browsers.sort((a, b) => a.completeShare < b.completeShare)}
+							data={browsers}
 							margin={{top: 20, right: 30, left: 20, bottom: 5}}
 						>
 							<XAxis dataKey="browser"/>
