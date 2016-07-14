@@ -103,8 +103,7 @@ class BrowsersStore {
 						"browser":"Safari",
 						"version_usage":{
 							"8":0.20787,
-							"9":0.36244,
-							"9.1":1.53504
+							"9":2.36244,
 						}
 					},
 				]

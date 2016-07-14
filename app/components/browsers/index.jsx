@@ -51,29 +51,38 @@ export default class Browsers extends React.Component {
 	}
 	render() {
 		const scope = this.props.currentScope;
-		const browsers = this.props.browserscopes[scope].browsers;
-		const browserss = this.sumBrowserVersions(browsers);
-		console.log(browserss);
+		let browsers = [];
+		if(this.props.browserscopes[scope].browsers) {
+			browsers = this.props.browserscopes[scope].browsers;
+			for (var i = 0; i < browsers.length; i++) {
+
+				let newBrowser = browsers[i];
+				newBrowser.completeShare = Object.keys(newBrowser.version_usage).reduce((sum, version) => {
+					return sum += newBrowser.version_usage[version];
+				}, 0);
+				browsers[i] = newBrowser;
+
+			}
+		}
 		return (
 			<div>
 				<div className="content-container edged browser-container">
 					<ResponsiveContainer>
 						<BarChart 
-							data={browserss}
+							data={browsers.sort((a, b) => a.completeShare < b.completeShare)}
 							margin={{top: 20, right: 30, left: 20, bottom: 5}}
 						>
-							<XAxis dataKey="name"/>
+							<XAxis dataKey="browser"/>
 							<YAxis/>
 							<CartesianGrid />
 							<Tooltip/>
-							<Legend />
-							<Bar dataKey="share" stackId="a" fill="#8884d8" />
+							<Bar dataKey="completeShare" stackId="a" fill="#8884d8" />
 						</BarChart>
 					</ResponsiveContainer>
 				</div>
 				<div className="content-container content edged browsertiles-container">
-					{browserss && browserss.map((item, index) =>
-						<BrowserBox key={index} browser={item} />
+					{browsers && browsers.map((item, index) =>
+						<BrowserBox key={index} browser={item} maxVal={browsers[0].completeShare} />
 					)}
 				</div>
 			</div>

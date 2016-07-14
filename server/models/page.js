@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const PageSchema = new mongoose.Schema({
 	title: 			String,
 	url: 			String,
-	latestSupport: Number,
+	latestSupport: String,
 	imgSrc: String,
 	snapshots:     [{
 		captured:  {
@@ -12,15 +12,7 @@ const PageSchema = new mongoose.Schema({
 		},
 		pageSupport: Number,
 		browserCollection: [],
-		elementCollection: [{
-			name: 	String,
-			title: String,
-			count: 	Number,
-			impact: Number,
-			message: String,
-			partial: [],
-			missing: []
-		}],
+		elementCollection: [],
 		scope: String
 	}],
 	user: {

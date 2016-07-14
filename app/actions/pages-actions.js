@@ -77,6 +77,7 @@ class PagesActions {
         let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId)
         page.snapshots.push(snapshot);
         page.latestSupport = snapshot.pageSupport;
+        console.log(page);
         this.update(snapshot.pageId, page);
         return {ok: true, id: page._id, data: snapshot};
     }

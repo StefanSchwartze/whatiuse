@@ -97,40 +97,7 @@ export default class Navbar extends React.Component {
 									)
 								}
 							</li>
-							<Tooltip 
-								overlayClassName="tooltip--local"
-								visible={this.state.showBrowserModal}
-								placement="bottom"
-								mouseEnterDelay={0}
-								mouseLeaveDelay={0}
-								destroyTooltipOnHide={true}
-								overlay={
-									<div className="modal-container">
-
-
-										<div className="modal-head">
-											<span>Browser set</span>
-											<button className="icon-close button button--close" onClick={() => this.setState({ showBrowserModal: false })}></button>
-										</div>
-										<div className="browsers">
-											{this.props.browserscopes[this.props.browserScope] && this.props.browserscopes[this.props.browserScope].browsers.map(
-												(item, key) => 
-												<div className="justify" key={key}>
-													{agents[item.name] ? agents[item.name].browser : item.name} | {item.version} | {item.share}
-												</div>
-												)
-											}
-										</div>
-									</div>
-								}
-							>
-								<li 
-									className={classnames('nav-list-item withOverlay', this.state.showBrowserModal ? 'active' : '')} 
-									onClick={() => this.setState({ showBrowserModal: !this.state.showBrowserModal })}
-								>
-									Browsers
-								</li>
-					        </Tooltip>
+							
 							<Tooltip 
 								overlayClassName="tooltip--local"
 								visible={this.state.showModal}

@@ -146,7 +146,6 @@ module.exports = function evaluate(args) {
 			            feature.count = usageData.counts[feature.feature];
 			            feature.name = feature.feature;
 			            feature.title = feature.title;
-			            feature.message = feature.message;
 			            return feature;
 			        });
 
