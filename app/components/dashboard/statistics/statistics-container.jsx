@@ -6,12 +6,7 @@ import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip
 import HistoryTooltip from '../../shared/history-tooltip';
 
 import moment from 'moment';
-import {findItemById} from 'utils/store-utils';
-import {sortBy, orderBy, flatten, reduce, forEach} from 'lodash';
-
-import connectToStores from 'alt-utils/lib/connectToStores';
-import StatusStore from 'stores/status-store';
-import StatusActions from 'actions/status-actions';
+import {orderBy} from 'lodash';
 
 import ElementsList from '../../shared/elements-list';
 import BrowsersList from '../../shared/browsers-list';

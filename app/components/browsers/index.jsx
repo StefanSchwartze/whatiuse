@@ -7,9 +7,7 @@ import BrowserBox from './browserbox';
 import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
 
-import {clone, camelCase, flatten, values, find, forEach, uniq, merge, sumBy, groupBy, value, map as _map} from "lodash";
-import classnames from 'classnames';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
 
 @authDecorator
 @connectToStores
@@ -22,10 +20,6 @@ export default class Browsers extends React.Component {
 	}
 	constructor(props) {
 		super(props);
-	}
-	componentWillMount() {
-	}
-	componentDidMount() {
 	}
 	render() {
 		const scope = this.props.currentScope;

@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal, {closeStyle} from 'simple-react-modal';
+import Modal from 'simple-react-modal';
 import classnames from 'classnames';
 import PageForm from './page-form';
 import Page from './page';
@@ -17,8 +17,6 @@ export default class PagesList extends React.Component {
 			rtl: false,
 			showModal: false
 		};
-	}
-	componentWillMount() {
 	}
 	toggleOrder(rtl) {
 		this.setState({rtl: rtl})	

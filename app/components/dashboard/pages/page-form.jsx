@@ -1,9 +1,6 @@
 import React from 'react';
 import { Form } from 'formsy-react';
 import TextInput from 'components/shared/form-elements/input';
-
-import {authDecorator} from 'utils/component-utils';
-
 import PagesActions from 'actions/pages-actions';
 
 export default class PageForm extends React.Component {

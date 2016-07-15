@@ -1,7 +1,6 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 
-import ProjectActions from 'actions/projects-actions';
 import BrowserActions from 'actions/browsers-actions';
 
 export default class Uploader extends React.Component {

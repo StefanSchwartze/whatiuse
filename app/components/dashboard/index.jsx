@@ -1,23 +1,16 @@
 import React from 'react';
-import AltContainer from 'alt-container';
 
 import PagesList from './pages/pages-list';
 import PagesStore from 'stores/pages-store';
 import PagesActions from 'actions/pages-actions';
 
-import BrowsersStore from 'stores/browsers-store';
-
 import StatisticsContainer from './statistics/statistics-container';
 
 import {findItemById} from 'utils/store-utils';
-import {sortBy, orderBy, flatten, reduce, forEach, floor, map, values, head} from 'lodash';
+import {forEach, floor, values, head} from 'lodash';
 
 import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
-
-
-
-import alt from 'utils/alt';
 
 @authDecorator
 @connectToStores

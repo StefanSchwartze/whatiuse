@@ -1,8 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {findItemById} from 'utils/store-utils';
-import {sortBy, orderBy, flatten, reduce, forEach, floor, map, values, head} from 'lodash';
-
 import ProjectForm from './project-form';
 
 export default class ProjectsList extends React.Component {

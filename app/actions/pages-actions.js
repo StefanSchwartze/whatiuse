@@ -1,6 +1,6 @@
 import alt from 'utils/alt';
 import api from 'utils/api';
-import {clone, assign, map, flatten, findKey, forEach, find} from 'lodash';
+import {clone} from 'lodash';
 import {networkAction} from 'utils/action-utils';
 import {findItemById, findItemByTitleAndUrl} from 'utils/store-utils';
 import {agents} from 'utils/user-agents';

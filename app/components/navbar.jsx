@@ -5,7 +5,6 @@ import {Link} from 'react-router';
 import Tooltip from 'rc-tooltip';
 import classnames from 'classnames';
 import { findItemById } from 'utils/store-utils';
-
 import { agents } from 'utils/user-agents';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
