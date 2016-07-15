@@ -1,6 +1,7 @@
 'use strict';
 
-require('babel/register');
+require('babel-core/register');
+require('babel-polyfill');
 
 var debug = require('debug')('dev');
 var webpack = require('webpack');

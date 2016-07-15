@@ -3,7 +3,7 @@
 /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 /* eslint camelcase: 0 */
 
-require('babel/register');
+require('babel-core/register');
 
 var path = require('path');
 var webpack = require('webpack');
