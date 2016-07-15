@@ -15,4 +15,4 @@ Build the project first:
 
 Then start the koa server:
 
-* `$ NODE_ENV=production node --harmony server/index.js` (nodejs 4.4.2)
+* `$ NODE_ENV=production node server/index.js` (nodejs 4.4.2)
