@@ -1,13 +1,12 @@
 import JSONStream from 'JSONStream';
 import { pipe, through, concat } from 'mississippi';
-import styles from 'style-stream';
 import next from 'next-stream';
 import doiuse from 'doiuse/stream';
 import prune from './prune';
 import unique from './unique';
 import limitstream from './limit';
 import {agents} from './user-agents';
-import { map, flatten, findKey, forEach, find, values, uniq } from 'lodash';
+import { flatten, findKey } from 'lodash';
 import getCss from 'get-css';
 import fromString from 'from2-string';
 
@@ -141,7 +140,7 @@ module.exports = function evaluate(args) {
 
 				    let data = {};
 				    const features = transformBrowserVersion(usageData.features);
-				    data.elementCollection = map(features, (value, prop) => {
+				    data.elementCollection = features.map((value, prop) => {
 			            let feature = value;
 			            feature.count = usageData.counts[feature.feature];
 			            feature.name = feature.feature;
