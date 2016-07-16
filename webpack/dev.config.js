@@ -46,13 +46,14 @@ export default {
 			publicPath: PUBLIC_PATH
 		},
 		module: {
-			// preLoaders: [
-			// 	{
-			// 		test: /\.js$|.jsx$/,
-			// 		exclude: /node_modules|styles/,
-			// 		loaders: ["eslint-loader", "jscs-loader"]
-			// 	}
-			// ],
+			preLoaders: [
+				{
+					test: /\.js$|.jsx$/,
+					include: "/app/actions",
+					//exclude: /node_modules|styles/,
+					loaders: ["eslint-loader"]
+				}
+			],
 			loaders: [
 				{
 					test: /\.json$/,
@@ -82,16 +83,11 @@ export default {
 			]
 		},
     	postcss: [ autoprefixer({ browsers: ['last 3 versions'] }) ],
-
-		// jscs: {
-		// 	emitErrors: false,
-		// 	failOnHint: false
-		// },
-		// eslint: {
-		// 	emitWarning: true,
-		// 	failOnError: false,
-		// 	failOnWarning: false
-		// },
+		eslint: {
+			emitWarning: true,
+			failOnError: false,
+			failOnWarning: true
+		},
 		plugins: [
 
 			// hot reload

@@ -8,12 +8,12 @@ class BrowsersActions {
     constructor() {
     }
     update(type, browsers) {
-    	return { browsers: browsers, type: type };
+        return { browsers: browsers, type: type };
     }
     fetchConfig() {
-    	const projectStore = alt.stores.ProjectsStore.state;
-    	const project = findItemById(projectStore.projects, projectStore.currentProjectId);
-    	return project.browserscopes.config;
+        const projectStore = alt.stores.ProjectsStore.state;
+        const project = findItemById(projectStore.projects, projectStore.currentProjectId);
+        return project.browserscopes.config;
     }
     fetchCustom() {
         const projectStore = alt.stores.ProjectsStore.state;
@@ -45,7 +45,7 @@ class BrowsersActions {
 
             StatusActions.done();
 
-        }
+        };
 
     }
 }

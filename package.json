@@ -8,7 +8,7 @@
     "dev": "node ./webpack/dev-server.js",
     "prod": "NODE_ENV=production node server/index.js",
     "postinstall": "npm run build",
-    "lint": "eslint app --ext .jsx,.js"
+    "lint": "eslint app/actions --ext .jsx,.js"
   },
   "repository": {
     "type": "git",

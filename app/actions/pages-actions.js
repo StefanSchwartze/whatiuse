@@ -3,15 +3,15 @@ import api from 'utils/api';
 import {clone} from 'lodash';
 import {networkAction} from 'utils/action-utils';
 import {findItemById, findItemByTitleAndUrl} from 'utils/store-utils';
-import {agents} from 'utils/user-agents';
 
 import axios from 'axios';
 import StatusActions from 'actions/status-actions';
+let socket;
 
 if(!process.env.BROWSER) {
-    var socket = require('socket.io-client')('http://localhost');
+    socket = require('socket.io-client')('http://localhost');
 } else {
-    var socket = io();
+    socket = io();
 }
 
 class PagesActions {
@@ -45,7 +45,7 @@ class PagesActions {
         }
     }
     createBackground(url, title) {
-        return async (dispatch) => {
+        return async () => {
             const response = await axios.post('/image', { url: url, title: title });
             let page = findItemByTitleAndUrl(alt.stores.PagesStore.state.pages, title, url);
             page.imgSrc = response.data.imgSrc;
@@ -61,7 +61,8 @@ class PagesActions {
             const scope = store.currentScope;
             const browsers = store.browserscopes[scope].browsers;
 
-            socket.emit('triggerURL', { url: page.url, browsers: browsers, id: page._id }, function (err) {
+            socket.emit('triggerURL', { url: page.url, browsers: browsers, id: page._id }, 
+                function (err) {
                     if (err) {
                         console.error('Error deleting user:', err);
                         dispatch({ok: false, err: err});
@@ -77,7 +78,6 @@ class PagesActions {
         let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId)
         page.snapshots.push(snapshot);
         page.latestSupport = snapshot.pageSupport;
-        console.log(page);
         this.update(snapshot.pageId, page);
         return {ok: true, id: page._id, data: snapshot};
     }

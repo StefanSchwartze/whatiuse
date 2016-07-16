@@ -2,9 +2,6 @@ import alt from 'utils/alt';
 import api from 'utils/api';
 import {clone} from 'lodash';
 import {networkAction} from 'utils/action-utils';
-import {findItemById, findItemByTitleAndUrl} from 'utils/store-utils';
-//import BrowsersActions from './browsers-actions';
-import StatusActions from './status-actions';
 
 class ProjectsActions {
     constructor() {
