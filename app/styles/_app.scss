@@ -153,6 +153,7 @@ a {
 	&.edged {
 		padding: 0;
 		margin: 0;
+		margin: auto;
 	}
 	&--small {
 		max-width: 320px;
@@ -357,7 +358,7 @@ a {
 		> *:first-child {
 			margin-left: $spacing-medium;
 			@media only screen and (min-width: 1281px) {
-				margin-left: calc( (100% - 1280px) / 2 + $spacing-medium);	
+				margin-left: calc( (100% - 1280px) / 2);	
 			}
 		}
 		> .hint--empty {
