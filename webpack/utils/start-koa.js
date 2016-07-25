@@ -23,15 +23,15 @@ const startServer = () => {
     if (message.match(/^online$/)) {
       if (serverReload) {
         serverReload = false;
-        browserSync.reload();
+        //browserSync.reload();
       }
       if (!started) {
         started = true;
         // Start browserSync
-        browserSync({
+        /*browserSync({
           port: 8080,
           proxy: 'http://localhost:3000'
-        });
+        });*/
         // Start watcher on server files
         // and reload browser on change
         watch(
