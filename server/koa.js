@@ -200,7 +200,7 @@ import Project from "./models/project";
 
 	var statusRouter = koaRouter();
 
-	statusRouter.post("/status", function*() {
+	statusRouter.get("/status", function*() {
 		this.status = 200;
 	});
 
