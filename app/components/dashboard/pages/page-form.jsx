@@ -5,7 +5,6 @@ import PagesActions from 'actions/pages-actions';
 
 export default class PageForm extends React.Component {
 	static propTypes = {
-		pages: React.PropTypes.array,
 		onSend: React.PropTypes.func
 	}
 	constructor(props) {
@@ -29,9 +28,6 @@ export default class PageForm extends React.Component {
 		model.url = model.url || 'http://sevenval.com';
 		model.elementsCollections = model.elementsCollections || [];
 		PagesActions.add(model);
-		if(this.props.onSend) {
-			this.props.onSend('Page added');
-		}
 	}
 	send() {
 		this.refs.pageForm.submit();

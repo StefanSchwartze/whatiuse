@@ -5,16 +5,6 @@ const PageSchema = new mongoose.Schema({
 	url: 			String,
 	latestSupport: String,
 	imgSrc: String,
-	snapshots:     [{
-		captured:  {
-			type: 		Date,
-			default: 	Date.now
-		},
-		pageSupport: Number,
-		browserCollection: [],
-		elementCollection: [],
-		scope: String
-	}],
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'user'
