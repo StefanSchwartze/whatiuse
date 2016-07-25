@@ -28,6 +28,9 @@ export default class PageForm extends React.Component {
 		model.url = model.url || 'http://sevenval.com';
 		model.elementsCollections = model.elementsCollections || [];
 		PagesActions.add(model);
+		if(this.props.onSend) {
+			this.props.onSend('Page added');
+		}
 	}
 	send() {
 		this.refs.pageForm.submit();
