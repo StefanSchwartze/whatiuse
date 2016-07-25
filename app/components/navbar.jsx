@@ -200,23 +200,18 @@ export default class Navbar extends React.Component {
 									)
 								}
 							</li>
-							
-							<Tooltip 
-								overlayClassName="tooltip--local"
-								visible={this.state.showModal}
-								placement="bottom"
-								mouseEnterDelay={0}
-								mouseLeaveDelay={0}
-								destroyTooltipOnHide={true}
-								overlay={
-									<div className="modal-container modal-container--wide">
-
-
-										<div className="modal-head">
-											<span>Browser settings</span>
-											<button className="icon-close button button--close" onClick={() => this.setState({ showModal: false })}></button>
-										</div>
-										<Tabs
+							<Modal 
+								transitionSpeed={250}
+								className="modal"
+								containerClassName={classnames('animate', 'modal-container', 'checked', 'modal-container--wide')}
+								closeOnOuterClick={true}
+								show={this.state.showModal}
+							>
+								<div className="modal-head">
+									<span>Browser settings</span>
+									<button className="icon-close button button--close" onClick={() => this.setState({ showModal: false })}></button>
+								</div>
+								<Tabs
 											onSelect={(index) => this.setState({ tabIndex: index })}
 											selectedIndex={this.state.tabIndex}
 										>
@@ -244,16 +239,13 @@ export default class Navbar extends React.Component {
 												/>	
 											</TabPanel>
 										</Tabs>
-									</div>
-								}
+							</Modal>
+							<li 
+								className={classnames('nav-list-item', this.state.showModal ? 'active' : '')} 
+								onClick={this.showModal.bind(this)}
 							>
-								<li 
-									className={classnames('nav-list-item withOverlay', this.state.showModal ? 'active' : '')} 
-									onClick={this.showModal.bind(this)}
-								>
-									<span className="icon-settings"></span>
-								</li>
-					        </Tooltip>
+								<span className="icon-settings"></span>
+							</li>
 							<li className="nav-list-item" onClick={this.logout.bind(this)}>
 								<a href="#" className="link"><span className="icon-enter"></span></a>
 							</li>
