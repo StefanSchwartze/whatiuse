@@ -1,6 +1,9 @@
 import alt from 'utils/alt';
 import axios from 'axios';
-import {findItemById} from 'utils/store-utils';
+import {clone} from 'lodash';
+import api from 'utils/api';
+import {findItemById, constructBrowserArray, deconstructBrowserArray} from 'utils/store-utils';
+import {networkAction} from 'utils/action-utils';
 import StatusActions from './status-actions';
 import ProjectsActions from './projects-actions';
 
@@ -9,6 +12,18 @@ class BrowsersActions {
     }
     update(type, browsers) {
         return { browsers: browsers, type: type };
+    }
+    add(browserCollection) {
+        var browserset = browserCollection;
+        return async (dispatch) => {
+            const browsers = constructBrowserArray(clone(browserset));
+            networkAction(dispatch, this, api.browsers.post, {browsers: browsers});
+        }
+    }
+    fetchGlobal() {
+        return async (dispatch) => {
+            networkAction(dispatch, this, api.browsers.getAll);
+        }
     }
     fetchConfig() {
         const projectStore = alt.stores.ProjectsStore.state;

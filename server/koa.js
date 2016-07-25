@@ -89,6 +89,7 @@ import uuid from "node-uuid";
 import User from "./models/user";
 import Page from "./models/page";
 import Project from "./models/project";
+import Stat from "./models/stat";
 
 	const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0.1:27017/whatiuse";
 	const mongoose = require("mongoose");
@@ -100,6 +101,9 @@ import Project from "./models/project";
 
 	var PagesController = generateApi(app, Page, "/api");
 	PagesController.mount();
+
+	var StatController = generateApi(app, Stat, "/api");
+	StatController.mount();
 
 	var authRouter = koaRouter();
 
