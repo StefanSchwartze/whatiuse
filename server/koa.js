@@ -197,6 +197,16 @@ import Project from "./models/project";
 	app
 		.use(uploadRouter.routes())
 		.use(uploadRouter.allowedMethods());
+
+	var statusRouter = koaRouter();
+
+	statusRouter.post("/status", function*() {
+		this.status = 200;
+	});
+
+	app
+		.use(statusRouter.routes())
+		.use(statusRouter.allowedMethods());
 		
 app.use(router);
 
