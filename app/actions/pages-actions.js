@@ -6,6 +6,7 @@ import {findItemById, findItemByTitleAndUrl} from 'utils/store-utils';
 
 import axios from 'axios';
 import StatusActions from 'actions/status-actions';
+import SnapshotsActions from 'actions/snapshots-actions';
 let socket;
 
 if(!process.env.BROWSER) {
@@ -74,11 +75,12 @@ class PagesActions {
         }
     }
     checkComplete(snapshot) {
+        SnapshotActions.add(snapshot);
         this.checked(snapshot.pageId);
-        let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId)
-        page.snapshots.push(snapshot);
+        let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId);
+        //page.snapshots.push(snapshot);
         page.latestSupport = snapshot.pageSupport;
-        this.update(snapshot.pageId, page);
+        this.update(page._id, page);
         return {ok: true, id: page._id, data: snapshot};
     }
 }

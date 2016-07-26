@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const SnapshotSchema = new mongoose.Schema({
-	page: {
+	pageId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'page'
 	},

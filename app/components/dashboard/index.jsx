@@ -15,11 +15,6 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 @authDecorator
 @connectToStores
 export default class Dashboard extends React.Component {
-	static propTypes = {
-		item: React.PropTypes.object,
-		pages: React.PropTypes.array,
-		currentPageId: React.PropTypes.string
-	}
 	static getStores(props) {
 		return [PagesStore];
 	}
