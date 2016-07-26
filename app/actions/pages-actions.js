@@ -75,7 +75,10 @@ class PagesActions {
         }
     }
     checkComplete(snapshot) {
-        SnapshotActions.add(snapshot);
+        const store = alt.stores.BrowsersStore.state;
+        const scope = store.currentScope;
+        snapshot.scope = 'global';
+        SnapshotsActions.add(snapshot);
         this.checked(snapshot.pageId);
         let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId);
         //page.snapshots.push(snapshot);

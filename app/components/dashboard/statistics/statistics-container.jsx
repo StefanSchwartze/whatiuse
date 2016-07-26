@@ -13,7 +13,8 @@ import BrowsersList from '../../shared/browsers-list';
 
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
-		page: React.PropTypes.object
+		page: React.PropTypes.object,
+		snapshots: React.PropTypes.array.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -22,17 +23,17 @@ export default class StatisticsContainer extends React.Component {
 	render() {
 		let pageElem;
 		let timeline;
-
+console.log(this.props);
 		if(Object.keys(this.props.page).length > 0) {
 			
-			if(this.props.page.snapshots && this.props.page.snapshots.length > 0) {
+			if(this.props.snapshots && this.props.snapshots.length > 0) {
 			
 				const page = this.props.page;
-				let snapshots = page.snapshots || [];
-				let elements = page.snapshots[page.snapshots.length - 1].elementCollection || [];
-				let lastCheck = page.isChecking ? (<span><i className="icon icon-spinner8 animate rotate"></i>Currently checking…</span>) : moment(page.snapshots[page.snapshots.length - 1].captured).calendar();
+				const snapshots = this.props.snapshots || [];
+				let elements = snapshots[snapshots.length - 1].elementCollection || [];
+				let lastCheck = page.isChecking ? (<span><i className="icon icon-spinner8 animate rotate"></i>Currently checking…</span>) : moment(snapshots[snapshots.length - 1].captured).calendar();
 
-				if(page.snapshots.length > 1) {
+				if(snapshots.length > 1) {
 					timeline = <div className="history-container">
 									<div className="description">
 										<span>Timeline</span>

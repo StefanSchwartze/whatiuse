@@ -33,8 +33,8 @@ export default class Page extends React.Component {
 		let support = '- %';
 		let state;
 		let progress;
-		if(this.props.page.snapshots && this.props.page.snapshots.length > 0) {
-			support = floor(this.props.page.snapshots[this.props.page.snapshots.length - 1].pageSupport, 2) + '%';
+		if(this.props.page.latestSupport) {
+			support = floor(this.props.page.latestSupport, 2) + '%';
 		}
 		state = <span>{support}</span>;
 		if(this.props.page.isChecking) {

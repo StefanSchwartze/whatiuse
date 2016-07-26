@@ -328,11 +328,10 @@ io.on('connection', function(socket){
 		    const getPercentageTwo = (browser) => {
 		        let sum = 0;
 		        forEach(browser, function(browser, key) {
-		            sum += Object.keys(browser.version_usage).reduce((prev, current) => {
-		            	return prev + browser.version_usage[current];
+		            sum += browser.version_usage.reduce((prev, current, index) => {
+		            	return prev + browser.version_usage[index].usage;
 		            }, 0);
 		        })
-
 		        return sum;
 		    }
 		    const addVersionUsage = (browsers, browsersWithPercentages) => {
@@ -340,9 +339,9 @@ io.on('connection', function(socket){
 		    		let percBrowser = find(browsersWithPercentages, function(item) {
 	                    return item.alias === browser.alias; 
 	                });
-	                let version_usage = {};
+	                let version_usage = [];
 	                for (var i = 0; i < browser.versions.length; i++) {
-	                	version_usage[browser.versions[i]] = percBrowser.version_usage[browser.versions[i]];
+	                	version_usage.push({ version: browser.versions[i], usage: percBrowser.version_usage[browser.versions[i]]});
 	                }
 		    		return {
 		    			browser: browser.browser,

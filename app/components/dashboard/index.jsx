@@ -3,6 +3,7 @@ import React from 'react';
 import PagesList from './pages/pages-list';
 import PagesStore from 'stores/pages-store';
 import PagesActions from 'actions/pages-actions';
+import SnapshotsStore from 'stores/snapshots-store';
 import SnapshotsActions from 'actions/snapshots-actions';
 
 import StatisticsContainer from './statistics/statistics-container';
@@ -17,17 +18,20 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 @connectToStores
 export default class Dashboard extends React.Component {
 	static getStores(props) {
-		return [PagesStore];
+		return [PagesStore, SnapshotsStore];
 	}
 	static getPropsFromStores(props) {
-		return PagesStore.getState();
+		return {
+			pages: PagesStore.getState().pages,
+			snapshots: SnapshotsStore.getState().snapshots
+		}
 	}
 	constructor(props) {
 		super(props);
 	}
 	componentWillMount() {
 		PagesActions.fetch({ projectId: this.props.params.id});
-		SnapshotsActions.getByPageId(this.props.params.id);
+		SnapshotsActions.fetch({ page: this.props.params.id});
 	}
 	componentDidMount() {
 		let socket = io.connect();
@@ -93,10 +97,13 @@ export default class Dashboard extends React.Component {
 	}
 	render() {
 		const pages = JSON.parse(JSON.stringify(this.props.pages));
-		const currentPageId = this.props.params.pageid;
+		const currentPageId = this.props.params.pageid || '';
 		let statistics = <div></div>
 		if(pages.length > 0) {
-			statistics = <StatisticsContainer page={this.currentPage(pages, currentPageId)} />
+			statistics = <StatisticsContainer 
+							page={this.currentPage(pages, currentPageId)}
+							snapshots={this.props.snapshots}
+						/>
 		}
 		return (
 			<div>

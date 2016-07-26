@@ -141,10 +141,19 @@ module.exports = function evaluate(args) {
 				    let data = {};
 				    const features = transformBrowserVersion(usageData.features);
 				    data.elementCollection = features.map((value, prop) => {
-			            let feature = value;
+			            let feature = {};
+			            if(value.partial) {
+			            	feature.partial = value.partial;
+			            	feature.impactPartial = value.impactPartial;
+			            }
+			            if(value.missing) {
+			            	feature.missing = value.missing;
+			            	feature.impactMissing = value.impactMissing;
+			            }
+			            feature.feature = value.feature;
 			            feature.count = usageData.counts[feature.feature];
-			            feature.name = feature.feature;
-			            feature.title = feature.title;
+			            feature.name = value.feature;
+			            feature.title = value.title;
 			            return feature;
 			        });
 
