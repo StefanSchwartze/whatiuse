@@ -23,10 +23,10 @@
 				align-items: center;
 				text-align: center;
 				justify-content: center;
-				background: $yellow-dark;
-				color: black;
+				color: $grey-dark;
 				&.active {
-					background: $yellow;
+					border-bottom: solid 3px $yellow;
+					color: $yellow;
 				}
 				> span:first-child {
 					margin-right: $spacing-small;

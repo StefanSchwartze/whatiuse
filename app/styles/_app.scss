@@ -7,8 +7,11 @@ body {
 	margin: 0;
 	padding: 0;
     font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: $accent-50;
+    background-color: $grey;
     font-size: 1rem;
+    min-height: 100%;
+    width: 100%;
+    position: absolute;
 }
 a {
 	text-decoration: none;
@@ -168,10 +171,10 @@ a {
 		height: 350px;
 	}
 	&.statistics-container {
-		background-color: white;
+		background-color: $grey;
 	}
 	&.browsertiles-container {
-		background-color: #f8f8f8;
+		background-color: $grey;
 		display: flex;
 		flex-direction: column;
 	}
@@ -405,7 +408,7 @@ a {
 		pointer-events: none;
 		margin-top: 0px;
 		border-color: transparent;
-		border-bottom-color: #fff;
+		border-bottom-color: $grey;
 		border-width: 20px;
 		margin-left: -20px;
 		transition: margin .25s;
