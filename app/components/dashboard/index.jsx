@@ -96,7 +96,7 @@ export default class Dashboard extends React.Component {
 		}
 	}
 	render() {
-		const pages = JSON.parse(JSON.stringify(this.props.pages));
+		const pages = this.props.pages;
 		const currentPageId = this.props.params.pageid || '';
 		let statistics = <div></div>
 		if(pages.length > 0) {
