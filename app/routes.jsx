@@ -17,8 +17,12 @@ export default (
 		<IndexRoute
 			component={Projects} />
 		<Route
-			path='projects/:id'
-			component={Dashboard} />
+			path='projects/:id/pages'
+			component={Dashboard}>
+			<Route
+				path=':pageid'
+				component={Dashboard} />
+		</Route>
 		<Route
 			path='projects/:id/browsers'
 			component={Browsers} />

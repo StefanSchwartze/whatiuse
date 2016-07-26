@@ -13,7 +13,7 @@ export default class ProjectsList extends React.Component {
 		return (
 			<div className="projects-list">
 				{this.props.projects && this.props.projects.map((item, index) =>
-					<Link key={item._id} to={'/projects/' + item._id + ''} className="link">
+					<Link key={item._id} to={'/projects/' + item._id + '/pages'} className="link">
 						<div className="project" key={index} >
 							<h2 className="">{item.title}</h2>
 							<p className="">{item.url}</p>

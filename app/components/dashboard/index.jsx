@@ -3,6 +3,7 @@ import React from 'react';
 import PagesList from './pages/pages-list';
 import PagesStore from 'stores/pages-store';
 import PagesActions from 'actions/pages-actions';
+import SnapshotsActions from 'actions/snapshots-actions';
 
 import StatisticsContainer from './statistics/statistics-container';
 
@@ -25,7 +26,8 @@ export default class Dashboard extends React.Component {
 		super(props);
 	}
 	componentWillMount() {
-		return PagesActions.fetch();
+		PagesActions.fetch({ projectId: this.props.params.id});
+		SnapshotsActions.getByPageId(this.props.params.id);
 	}
 	componentDidMount() {
 		let socket = io.connect();
@@ -91,7 +93,7 @@ export default class Dashboard extends React.Component {
 	}
 	render() {
 		const pages = JSON.parse(JSON.stringify(this.props.pages));
-		const currentPageId = this.props.currentPageId;
+		const currentPageId = this.props.params.pageid;
 		let statistics = <div></div>
 		if(pages.length > 0) {
 			statistics = <StatisticsContainer page={this.currentPage(pages, currentPageId)} />
@@ -101,7 +103,8 @@ export default class Dashboard extends React.Component {
 				<PagesList 
 					completeSupport={this.calcCompleteSupport(pages)}
 					pages={pages}
-					currentPageId={currentPageId} />
+					currentPageId={currentPageId}
+					currentProjectId={this.props.params.id} />
 				{statistics}
 			</div>
 		);

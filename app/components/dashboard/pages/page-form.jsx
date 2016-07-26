@@ -5,7 +5,8 @@ import PagesActions from 'actions/pages-actions';
 
 export default class PageForm extends React.Component {
 	static propTypes = {
-		onSend: React.PropTypes.func
+		onSend: React.PropTypes.func,
+		projectId: React.PropTypes.string.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -27,6 +28,7 @@ export default class PageForm extends React.Component {
 		model.title = model.title || 'Home';
 		model.url = model.url || 'http://sevenval.com';
 		model.elementsCollections = model.elementsCollections || [];
+		model.projectId = this.props.projectId;
 		PagesActions.add(model);
 		if(this.props.onSend) {
 			this.props.onSend('Page added');

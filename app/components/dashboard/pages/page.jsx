@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import {floor} from 'lodash';
+import { Link } from 'react-router';
 
 import PagesActions from 'actions/pages-actions';
 
@@ -56,8 +57,9 @@ export default class Page extends React.Component {
 						{state}
 					</div>
 					<div className="open">
+
 						{
-							!this.props.isActive ? <button onClick={this.setActive.bind(this)} className="button button--wide button--strong button--accent" >Open</button> : ""
+							!this.props.isActive ? <Link to={'/projects/' + this.props.page.projectId + '/pages/' + this.props.page._id + ''} className="button button--wide button--strong button--accent">Open</Link> : ""
 						}
 						<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >CHECK</button>
 					</div>

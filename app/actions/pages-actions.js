@@ -19,9 +19,9 @@ class PagesActions {
     constructor() {
         this.generateActions('removeCurrent', 'selectPage', 'checking', 'checked', 'progress');
     }
-    fetch() {
+    fetch(params) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.pages.getAll);
+            networkAction(dispatch, this, api.pages.getAll, params);
         }
     }
     get(id) {

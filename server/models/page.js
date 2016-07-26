@@ -8,6 +8,10 @@ const PageSchema = new mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'user'
+	},
+	projectId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'project'
 	}
 });
 

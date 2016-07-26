@@ -256,10 +256,10 @@ export default class Navbar extends React.Component {
 						<ul className="nav-list">
 							<li className="nav-list-item">
 								<Link 
-									to={'/projects/' + currentProject._id} 
+									to={'/projects/' + currentProject._id + '/pages'} 
 									activeClassName="active"
 									className="link">
-									<span className="icon-home"></span>Dashboard
+									<span className="icon-home"></span>Pages
 								</Link>
 							</li>
 							<li className="nav-list-item">

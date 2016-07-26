@@ -7,6 +7,7 @@ import PagesActions from 'actions/pages-actions';
 
 export default class PagesList extends React.Component {
 	static propTypes = {
+		currentProjectId: React.PropTypes.string.isRequired,
 		pages: React.PropTypes.array.isRequired,
 		currentPageId: React.PropTypes.string.isRequired,
 		completeSupport: React.PropTypes.string.isRequired
@@ -65,7 +66,7 @@ export default class PagesList extends React.Component {
 							<span>Add new page</span>
 							<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
 						</div>
-						<PageForm onSend={this.closeModal.bind(this)} />
+						<PageForm projectId={this.props.currentProjectId} onSend={this.closeModal.bind(this)} />
 					</Modal>
 					<div className="pages-head">
 						<div className="count">{this.props.pages.length} page{this.props.pages.length === 1 ? '' : 's'}</div>
