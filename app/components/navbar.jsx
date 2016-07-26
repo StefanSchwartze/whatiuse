@@ -38,7 +38,6 @@ export default class Navbar extends React.Component {
 			status: StatusStore.getState(),
 			browserScope: BrowsersStore.getState().currentScope,
 			browserscopes: BrowsersStore.getState().browserscopes,
-			agents: BrowsersStore.getState().agents,
 			projects: ProjectsStore.getState().projects,
 			currentProjectId: ProjectsStore.getState().currentProjectId
 		}
@@ -226,7 +225,7 @@ export default class Navbar extends React.Component {
 															<Configurator 
 																currentProject={currentProject} 
 																browsers={this.props.browserscopes.custom.browsers} 
-																agents={this.props.agents} 
+																agents={agents} 
 																onSend={() => this.setState({ showModal: false })} 
 															/>
 														)
