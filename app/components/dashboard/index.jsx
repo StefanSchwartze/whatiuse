@@ -37,7 +37,8 @@ export default class Dashboard extends React.Component {
 		let socket = io.connect();
 		socket.on('connect', function() {
 			socket.on('progress', function(data) {
-				//PagesActions.progress({ progress: data.progress, pageId: data.pageId});
+				PagesActions.checking(data.pageId);
+				PagesActions.progress({ progress: data.progress, pageId: data.pageId});
 			}); 
 			socket.on('triggerComplete', function(data) {
 				PagesActions.checkComplete(data.data);
@@ -97,12 +98,13 @@ export default class Dashboard extends React.Component {
 	}
 	render() {
 		const pages = this.props.pages;
+		const snapshots = this.props.snapshots;
 		const currentPageId = this.props.params.pageid || '';
 		let statistics = <div></div>
 		if(pages.length > 0) {
 			statistics = <StatisticsContainer 
 							page={this.currentPage(pages, currentPageId)}
-							snapshots={this.props.snapshots}
+							snapshots={snapshots}
 						/>
 		}
 		return (

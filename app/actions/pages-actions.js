@@ -3,6 +3,7 @@ import api from 'utils/api';
 import {clone} from 'lodash';
 import {networkAction} from 'utils/action-utils';
 import {findItemById, findItemByTitleAndUrl} from 'utils/store-utils';
+import BrowsersStore from 'stores/browsers-store';
 
 import axios from 'axios';
 import StatusActions from 'actions/status-actions';
@@ -58,11 +59,11 @@ class PagesActions {
             StatusActions.started();
             this.checking(page._id);
 
-            const store = alt.stores.BrowsersStore.state;
+            const store = BrowsersStore.getState();
             const scope = store.currentScope;
-            const browsers = store.browserscopes[scope].browsers;
+            const browsers = clone(store.browserscopes[scope].browsers);
 
-            socket.emit('triggerURL', { url: page.url, browsers: browsers, id: page._id }, 
+            socket.emit('triggerURL', { url: page.url, browsers: browsers, id: page._id, page: page }, 
                 function (err) {
                     if (err) {
                         console.error('Error deleting user:', err);
@@ -78,13 +79,11 @@ class PagesActions {
         const store = alt.stores.BrowsersStore.state;
         const scope = store.currentScope;
         snapshot.scope = 'global';
-        SnapshotsActions.add(snapshot);
+        SnapshotsActions.save(snapshot);
         this.checked(snapshot.pageId);
         let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId);
-        //page.snapshots.push(snapshot);
         page.latestSupport = snapshot.pageSupport;
-        this.update(page._id, page);
-        return {ok: true, id: page._id, data: snapshot};
+        return page;
     }
 }
 

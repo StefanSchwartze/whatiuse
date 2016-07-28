@@ -2,7 +2,7 @@ import alt from 'utils/alt';
 import axios from 'axios';
 import {clone} from 'lodash';
 import api from 'utils/api';
-import {findItemById, constructBrowserArray, deconstructBrowserArray} from 'utils/store-utils';
+import {findItemById} from 'utils/store-utils';
 import {networkAction} from 'utils/action-utils';
 import StatusActions from './status-actions';
 import ProjectsActions from './projects-actions';
@@ -16,7 +16,7 @@ class BrowsersActions {
     add(browserCollection) {
         var browserset = browserCollection;
         return async (dispatch) => {
-            const browsers = constructBrowserArray(clone(browserset));
+            const browsers = clone(browserset);
             networkAction(dispatch, this, api.browsers.post, {browsers: browsers});
         }
     }

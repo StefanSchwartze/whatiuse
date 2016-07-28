@@ -25,6 +25,8 @@ import browserslist from "browserslist";
 
 import urlToImage from "url-to-image";
 
+import axios from "axios";
+
 const app = koa();
 const env = process.env.NODE_ENV || "development";
 
@@ -227,12 +229,13 @@ io.on('connection', function(socket){
 
 		const url = data.url;
 		const id = data.id;
+		const page = data.page;
 		let browsers = data.browsers;
 		let browserNames = [];
 		for (var i = 0; i < browsers.length; i++) {
 			const browserName = browsers[i].alias;
 			const versions = browsers[i].version_usage;
-			browserNames = browserNames.concat(Object.keys(versions).map((version) => browserName + ' ' + version));
+			browserNames = browserNames.concat(versions.map((version) => browserName + ' ' + version.version));
 		}
 		let progress = 0;
 
@@ -318,7 +321,10 @@ io.on('connection', function(socket){
 		                    return (o.alias === browser.alias); 
 		                });
 		                if(obje) {
-		                	sum += parseFloat(obje.version_usage[value]);
+		                	let val = find(obje.version_usage, function(o) {
+			                    return (o.version === value); 
+			                });
+		                	sum += parseFloat(val.usage);	
 		            	}
 		            })
 		        })
@@ -341,7 +347,10 @@ io.on('connection', function(socket){
 	                });
 	                let version_usage = [];
 	                for (var i = 0; i < browser.versions.length; i++) {
-	                	version_usage.push({ version: browser.versions[i], usage: percBrowser.version_usage[browser.versions[i]]});
+	                	const version = find(percBrowser.version_usage, function(item) {
+		                    return item.version === browser.versions[i]; 
+		                });
+	                	version_usage.push({ version: version.version, usage: version.usage});
 	                }
 		    		return {
 		    			browser: browser.browser,
@@ -353,8 +362,6 @@ io.on('connection', function(socket){
 		    }
 
 			let elements = sumObjectArrayByProp(newElems, 'feature', ['missing', 'partial']);
-			
-			var allBrowsers = {};
 
 			for (var i = 0; i < elements.length; i++) {
 
@@ -381,10 +388,22 @@ io.on('connection', function(socket){
 				elementCollection: elements,
 				browserCollection: browsers,
 				pageSupport: (100 - getPercentage(missingBrowserss, browsers)).toFixed(2),
-				pageId: id
+				pageId: id,
+				scope: 'global'
 			}
 
-			io.emit('triggerComplete', { data: send });
+			function updatePage() {
+				return axios.put('http://localhost:3000/api/pages/' + page._id, page);
+			}
+			function saveSnapshot() {
+				return axios.post('http://localhost:3000/api/snapshots/', send);
+			}
+
+			axios.all([updatePage(), saveSnapshot()])
+				.then(axios.spread((page, snapshot) => {
+					io.emit('triggerComplete', { data: snapshot.data });
+				})
+			);
 		});
 	});
 

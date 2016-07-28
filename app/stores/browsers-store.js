@@ -1,6 +1,6 @@
 import alt from 'utils/alt';
 import {assign, map} from 'lodash';
-import {findItemById, findIndexById, deconstructBrowserArray} from 'utils/store-utils';
+import {findItemById, findIndexById} from 'utils/store-utils';
 import BrowsersActions from 'actions/browsers-actions';
 
 class BrowsersStore {
@@ -20,7 +20,7 @@ class BrowsersStore {
 		this.currentScope = 'global';
 	}
 	onAdd(browsers) {
-		this.browserscopes.global.browsers = deconstructBrowserArray(browsers.browsers);
+		this.browserscopes.global.browsers = browsers.browsers;
 	}
 	onFetchGlobal(snapshots) {
 		let browserCollection;
@@ -30,7 +30,7 @@ class BrowsersStore {
 		else {
 			browserCollection = [];
 		}
-		this.browserscopes.global.browsers = deconstructBrowserArray(browserCollection);
+		this.browserscopes.global.browsers = browserCollection;
 	}
 	onFetchConfig(config) {
 		this.browserscopes.custom = config;

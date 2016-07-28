@@ -65,102 +65,189 @@ export default class Navbar extends React.Component {
 	}
 	addGlobalBrowserset() {
 		var browsers = [
+			{
+				"alias":"ie",
+				"browser":"IE",
+				"version_usage":[
 					{
-						"alias":"ie",
-						"browser":"IE",
-						"version_usage":{
-							"8":0.629643,
-							"9":0.427062,
-							"11":4.87837
-						}
+						"version":"8",
+						"usage":0.629643
 					},
 					{
-						"alias":"and_chr",
-						"browser":"Chrome for Android",
-						"version_usage":{
-							"51":19.4722
-						}
+						"version":"9",
+						"usage":0.427062
 					},
 					{
-						"alias":"and_uc",
-						"browser":"UC Browser for Android",
-						"version_usage":{
-							"9.9":6.6515
-						}
+						"version":"11",
+						"usage":4.87837
+					}
+				]
+			},
+			{
+				"alias":"and_chr",
+				"browser":"Chrome for Android",
+				"version_usage":[
+					{
+						"version":"51",
+						"usage":19.4722
+					}
+				]
+			},
+			{
+				"alias":"and_uc",
+				"browser":"UC Browser for Android",
+				"version_usage":[
+					{
+						"version":"9.9",
+						"usage":6.6515
+					}
+				]
+			},
+			{
+				"alias":"android",
+				"browser":"Android Browser",
+				"version_usage":[
+					{
+						"version":"4.2-4.3",
+						"usage":0.626031
 					},
 					{
-						"alias":"android",
-						"browser":"Android Browser",
-						"version_usage":{
-							"4.2-4.3":0.626031,
-							"4.4.3-4.4.4":0.98683,
-							"4.4":1.65044
-						}
+						"version":"4.4.3-4.4.4",
+						"usage":0.98683
 					},
 					{
-						"alias":"chrome",
-						"browser":"Chrome",
-						"version_usage":{
-							"29":1.02336,
-							"48":0.4264,
-							"49":2.42515,
-							"50":6.81707,
-							"51":17.2852,
-							"52":0.09594
-						}
+						"version":"4.4",
+						"usage":1.65044
+					}
+				]
+			},
+			{
+				"alias":"chrome",
+				"browser":"Chrome",
+				"version_usage":[
+					{
+						"version":"29",
+						"usage":1.02336
 					},
 					{
-						"alias":"edge",
-						"browser":"Edge",
-						"version_usage":{
-							"13":1.35382
-						}
+						"version":"48",
+						"usage":0.4264
 					},
 					{
-						"alias":"firefox",
-						"browser":"Firefox",
-						"version_usage":{
-							"39":0.06396,
-							"45":0.27183,
-							"46":2.30256,
-							"47":3.78963,
-							"48":0.12259
-						}
+						"version":"49",
+						"usage":2.42515
 					},
 					{
-						"alias":"ios_saf",
-						"browser":"iOS Safari",
-						"version_usage":{
-							"8.1-8.4":0.466736,
-							"9.0-9.2":1.00746,
-							"9.3":7.14444
-						}
+						"version":"50",
+						"usage":6.81707
 					},
 					{
-						"alias":"op_mini",
-						"browser":"Opera Mini",
-						"version_usage":{
-							"5.0-8.0":4.69025
-						}
+						"version":"51",
+						"usage":17.2852
 					},
 					{
-						"alias":"opera",
-						"browser":"Opera",
-						"version_usage":{
-							"36":0.05863,
-							"37":0.19188,
-							"38":0.3198
-						}
+						"version":"52",
+						"usage":0.09594
+					}
+				]
+			},
+			{
+				"alias":"edge",
+				"browser":"Edge",
+				"version_usage":[
+					{
+						"version":"13",
+						"usage":1.35382
+					}
+				]
+			},
+			{
+				"alias":"firefox",
+				"browser":"Firefox",
+				"version_usage":[
+					{
+						"version":"39",
+						"usage":0.06396
 					},
 					{
-						"alias":"safari",
-						"browser":"Safari",
-						"version_usage":{
-							"8":0.20787,
-							"9":2.36244,
-						}
+						"version":"45",
+						"usage":0.27183
 					},
-				];
+					{
+						"version":"46",
+						"usage":2.30256
+					},
+					{
+						"version":"47",
+						"usage":3.78963
+					},
+					{
+						"version":"48",
+						"usage":0.12259
+					}
+				]
+			},
+			{
+				"alias":"ios_saf",
+				"browser":"iOS Safari",
+				"version_usage":[
+					{
+						"version":"8.1-8.4",
+						"usage":0.466736
+					},
+					{
+						"version":"9.0-9.2",
+						"usage":1.00746
+					},
+					{
+						"version":"9.3",
+						"usage":7.14444
+					}
+				]
+			},
+			{
+				"alias":"op_mini",
+				"browser":"Opera Mini",
+				"version_usage":[
+					{
+						"version":"5.0-8.0",
+						"usage":4.69025
+					}
+				]
+			},
+			{
+				"alias":"opera",
+				"browser":"Opera",
+				"version_usage":[
+					{
+						"version":"36",
+						"usage":0.05863
+					},
+					{
+						"version":"37",
+						"usage":0.19188
+					},
+					{
+						"version":"38",
+						"usage":0.3198
+					}
+				]
+			},
+			{
+				"alias":"safari",
+				"browser":"Safari",
+				"version_usage":[
+					{
+						"version":"8",
+						"usage":0.20787
+					},
+					{
+						"version":"9",
+						"usage":2.36244
+					}
+				]
+			}
+		];
 		BrowserActions.add(browsers);
 	}
 	render() {

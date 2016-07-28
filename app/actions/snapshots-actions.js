@@ -6,6 +6,7 @@ import {constructBrowserArray} from 'utils/store-utils';
 
 class SnapshotsActions {
     constructor() {
+        this.generateActions('save');
     }
     fetch(params) {
         return async (dispatch) => {

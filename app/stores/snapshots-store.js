@@ -23,6 +23,9 @@ class SnapshotStore {
 	onDelete(item) {
 		this.snapshots.splice(findIndexById(this.snapshots, item._id), 1);
 	}
+	onSave(item) {
+		this.snapshots.push(item);
+	}
 }
 
 module.exports = (alt.createStore(SnapshotStore));

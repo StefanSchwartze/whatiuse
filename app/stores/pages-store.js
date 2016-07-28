@@ -16,10 +16,6 @@ class PagesStore {
 		this.currentPageId = '';
 		socket.on('connect', () => {
 			console.log('Uhh, connected!');
-			/*socket.on('progress', (data) => {
-				console.log(data);
-				//this.onProgress(data.progress, data.id);
-			});*/
 		});
 	}
 	onAdd(item) {
@@ -61,6 +57,9 @@ class PagesStore {
 		let page = findItemById(this.pages, data.pageId);
 		page.progress = data.progress;
 		assign(findItemById(this.pages, data.pageId), page);
+	}
+	onCheckComplete(item) {
+		assign(findItemById(this.pages, item._id), item);
 	}
 }
 
