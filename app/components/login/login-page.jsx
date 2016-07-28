@@ -26,46 +26,55 @@ export default class LoginPage extends React.Component {
 	static getPropsFromStores() {
 		return LoginStore.getState();
 	}
-	componentWillMount() {
-		this.state = {
-			login: {}
-		};
-	}
 	register() {
 		LoginActions.register(this.state.login);
 	}
 	login() {
 		LoginActions.login(this.state.login);
 	}
+	logout() {
+		LoginActions.logout();
+	}
 	render() {
-		var error;
-		if (this.props.LoginStore.error) {
-			error = <p>{this.props.LoginStore.error}</p>;
-		}
-		return (
-			<div className="container startpage">
+		let error;
+		if(this.props.user && this.props.user.token) {
+			return (
+				<div className="container startpage">
 				<div className="content-container content-container--small">
-					<h1 className="pagetitle"><i className="fa fa-clock-o left"></i>Codeimpact</h1>
-					<h3 className="pagedesc">Subtitle</h3>
-					<h2>Sign in or create a new account.</h2>
+					<h1 className="pagetitle">Codeimpact</h1>
 					<br/>
-					{error}
-					<input
-						className="input"
-						label='Username'
-						type='text'
-						value={this.state.login.username || ''}
-						onChange={this.changeHandler.bind(this, 'login', 'username')} />
-					<input
-						className="input"
-						label='Password'
-						type='password'
-						value={this.state.login.password || ''}
-						onChange={this.changeHandler.bind(this, 'login', 'password')} />
-					<button className="button button--wide button--full button--accent" onClick={this.register.bind(this)}>Create account</button>
-					<button className="button button--wide button--full button--red" onClick={this.login.bind(this)}>Sign in</button>
+					<p>You are already logged in. To change the user, first log out.</p>
+					<button className="button button--wide button--full button--red" onClick={this.logout.bind(this)}>Logout</button>
 				</div>
 			</div>
-		);
+			)
+		} else {
+			if (this.props.LoginStore.error) {
+				error = <p>{this.props.LoginStore.error}</p>;
+			}
+			return (
+				<div className="container startpage">
+					<div className="content-container content-container--small">
+						<h1 className="pagetitle">Codeimpact</h1>
+						<br/>
+						{error}
+						<input
+							className="input"
+							label='Username'
+							type='text'
+							value={this.state.login.username || ''}
+							onChange={this.changeHandler.bind(this, 'login', 'username')} />
+						<input
+							className="input"
+							label='Password'
+							type='password'
+							value={this.state.login.password || ''}
+							onChange={this.changeHandler.bind(this, 'login', 'password')} />
+						<button className="button button--wide button--full button--accent" onClick={this.register.bind(this)}>Create account</button>
+						<button className="button button--wide button--full button--red" onClick={this.login.bind(this)}>Sign in</button>
+					</div>
+				</div>
+			);			
+		}
 	}
 }
