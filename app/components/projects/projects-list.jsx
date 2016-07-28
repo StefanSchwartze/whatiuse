@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import ProjectForm from './project-form';
+import Project from './project';
 
 export default class ProjectsList extends React.Component {
 	static propTypes = {
@@ -12,13 +13,8 @@ export default class ProjectsList extends React.Component {
 	render() {
 		return (
 			<div className="projects-list">
-				{this.props.projects && this.props.projects.map((item, index) =>
-					<Link key={item._id} to={'/projects/' + item._id + '/pages'} className="link">
-						<div className="project" key={index} >
-							<h2 className="">{item.title}</h2>
-							<p className="">{item.url}</p>
-						</div>
-					</Link>)
+				{this.props.projects && this.props.projects.map(item =>
+					<Project key={item._id} project={item} />)
 				}
 				<div className="project">
 					<ProjectForm />

@@ -112,11 +112,12 @@ a {
 			box-shadow: 0 0 0 2px $red-dark;
 		}
 	}
-	&--close, &--delete {
+	&--close, &--delete, &--icon {
 		font-size: $font-size-large;
 		color: $grey-light;
 		padding: 0;
 		margin: 0;
+		border-radius: 0;
 		&:hover {
 			color: black;
 		}
@@ -141,6 +142,14 @@ a {
 		&.active {
 			background: $grey;
 			color: $black-ninety;
+		}
+	}
+	&--expandable {
+		> :first-child {
+
+		}
+		> :last-child {
+			max-width: 0;
 		}
 	}
 }
@@ -201,9 +210,32 @@ a {
 	background: white;
 	.project {
 		padding: $spacing-medium;
-		border-bottom: solid 1px $grey;
 		> * {
 			margin: 0;
+		}
+	}
+	.projects-list-item {
+		display: inline-flex;
+		width: 100%;
+		align-items: stretch;
+		justify-content: space-between;
+		border-bottom: solid 1px $grey;
+		> * {
+			border-right: solid 1px $grey;
+		}
+		> :last-child {
+			border: none;
+		}
+		.link {
+			overflow: hidden;
+		}
+		.button--delete {
+			flex-grow: 1;
+		}
+		.button--icon {
+			flex-grow: 1;
+			align-self: center;
+			text-align: center;
 		}
 	}
 }
