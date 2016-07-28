@@ -285,6 +285,20 @@ export default class Navbar extends React.Component {
 										onClick={this.selectBrowserScope.bind(this, item)}><span className={"icon-" + item}></span> {item}</div>
 									)
 								}
+								<Tooltip
+									overlayClassName="tooltip--simple"
+									placement="bottom"
+									mouseEnterDelay={0}
+									mouseLeaveDelay={0}
+									destroyTooltipOnHide={true}
+									overlay={
+										<div style={{maxWidth: 320}}>
+											Select which dataset of browsers you want to evaluate.
+										</div>
+									}
+								>
+								<span className="icon-help helper"></span>
+						        </Tooltip>
 							</li>
 							<Modal 
 								transitionSpeed={250}

@@ -3,7 +3,7 @@
 	box-shadow: 0 0 14px -3px $grey-dark;
 	background-color: $black-ninety;
 	color: white;
-	z-index: 2;
+	z-index: 1;
 	position: relative;
 }
 .navigation {
@@ -89,8 +89,11 @@
 		&:first-child {
 			border-radius: $border-radius-large 0 0 $border-radius-large;
 		}
-		&:last-child {
+		&:nth-child(3) {
 			border-radius: 0 $border-radius-large $border-radius-large 0;
 		}
+	}
+	.helper {
+		margin-left: $spacing-small;
 	}
 }

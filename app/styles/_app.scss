@@ -773,6 +773,8 @@ a {
 .tooltip--simple {
 	filter: drop-shadow(4px 10px 15px rgba(0,0,0,.25));
 	margin-top: -20px;
+	z-index: 2;
+	position: absolute;
 	.rc-tooltip-inner {
 		background: white;
 		color: $black-ninety;
@@ -784,6 +786,17 @@ a {
 		bottom: -10px !important;
 		border-width: 10px 10px 0 !important;
 		margin-left: -10px;
+	}
+	&.rc-tooltip-placement-bottom {
+		.rc-tooltip-inner {
+			margin-top: 5px;
+		}
+		.rc-tooltip-arrow {
+			margin-left: -10px;
+			  top: -4px !important;
+			  border-width: 0 10px 10px !important;
+			  border-bottom-color: white !important;
+		}	
 	}
 }
 .tooltip--local {
