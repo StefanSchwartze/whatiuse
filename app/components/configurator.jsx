@@ -3,6 +3,8 @@ import { Form } from 'formsy-react';
 import Browserfields from 'components/shared/form-elements/browser-fields';
 import ProjectActions from 'actions/projects-actions';
 import BrowserActions from 'actions/browsers-actions';
+import { agents } from 'utils/user-agents';
+import {values} from 'lodash';
 
 export default class Configurator extends React.Component {
 	static propTypes = {
@@ -15,7 +17,7 @@ export default class Configurator extends React.Component {
 		super(props);
 		this.state = {
 			canSubmit: false,
-			fields: props.browsers || []
+			fields: props.browsers || []
 		};
 	}
 	addField(e) {
@@ -37,7 +39,6 @@ export default class Configurator extends React.Component {
 		let project = this.props.currentProject;
 		let fieldCount = Object.keys(data).length / 3;
 		let models = [];
-
 		for (var i = 0; i < fieldCount; i++) {
 			let name = data['browser' + i];
 			let version = data['version' + i];
@@ -49,10 +50,34 @@ export default class Configurator extends React.Component {
 			}
 			models.push(model);
 		}
-		
-		project.browserscopes.config.browsers = models;
+
+		project.browserscopes.config.browsers = values(models.reduce(function(prev, current, index, array){
+		   if(!(current.name in prev.result)) {
+		      prev.result[current.name] = {
+		      	"alias":current.name,
+				"browser":agents[current.name].browser,
+				"version_usage":[
+					{
+						"version":current.version,
+						"usage":current.share
+					}
+				]
+		      };  
+		   } 
+		   else {
+		   		if(prev.result[current.name]) {
+		       		prev.result[current.name].version_usage.push({
+		       			"version":current.version,
+						"usage":current.share
+		       		});
+		   		}
+		   }  
+
+		   return prev;
+		},{result: {}}).result);
+
 		ProjectActions.update(project._id, project);
-		BrowserActions.update('custom', models);
+		BrowserActions.update('custom', project.browserscopes.config.browsers);
 		if(this.props.onSend) {
 			this.props.onSend();
 		}
@@ -63,6 +88,27 @@ export default class Configurator extends React.Component {
 	}
 	render() {
 		const { fields, canSubmit } = this.state;
+		const convertFields = function(fields) {
+			let versions = [];
+			if(fields.length > 0) {
+				for (var i = 0; i < fields.length; i++) {
+					var browser = fields[i];
+					if(browser.id) {
+						versions.push(browser);
+					} else {
+						for (var k = 0; k < browser.version_usage.length; k++) {
+							versions.push({
+								name: browser.alias,
+								version: browser.version_usage[k].version,
+								share: browser.version_usage[k].usage,
+								id: Date.now()
+							});
+						}
+					}
+				}
+			}
+			return versions;
+		}
 		return (
 			<div>
 				<Form 
@@ -73,7 +119,7 @@ export default class Configurator extends React.Component {
 					className="configurator">
 					<Browserfields
 						agents={this.props.agents}
-						data={fields} 
+						data={convertFields(fields)} 
 						onRemove={this.removeField.bind(this)} />
 					<button 
 						className="button button--wide button--accent button--add" 
