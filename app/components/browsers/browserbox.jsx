@@ -30,8 +30,8 @@ export default class BrowsersBox extends React.Component {
 						className="percentagebox"
 					>
 						<div className="percentagebox-content" style={{width: width}}>
-							{this.props.browser.version_usage && Object.keys(this.props.browser.version_usage).map((item, index) =>
-								<div className="browser-version" key={index} style={{width: (this.props.browser.version_usage[item] / this.props.browser.completeShare) * 100 + '%'}}></div>
+							{this.props.browser.version_usage && this.props.browser.version_usage.map((item, index) =>
+								<div className="browser-version" key={index} style={{width: (this.props.browser.version_usage[index].usage / this.props.browser.completeShare) * 100 + '%'}}></div>
 							)}
 						</div>
 

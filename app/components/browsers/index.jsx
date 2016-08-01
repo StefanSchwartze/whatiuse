@@ -29,8 +29,8 @@ export default class Browsers extends React.Component {
 			for (var i = 0; i < browsers.length; i++) {
 
 				let newBrowser = browsers[i];
-				newBrowser.completeShare = Object.keys(newBrowser.version_usage).reduce((sum, version) => {
-					return sum += newBrowser.version_usage[version];
+				newBrowser.completeShare = newBrowser.version_usage.reduce((sum, version, index) => {
+					return sum += newBrowser.version_usage[index].usage;
 				}, 0);
 				browsers[i] = newBrowser;
 
