@@ -10,7 +10,8 @@ export default class PagesList extends React.Component {
 		currentProjectId: React.PropTypes.string.isRequired,
 		pages: React.PropTypes.array.isRequired,
 		currentPageId: React.PropTypes.string.isRequired,
-		completeSupport: React.PropTypes.string.isRequired
+		completeSupport: React.PropTypes.string.isRequired,
+		currentScope: React.PropTypes.string.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -81,7 +82,7 @@ export default class PagesList extends React.Component {
 						{this.props.pages && this.props.pages
 								/*.sort((a, b) => b.latestSupport - a.latestSupport)*/
 								.map((item, index) =>
-							<Page key={index} page={item} isActive={this.props.currentPageId === item._id} />)
+							<Page key={index} scope={this.props.currentScope} page={item} isActive={this.props.currentPageId === item._id} />)
 						}
 					</div>
 				</div>

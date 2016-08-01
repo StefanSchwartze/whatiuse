@@ -31,7 +31,10 @@ export default class Dashboard extends React.Component {
 	}
 	componentWillMount() {
 		PagesActions.fetch({ projectId: this.props.params.id});
-		SnapshotsActions.fetch({ page: this.props.params.id});
+		SnapshotsActions.fetch({ 
+			page: this.props.params.id, 
+			scope: this.props.params.scope
+		});
 	}
 	componentDidMount() {
 		let socket = io.connect();
@@ -113,7 +116,8 @@ export default class Dashboard extends React.Component {
 					completeSupport={this.calcCompleteSupport(pages)}
 					pages={pages}
 					currentPageId={currentPageId}
-					currentProjectId={this.props.params.id} />
+					currentProjectId={this.props.params.id}
+					currentScope={this.props.params.scope} />
 				{statistics}
 			</div>
 		);

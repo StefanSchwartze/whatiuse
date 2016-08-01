@@ -10,7 +10,7 @@ export default class App extends React.Component {
   render() {
     var navbar;
     if (this.props.location.pathname !== '/login' &&
-        this.props.location.pathname !== '/') {
+        this.props.location.pathname !== '/projects') {
       navbar = <Navbar {...this.props}/>;
     }
     return (

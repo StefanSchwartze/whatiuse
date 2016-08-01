@@ -25,19 +25,19 @@ class BrowsersActions {
             networkAction(dispatch, this, api.browsers.getAll);
         }
     }
-    fetchConfig() {
-        const projectStore = alt.stores.ProjectsStore.state;
-        const project = findItemById(projectStore.projects, projectStore.currentProjectId);
-        return project.browserscopes.config;
+    fetchCustom(id) {
+        return async (dispatch) => {
+            networkAction(dispatch, this, api.projects.get, id);
+        }
     }
-    fetchCustom() {
+    fetchFdx() {
         const projectStore = alt.stores.ProjectsStore.state;
         const project = findItemById(projectStore.projects, projectStore.currentProjectId);
         return project.browserscopes.fdx;
     }
     selectScope(scope) {
         this.fetchCustom();
-        this.fetchConfig();
+        this.fetchFdx();
         return scope;
     }
     validateBrowserset(browsers) {

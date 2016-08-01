@@ -3,6 +3,7 @@ import AltContainer from 'alt-container';
 
 import BrowsersStore from 'stores/browsers-store';
 import BrowserBox from './browserbox';
+import BrowserActions from 'actions/browsers-actions';
 
 import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
@@ -21,11 +22,23 @@ export default class Browsers extends React.Component {
 	constructor(props) {
 		super(props);
 	}
+	componentWillMount() {
+		if(this.props.params.scope === 'global') {
+			BrowserActions.fetchGlobal();
+		} else if(this.props.params.scope === 'custom') {
+			console.log('fetch custom');
+			BrowserActions.fetchCustom(this.props.params.id);
+		} else if(this.props.params.scope === 'fdx') {
+			BrowserActions.fetchFdx();
+		}
+	}
 	render() {
 		const scope = this.props.currentScope;
+		console.log(scope);
 		let browsers = [];
-		if(this.props.browserscopes[scope].browsers) {
+		if(scope && this.props.browserscopes[scope].browsers.length > 0) {
 			browsers = this.props.browserscopes[scope].browsers;
+			console.log(browsers);
 			for (var i = 0; i < browsers.length; i++) {
 
 				let newBrowser = browsers[i];

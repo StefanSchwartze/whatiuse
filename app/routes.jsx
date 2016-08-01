@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {Route, IndexRoute, NotFoundRoute} from 'react-router';
+import {Route, IndexRedirect, NotFoundRoute} from 'react-router';
 
 import App from './components/app';
 import Login from './components/login/index';
@@ -29,21 +29,33 @@ export default (
 		<Route
 			path='login'
 			component={Login} />
-		<IndexRoute
+		<IndexRedirect to="/projects" />
+		<Route
+			path='projects'
 			component={Projects}
 			onEnter={requireAuth} />
 		<Route
-			path='projects/:id/pages'
-			component={Dashboard}
+			path='projects/:id'
 			onEnter={requireAuth} >
+
+			<IndexRedirect to="global" />
 			<Route
-				path=':pageid'
-				component={Dashboard} />
+				path=':scope' >
+				<IndexRedirect to="pages" />
+				<Route
+					path='pages'
+					component={Dashboard} >
+					<Route
+						path=':pageid'
+						component={Dashboard} />
+				</Route>
+				<Route
+					path='browsers'
+					component={Browsers} />
+
+			</Route>
+
 		</Route>
-		<Route
-			path='projects/:id/browsers'
-			component={Browsers}
-			onEnter={requireAuth} />
 		<Route patch="*" component={require('./pages/not-found')} />
 	</Route>
 );

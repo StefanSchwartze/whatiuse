@@ -9,7 +9,8 @@ import PagesActions from 'actions/pages-actions';
 export default class Page extends React.Component {
 	static propTypes = {
 		page: React.PropTypes.object.isRequired,
-		isActive: React.PropTypes.bool.isRequired
+		isActive: React.PropTypes.bool.isRequired,
+		scope: React.PropTypes.string.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -59,7 +60,7 @@ export default class Page extends React.Component {
 					<div className="open">
 
 						{
-							!this.props.isActive ? <Link to={'/projects/' + this.props.page.projectId + '/pages/' + this.props.page._id + ''} className="button button--wide button--strong button--accent">Open</Link> : ""
+							!this.props.isActive ? <Link to={'/projects/' + this.props.page.projectId + '/' + this.props.scope + '/pages/' + this.props.page._id + ''} className="button button--wide button--strong button--accent">Open</Link> : ""
 						}
 						<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >CHECK</button>
 					</div>

@@ -43,9 +43,16 @@ export default class Navbar extends React.Component {
 		}
 	}
 	componentWillMount() {
-		ProjectActions.fetch();
+		//ProjectActions.fetch();
+		console.log(this.props.params);
 		ProjectActions.get(this.props.params.id);
-		BrowserActions.fetchGlobal();
+		if(this.props.params.scope === 'global') {
+			BrowserActions.fetchGlobal();
+		} else if(this.props.params.scope === 'custom') {
+			BrowserActions.fetchCustom(this.props.params.id);
+		} else if(this.props.params.scope === 'fdx') {
+			BrowserActions.fetchFdx();
+		}
 	}
 	retry() {
 		StatusActions.retry();
@@ -57,7 +64,7 @@ export default class Navbar extends React.Component {
 		BrowserActions.selectScope(scope);
 	}
 	showModal(){
-		BrowserActions.fetchConfig();
+		BrowserActions.fetchCustom();
 		this.setState({showModal: !this.state.showModal});
 	}
 	handleTabSelect(index) {
@@ -255,6 +262,7 @@ export default class Navbar extends React.Component {
 		let retryComponent;
 		let busyComponent;
 		let currentProject = findItemById(this.props.projects, this.props.currentProjectId) || '';
+		let currentScope = this.props.params.scope;
 		if (this.props.status.error) {
 			if (this.props.retryData) {
 				retryComponent = <li className="nav-list-item"><button onClick={this.retry} className="">Retry</button></li>;
@@ -279,10 +287,28 @@ export default class Navbar extends React.Component {
 							</li>
 							<li className="nav-list-item toggle">
 								{this.props.browserscopes && Object.keys(this.props.browserscopes).map(
-									(item, key) => 
-									<div key={key}
-										className={classnames('toggle-button', this.props.browserScope == item ? 'active' : '')}
-										onClick={this.selectBrowserScope.bind(this, item)}><span className={"icon-" + item}></span> {item}</div>
+									(item, key) => {
+									console.log(currentScope);
+									const url = this.props.location.pathname.replace(new RegExp(currentScope, 'g'), item);
+									return (
+										<Link 
+											key={key}
+											to={url} 
+											activeClassName="active"
+											className={classnames('toggle-button')}
+											onClick={this.selectBrowserScope.bind(this, item)}>
+											<span className={"icon-" + item}></span> {item}
+										</Link>)
+										
+									}
+
+
+
+
+
+
+
+
 									)
 								}
 								<Tooltip
@@ -356,7 +382,7 @@ export default class Navbar extends React.Component {
 						<ul className="nav-list">
 							<li className="nav-list-item">
 								<Link 
-									to={'/projects/' + currentProject._id + '/pages'} 
+									to={'/projects/' + currentProject._id + '/' + currentScope + '/pages'} 
 									activeClassName="active"
 									className="link">
 									<span className="icon-home"></span>Pages
@@ -364,7 +390,7 @@ export default class Navbar extends React.Component {
 							</li>
 							<li className="nav-list-item">
 								<Link 
-									to={'/projects/' + currentProject._id + '/browsers'} 
+									to={'/projects/' + currentProject._id + '/' + currentScope + '/browsers'} 
 									activeClassName="active"
 									className="link">
 									<span className="icon-pie-chart"></span>Browsers

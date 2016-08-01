@@ -21,6 +21,9 @@ class ProjectsStore {
 	    }, {});
 	}
 	onGet(project) {
+		if(this.projects.length === 0) {
+			this.projects.push(project);
+		}
 		this.currentProjectId = project._id;
 	}
 	onUpdate(item) {

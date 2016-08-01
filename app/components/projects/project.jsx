@@ -14,14 +14,14 @@ export default class Project extends React.Component {
 		const project = this.props.project;
 		return (
 			<div className="projects-list-item">
-				<Link to={'/projects/' + project._id + '/pages'} className="link">
+				<Link to={'/projects/' + project._id + '/global/pages'} className="link">
 					<div className="project">
 						<h2 className="">{project.title}</h2>
 						<p className="">{project.url}</p>
 					</div>
 				</Link>
 				<button onClick={() => ProjectsActions.delete(project._id)} className="icon-close button button--close"></button>
-				<Link to={'/projects/' + project._id + '/pages'} className="icon-long-arrow-right button button--icon"/>
+				<Link to={'/projects/' + project._id + '/global/pages'} className="icon-long-arrow-right button button--icon"/>
 			</div>
 		);
 	}

@@ -2,6 +2,7 @@ import alt from 'utils/alt';
 import {assign, map} from 'lodash';
 import {findItemById, findIndexById} from 'utils/store-utils';
 import BrowsersActions from 'actions/browsers-actions';
+import ProjectsStore from 'stores/projects-store';
 
 class BrowsersStore {
 	constructor() {
@@ -17,12 +18,13 @@ class BrowsersStore {
 				browsers: []
 			}
 		};
-		this.currentScope = 'global';
+		this.currentScope = null;
 	}
 	onAdd(browsers) {
 		this.browserscopes.global.browsers = browsers.browsers;
 	}
 	onFetchGlobal(snapshots) {
+		console.log('ich bin global');
 		let browserCollection;
 		if(snapshots.length && snapshots.length > 0) {
 			browserCollection = snapshots[0].browsers;
@@ -31,12 +33,17 @@ class BrowsersStore {
 			browserCollection = [];
 		}
 		this.browserscopes.global.browsers = browserCollection;
+		this.currentScope = 'global';
 	}
-	onFetchConfig(config) {
-		this.browserscopes.custom = config;
-	}
-	onFetchCustom(config) {
+	onFetchFdx(config) {
 		this.browserscopes.fdx = config;
+		//this.currentScope = 'fdx';
+	}
+	onFetchCustom(project) {
+		console.log('fetched custom');
+		console.log(project);
+		this.currentScope = 'custom';
+		this.browserscopes.custom.browsers = project ? project.browserscopes.config.browsers : [];
 	}
 	onValidateBrowserset(data) {
 		this.browserscopes.fdx = data.data;
