@@ -40,8 +40,8 @@ class BrowsersStore {
 		//this.currentScope = 'fdx';
 	}
 	onFetchCustom(project) {
-		console.log('fetched custom');
 		console.log(project);
+		console.log('fetched custom');
 		this.currentScope = 'custom';
 		this.browserscopes.custom.browsers = project ? project.browserscopes.config.browsers : [];
 	}

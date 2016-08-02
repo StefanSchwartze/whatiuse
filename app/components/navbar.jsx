@@ -61,10 +61,10 @@ export default class Navbar extends React.Component {
 		LoginActions.logout();
 	}
 	selectBrowserScope(scope) {
-		BrowserActions.selectScope(scope);
+		BrowserActions.selectScope(scope, this.props.params.id);
 	}
 	showModal(){
-		BrowserActions.fetchCustom();
+		BrowserActions.fetchCustom(this.props.params.id);
 		this.setState({showModal: !this.state.showModal});
 	}
 	handleTabSelect(index) {
@@ -288,7 +288,6 @@ export default class Navbar extends React.Component {
 							<li className="nav-list-item toggle">
 								{this.props.browserscopes && Object.keys(this.props.browserscopes).map(
 									(item, key) => {
-									console.log(currentScope);
 									const url = this.props.location.pathname.replace(new RegExp(currentScope, 'g'), item);
 									return (
 										<Link 

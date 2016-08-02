@@ -26,6 +26,7 @@ class BrowsersActions {
         }
     }
     fetchCustom(id) {
+        console.log(id);
         return async (dispatch) => {
             networkAction(dispatch, this, api.projects.get, id);
         }
@@ -35,9 +36,14 @@ class BrowsersActions {
         const project = findItemById(projectStore.projects, projectStore.currentProjectId);
         return project.browserscopes.fdx;
     }
-    selectScope(scope) {
-        this.fetchCustom();
-        this.fetchFdx();
+    selectScope(scope, id) {
+        if(scope === 'custom') {
+            this.fetchCustom(id);
+        } else if(scope === 'fdx') {
+            this.fetchFdx(id);
+        } else if(scope === 'global') {
+            this.fetchGlobal();
+        }
         return scope;
     }
     validateBrowserset(browsers) {

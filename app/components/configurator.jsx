@@ -59,7 +59,7 @@ export default class Configurator extends React.Component {
 				"version_usage":[
 					{
 						"version":current.version,
-						"usage":current.share
+						"usage":parseFloat(current.share)
 					}
 				]
 		      };  
@@ -68,7 +68,7 @@ export default class Configurator extends React.Component {
 		   		if(prev.result[current.name]) {
 		       		prev.result[current.name].version_usage.push({
 		       			"version":current.version,
-						"usage":current.share
+						"usage":parseFloat(current.share)
 		       		});
 		   		}
 		   }  
