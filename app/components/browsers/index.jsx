@@ -23,22 +23,14 @@ export default class Browsers extends React.Component {
 		super(props);
 	}
 	componentWillMount() {
-		if(this.props.params.scope === 'global') {
-			BrowserActions.fetchGlobal();
-		} else if(this.props.params.scope === 'custom') {
-			console.log('fetch custom');
-			BrowserActions.fetchCustom(this.props.params.id);
-		} else if(this.props.params.scope === 'fdx') {
-			BrowserActions.fetchFdx();
-		}
+		BrowserActions.fetch(this.props.params.scope, this.props.params.id);
+		BrowserActions.selectScope(this.props.params.scope);
 	}
 	render() {
-		const scope = this.props.currentScope;
-		console.log(scope);
+		const scope = this.props.params.scope;
 		let browsers = [];
 		if(scope && this.props.browserscopes[scope].browsers.length > 0) {
 			browsers = this.props.browserscopes[scope].browsers;
-			console.log(browsers);
 			for (var i = 0; i < browsers.length; i++) {
 
 				let newBrowser = browsers[i];

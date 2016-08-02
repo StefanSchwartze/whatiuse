@@ -20,30 +20,37 @@ class BrowsersActions {
             networkAction(dispatch, this, api.browsers.post, {browsers: browsers});
         }
     }
+    fetch(scope, projectId) {
+        return async (dispatch) => {
+            switch(scope) {
+                case 'global':
+                    this.fetchGlobal();
+                    break;
+                case 'custom':
+                    this.fetchCustom(projectId);
+                    break;
+                case 'custom':
+                    this.fetchFdx(projectId);
+                    break;
+            }
+        }
+    }
     fetchGlobal() {
         return async (dispatch) => {
             networkAction(dispatch, this, api.browsers.getAll);
         }
     }
     fetchCustom(id) {
-        console.log(id);
         return async (dispatch) => {
             networkAction(dispatch, this, api.projects.get, id);
         }
     }
-    fetchFdx() {
-        const projectStore = alt.stores.ProjectsStore.state;
-        const project = findItemById(projectStore.projects, projectStore.currentProjectId);
-        return project.browserscopes.fdx;
-    }
-    selectScope(scope, id) {
-        if(scope === 'custom') {
-            this.fetchCustom(id);
-        } else if(scope === 'fdx') {
-            this.fetchFdx(id);
-        } else if(scope === 'global') {
-            this.fetchGlobal();
+    fetchFdx(id) {
+        return async (dispatch) => {
+            networkAction(dispatch, this, api.projects.get, id);
         }
+    }
+    selectScope(scope) {
         return scope;
     }
     validateBrowserset(browsers) {

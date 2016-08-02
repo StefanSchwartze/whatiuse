@@ -24,7 +24,6 @@ class ProjectsActions {
     }
     update(id, data) {
         return async (dispatch) => {
-            //BrowsersActions.update(data, "custom");
             networkAction(dispatch, this, api.projects.put, id, clone(data));
         }
     }

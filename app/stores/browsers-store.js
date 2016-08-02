@@ -24,7 +24,6 @@ class BrowsersStore {
 		this.browserscopes.global.browsers = browsers.browsers;
 	}
 	onFetchGlobal(snapshots) {
-		console.log('ich bin global');
 		let browserCollection;
 		if(snapshots.length && snapshots.length > 0) {
 			browserCollection = snapshots[0].browsers;
@@ -33,16 +32,11 @@ class BrowsersStore {
 			browserCollection = [];
 		}
 		this.browserscopes.global.browsers = browserCollection;
-		this.currentScope = 'global';
 	}
-	onFetchFdx(config) {
-		this.browserscopes.fdx = config;
-		//this.currentScope = 'fdx';
+	onFetchFdx(project) {
+		this.browserscopes.fdx.browsers = project ? project.browserscopes.fdx.browsers : [];
 	}
 	onFetchCustom(project) {
-		console.log(project);
-		console.log('fetched custom');
-		this.currentScope = 'custom';
 		this.browserscopes.custom.browsers = project ? project.browserscopes.config.browsers : [];
 	}
 	onValidateBrowserset(data) {

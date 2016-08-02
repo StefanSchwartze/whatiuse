@@ -43,16 +43,8 @@ export default class Navbar extends React.Component {
 		}
 	}
 	componentWillMount() {
-		//ProjectActions.fetch();
-		console.log(this.props.params);
 		ProjectActions.get(this.props.params.id);
-		if(this.props.params.scope === 'global') {
-			BrowserActions.fetchGlobal();
-		} else if(this.props.params.scope === 'custom') {
-			BrowserActions.fetchCustom(this.props.params.id);
-		} else if(this.props.params.scope === 'fdx') {
-			BrowserActions.fetchFdx();
-		}
+		this.selectBrowserScope(this.props.params.scope);
 	}
 	retry() {
 		StatusActions.retry();
@@ -61,10 +53,11 @@ export default class Navbar extends React.Component {
 		LoginActions.logout();
 	}
 	selectBrowserScope(scope) {
-		BrowserActions.selectScope(scope, this.props.params.id);
+		BrowserActions.fetch(scope, this.props.params.id);
+		BrowserActions.selectScope(scope);
 	}
 	showModal(){
-		BrowserActions.fetchCustom(this.props.params.id);
+		BrowserActions.fetch(this.props.params.scope, this.props.params.id);
 		this.setState({showModal: !this.state.showModal});
 	}
 	handleTabSelect(index) {
@@ -286,29 +279,19 @@ export default class Navbar extends React.Component {
 								<span className="icon-add"></span>
 							</li>
 							<li className="nav-list-item toggle">
-								{this.props.browserscopes && Object.keys(this.props.browserscopes).map(
-									(item, key) => {
-									const url = this.props.location.pathname.replace(new RegExp(currentScope, 'g'), item);
+								{this.props.browserscopes && Object.keys(this.props.browserscopes).map((scope, key) => {
+									const url = this.props.location.pathname.replace(new RegExp(currentScope, 'g'), scope);
 									return (
 										<Link 
 											key={key}
 											to={url} 
 											activeClassName="active"
 											className={classnames('toggle-button')}
-											onClick={this.selectBrowserScope.bind(this, item)}>
-											<span className={"icon-" + item}></span> {item}
+											onClick={this.selectBrowserScope.bind(this, scope)}>
+											<span className={"icon-" + scope}></span> {scope}
 										</Link>)
 										
-									}
-
-
-
-
-
-
-
-
-									)
+									})
 								}
 								<Tooltip
 									overlayClassName="tooltip--simple"
