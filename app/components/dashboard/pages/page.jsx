@@ -18,11 +18,8 @@ export default class Page extends React.Component {
 	}
 	componentDidMount() {
 		if(this.refs.iframe) {
-			this.refs.iframe.addEventListener('load', this.onLoad.bind(this));
+			this.refs.iframe.addEventListener('load', () => this.setState({ isLoading: false }));
 		}
-	}
-	onLoad() {
-		this.setState({ isLoading: false });
 	}
 	setActive() {
 		PagesActions.selectPage(this.props.page._id);
@@ -58,7 +55,6 @@ export default class Page extends React.Component {
 						{state}
 					</div>
 					<div className="open">
-
 						{
 							!this.props.isActive ? <Link to={'/projects/' + this.props.page.projectId + '/' + this.props.scope + '/pages/' + this.props.page._id + ''} className="button button--wide button--strong button--accent">Open</Link> : ""
 						}

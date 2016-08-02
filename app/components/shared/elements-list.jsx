@@ -2,14 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
 
-export default class ElementsList extends React.Component {
+export default class ElementsList extends React.PureComponent {
 	static propTypes = {
 		elements: React.PropTypes.array,
 		orderProp: React.PropTypes.string,
 		unit: React.PropTypes.string
-	}
-	constructor(props) {
-		super(props);
 	}
 	render() {
 		if(this.props.elements.length === 0) {

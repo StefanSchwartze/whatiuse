@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line} from 'recharts';
 import HistoryTooltip from '../../shared/history-tooltip';
@@ -11,14 +10,10 @@ import {orderBy} from 'lodash';
 import ElementsList from '../../shared/elements-list';
 import BrowsersList from '../../shared/browsers-list';
 
-export default class StatisticsContainer extends React.Component {
+export default class StatisticsContainer extends React.PureComponent {
 	static propTypes = {
 		page: React.PropTypes.object,
 		snapshots: React.PropTypes.array.isRequired
-	}
-	constructor(props) {
-		super(props);
-		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
 		let pageElem;
