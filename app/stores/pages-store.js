@@ -3,20 +3,11 @@ import {assign, map} from 'lodash';
 import {findItemById, findIndexById} from 'utils/store-utils';
 import PagesActions from 'actions/pages-actions';
 
-if(!process.env.BROWSER) {
-	var socket = require('socket.io-client')('http://localhost');
-} else {
-	var socket = io();
-}
-
 class PagesStore {
 	constructor() {
 		this.bindActions(PagesActions);
 		this.pages = [];
 		this.currentPageId = '';
-		socket.on('connect', () => {
-			console.log('Uhh, connected!');
-		});
 	}
 	onAdd(item) {
 		this.pages.push(item);

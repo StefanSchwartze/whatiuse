@@ -100,9 +100,11 @@ export default class Dashboard extends React.Component {
 		}
 	}
 	render() {
+		const scope = this.props.params.scope;
 		const pages = this.props.pages;
 		const snapshots = this.props.snapshots;
 		const currentPageId = this.props.params.pageid || '';
+		const currentProjectId = this.props.params.id || '';
 		let statistics = <div></div>
 		if(pages.length > 0) {
 			statistics = <StatisticsContainer 
@@ -116,8 +118,8 @@ export default class Dashboard extends React.Component {
 					completeSupport={this.calcCompleteSupport(pages)}
 					pages={pages}
 					currentPageId={currentPageId}
-					currentProjectId={this.props.params.id}
-					currentScope={this.props.params.scope} />
+					currentProjectId={currentProjectId}
+					currentScope={scope} />
 				{statistics}
 			</div>
 		);
