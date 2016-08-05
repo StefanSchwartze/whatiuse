@@ -3,9 +3,13 @@ import Navbar from 'components/navbar';
 import LoginActions from 'actions/login-actions';
 
 export default class App extends React.Component {
+
+  static propTypes = { children: React.PropTypes.node }
+  static contextTypes = { flux: React.PropTypes.object.isRequired }
+
   constructor(props) {
     super(props);
-    LoginActions.loadLocalUser();
+    //LoginActions.loadLocalUser();
   }
   render() {
     var navbar;

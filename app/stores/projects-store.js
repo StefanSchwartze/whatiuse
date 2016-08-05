@@ -1,11 +1,10 @@
 import alt from 'utils/alt';
 import {assign, map} from 'lodash';
 import {findItemById, findIndexById} from 'utils/store-utils';
-import ProjectsActions from 'actions/projects-actions';
 
 class ProjectsStore {
 	constructor() {
-		this.bindActions(ProjectsActions);
+		this.bindActions(this.alt.getActions('projects'));
 		this.projects = [];
     	this.projectsHash = {};
 		this.currentProjectId = "";
@@ -42,4 +41,7 @@ class ProjectsStore {
 	}
 }
 
-module.exports = (alt.createStore(ProjectsStore));
+module.exports = {
+	default: (alt.createStore(ProjectsStore)),
+	raw: ProjectsStore
+}

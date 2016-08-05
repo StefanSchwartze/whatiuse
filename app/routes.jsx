@@ -24,8 +24,9 @@ function requireAuth(nextState, replace) {
 	}
 }
 
-export default (
-	<Route path='/' component={App}>
+export default function (flux) {
+  return (
+    <Route path='/' component={App}>
 		<Route
 			path='login'
 			component={Login} />
@@ -58,5 +59,5 @@ export default (
 		</Route>
 		<Route patch="*" component={require('./pages/not-found')} />
 	</Route>
-);
+)};
 

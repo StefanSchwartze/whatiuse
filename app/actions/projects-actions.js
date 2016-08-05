@@ -8,13 +8,21 @@ class ProjectsActions {
         this.generateActions('removeCurrent');
     }
     fetch() {
-        return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.getAll);
+        return async (dispatch, alt) => {
+            alt.resolve(async () => {
+                try {
+                    await networkAction(dispatch, this, api.projects.getAll);
+                } catch (error) {
+                    console.log(error);
+                }
+            })
         }
-    }
+    }/*
     get(id) {
-        return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.get, id);
+        return async (dispatch, alt) => {
+            alt.resolve(async () => {
+                await networkAction(dispatch, this, api.projects.get, id);
+            })
         }
     }
     add(data) {
@@ -31,7 +39,10 @@ class ProjectsActions {
         return async (dispatch) => {
             networkAction(dispatch, this, api.projects.delete, id);
         }
-    }
+    }*/
 }
 
-module.exports = (alt.createActions(ProjectsActions));
+module.exports = {
+    default: (alt.createActions(ProjectsActions)),
+    raw: ProjectsActions
+}

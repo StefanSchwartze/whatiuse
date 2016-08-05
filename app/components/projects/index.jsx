@@ -6,35 +6,29 @@ import ProjectForm from './project-form';
 import ProjectsList from './projects-list';
 import ProjectsStore from 'stores/projects-store';
 import ProjectsActions from 'actions/projects-actions';
+import connect from 'connect-alt';
 
-@authDecorator
-@connectToStores
+//@authDecorator
+@connect('projects')
 export default class Projects extends React.Component {
-	static contextTypes: {
-		location: React.PropTypes.object
+	static contextTypes = {
+		flux: React.PropTypes.object.isRequired
 	}
 	static propTypes = {
-		projects: React.PropTypes.array,
+		projectsStore: React.PropTypes.object.isRequired,
 		projectsHash: React.PropTypes.object,
 		currentPageId: React.PropTypes.string
-	}
-	static getStores(props) {
-		return [ProjectsStore];
-	}
-	static getPropsFromStores(props) {
-		return ProjectsStore.getState();
 	}
 	constructor(props) {
 		super(props);
 	}
 	componentWillMount() {
-		return ProjectsActions.fetch();
+		const { flux } = this.context;
+		flux.getActions('projects').fetch();
 	}
 	render() {
 		return (
-			<AltContainer store={ProjectsStore}>
-				<ProjectsList />
-			</AltContainer>
+			<ProjectsList />
 		);
 	}
 }
