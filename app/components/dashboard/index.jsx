@@ -30,9 +30,9 @@ export default class Dashboard extends React.Component {
 		super(props);
 	}
 	componentWillMount() {
-		PagesActions.fetch({ projectId: this.props.params.id});
+		PagesActions.fetch({ projectId: this.props.params.projectid});
 		SnapshotsActions.fetch({ 
-			page: this.props.params.id, 
+			page: this.props.params.pageid, 
 			scope: this.props.params.scope
 		});
 	}

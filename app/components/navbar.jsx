@@ -43,7 +43,7 @@ export default class Navbar extends React.Component {
 		}
 	}
 	componentWillMount() {
-		ProjectActions.get(this.props.params.id);
+		ProjectActions.get(this.props.params.projectid);
 		this.selectBrowserScope(this.props.params.scope);
 	}
 	retry() {
@@ -53,11 +53,11 @@ export default class Navbar extends React.Component {
 		LoginActions.logout();
 	}
 	selectBrowserScope(scope) {
-		BrowserActions.fetch(scope, this.props.params.id);
+		BrowserActions.fetch(scope, this.props.params.projectid);
 		BrowserActions.selectScope.bind(this, scope);
 	}
 	showModal(){
-		BrowserActions.fetch(this.props.params.scope, this.props.params.id);
+		BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);
 		this.setState({showModal: !this.state.showModal});
 	}
 	handleTabSelect(index) {

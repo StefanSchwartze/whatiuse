@@ -23,17 +23,19 @@ export default class Browsers extends React.Component {
 		super(props);
 	}
 	componentWillMount() {
-		BrowserActions.fetch(this.props.params.scope, this.props.params.id);
+		BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);
 		BrowserActions.selectScope(this.props.params.scope);
 	}
 	render() {
 		const scope = this.props.params.scope;
+		const currentBrowser = this.props.params.browserid;
 		let browsers = [];
 		if(scope && this.props.browserscopes[scope].browsers.length > 0) {
 			browsers = this.props.browserscopes[scope].browsers;
 			for (var i = 0; i < browsers.length; i++) {
 
 				let newBrowser = browsers[i];
+				newBrowser.isOpen = newBrowser.alias === currentBrowser;
 				newBrowser.completeShare = newBrowser.version_usage.reduce((sum, version, index) => {
 					return sum += newBrowser.version_usage[index].usage;
 				}, 0);
@@ -47,11 +49,11 @@ export default class Browsers extends React.Component {
 		return (
 			<div>
 				<div className="browsers-list">
-					<div className="content-container edged browser-container">
+					<div className="content-container edged browsers-container">
 						<ResponsiveContainer>
 							<BarChart 
 								data={browsers}
-								margin={{top: 20, right: 30, left: 20, bottom: 5}}
+								margin={{top: 20, right: 20, left: 0, bottom: 0}}
 							>
 								<XAxis dataKey="browser"/>
 								<YAxis/>
@@ -62,9 +64,14 @@ export default class Browsers extends React.Component {
 						</ResponsiveContainer>
 					</div>
 				</div>
-				<div className="content-container content edged browsertiles-container">
+				<div className="content-containe">
 					{browsers && browsers.map((item, index) =>
-						<BrowserBox key={index} browser={item} maxVal={browsers[0].completeShare} />
+						<BrowserBox 
+							key={index} 
+							scope={scope}
+							projectId={this.props.params.projectid}
+							browser={item} 
+							maxVal={browsers[0].completeShare} />
 					)}
 				</div>
 			</div>

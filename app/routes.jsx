@@ -35,7 +35,7 @@ export default (
 			component={Projects}
 			onEnter={requireAuth} />
 		<Route
-			path='projects/:id'
+			path='projects/:projectid'
 			onEnter={requireAuth} >
 
 			<IndexRedirect to="global" />
@@ -51,7 +51,11 @@ export default (
 				</Route>
 				<Route
 					path='browsers'
-					component={Browsers} />
+					component={Browsers} >
+					<Route
+						path=':browserid'
+						component={Browsers} />
+				</Route>
 
 			</Route>
 

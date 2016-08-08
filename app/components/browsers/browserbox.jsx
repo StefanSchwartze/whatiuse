@@ -1,28 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router';
 
 import classnames from 'classnames';
 
 export default class BrowsersBox extends React.Component {
 	static propTypes = {
 		browser: React.PropTypes.object.isRequired,
-		maxVal: React.PropTypes.number.isRequired
+		maxVal: React.PropTypes.number.isRequired,
+		scope: React.PropTypes.string.isRequired,
+		projectId: React.PropTypes.string.isRequired
 	}
 	constructor(props) {
 		super(props);
-		this.state = {
-			open: false
-		};
 	}
 	render() {
 		let width = (this.props.browser.completeShare / this.props.maxVal) * 100 + '%';
+		const baseURL = '/projects/' + this.props.projectId + '/' + this.props.scope + '/browsers/';
+		const url = this.props.browser.isOpen ? baseURL : baseURL + this.props.browser.alias;
 		return (
 			<div>
-				<div className="browser-container">
-					<div
-						className="browserbox"
-						onClick={() => this.setState({ open: !this.state.open })}
-					>
+				<Link
+					to={url} 
+					className="browser-container content-container">
+					<div className="browserbox">
 						<h3><span className={classnames('icon-' + this.props.browser.alias)}></span>{this.props.browser.browser}</h3>
 					</div>
 					<div className="separator"></div>
@@ -36,8 +37,8 @@ export default class BrowsersBox extends React.Component {
 						</div>
 
 					</div>
-				</div>
-				<div className={classnames('browser-detail', this.state.open ? 'open' : '')}>
+				</Link>
+				<div className={classnames('browser-detail', this.props.browser.isOpen ? 'open' : '')}>
 					<div className="content-container">
 						<h2>Wow, this information is so detailed!</h2>
 						<p>Here we show details about each browser version.

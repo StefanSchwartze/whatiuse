@@ -174,7 +174,7 @@ a {
 		background-color: $grey-medium;
 		max-width: 100%;
 	}
-	&.browser-container {
+	&.browsers-container {
 		height: 350px;
 	}
 	&.statistics-container {
@@ -665,11 +665,8 @@ a {
 }
 
 .browser-container {
-		margin: $spacing-medium $spacing-medium $spacing-small;
 		display: flex;
 		align-items: center;
-		margin-top: 1rem;
-		margin-left: 2rem;
 		cursor: pointer;
 	.browserbox {
 		padding: 0.5rem;
