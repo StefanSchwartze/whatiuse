@@ -98,7 +98,7 @@
     "react-hot-loader": "^1.2.7",
     "react-router": "^2.5.2",
     "react-tabs": "^0.5.5",
-    "recharts": "^0.12.4",
+    "recharts": "^0.12.8",
     "restful.js": "tomaash/restful.js",
     "sass-loader": "^4.0.0",
     "simple-react-modal": "^0.4.9",
