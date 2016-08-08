@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
-
 import classnames from 'classnames';
 
 export default class BrowsersBox extends React.Component {
@@ -16,10 +15,11 @@ export default class BrowsersBox extends React.Component {
 	}
 	render() {
 		let width = (this.props.browser.completeShare / this.props.maxVal) * 100 + '%';
+		const isOpen = this.props.browser.isOpen;
 		const baseURL = '/projects/' + this.props.projectId + '/' + this.props.scope + '/browsers/';
-		const url = this.props.browser.isOpen ? baseURL : baseURL + this.props.browser.alias;
+		const url = isOpen ? baseURL : baseURL + this.props.browser.alias;
 		return (
-			<div>
+			<div className={classnames('browser', isOpen ? 'open' : '')}>
 				<Link
 					to={url} 
 					className="browser-container content-container">
@@ -27,9 +27,7 @@ export default class BrowsersBox extends React.Component {
 						<h3><span className={classnames('icon-' + this.props.browser.alias)}></span>{this.props.browser.browser}</h3>
 					</div>
 					<div className="separator"></div>
-					<div
-						className="percentagebox"
-					>
+					<div className="percentagebox">
 						<div className="percentagebox-content" style={{width: width}}>
 							{this.props.browser.version_usage && this.props.browser.version_usage.map((item, index) =>
 								<div className="browser-version" key={index} style={{width: (this.props.browser.version_usage[index].usage / this.props.browser.completeShare) * 100 + '%'}}></div>
@@ -38,7 +36,7 @@ export default class BrowsersBox extends React.Component {
 
 					</div>
 				</Link>
-				<div className={classnames('browser-detail', this.props.browser.isOpen ? 'open' : '')}>
+				<div className="browser-detail">
 					<div className="content-container">
 						<h2>Wow, this information is so detailed!</h2>
 						<p>Here we show details about each browser version.
