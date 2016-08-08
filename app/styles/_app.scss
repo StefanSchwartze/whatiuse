@@ -175,8 +175,6 @@ a {
 		max-width: 100%;
 	}
 	&.browser-container {
-		background-color: $grey-medium;
-		max-width: 100%;
 		height: 350px;
 	}
 	&.statistics-container {
@@ -606,13 +604,8 @@ a {
 /*
 *	Component: Browsers
 */
-.browsers {
-	max-height: 400px;
-	overflow-y: scroll;
-	.justify {
-		display: flex;
-		justify-content: space-between;
-	}
+.browsers-list {
+	background-color: $grey-medium;
 }
 
 /*

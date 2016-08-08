@@ -46,19 +46,21 @@ export default class Browsers extends React.Component {
 		}
 		return (
 			<div>
-				<div className="content-container edged browser-container">
-					<ResponsiveContainer>
-						<BarChart 
-							data={browsers}
-							margin={{top: 20, right: 30, left: 20, bottom: 5}}
-						>
-							<XAxis dataKey="browser"/>
-							<YAxis/>
-							<CartesianGrid />
-							<Tooltip/>
-							<Bar dataKey="completeShare" stackId="a" fill="#8884d8" />
-						</BarChart>
-					</ResponsiveContainer>
+				<div className="browsers-list">
+					<div className="content-container edged browser-container">
+						<ResponsiveContainer>
+							<BarChart 
+								data={browsers}
+								margin={{top: 20, right: 30, left: 20, bottom: 5}}
+							>
+								<XAxis dataKey="browser"/>
+								<YAxis/>
+								<CartesianGrid />
+								<Tooltip/>
+								<Bar dataKey="completeShare" stackId="a" fill="#8884d8" />
+							</BarChart>
+						</ResponsiveContainer>
+					</div>
 				</div>
 				<div className="content-container content edged browsertiles-container">
 					{browsers && browsers.map((item, index) =>
