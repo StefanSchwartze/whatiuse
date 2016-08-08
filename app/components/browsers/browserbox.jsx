@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 import classnames from 'classnames';
+import { PieChart, Pie, Cell, Sector, ResponsiveContainer, XAxis } from 'recharts';
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 export default class BrowsersBox extends React.Component {
 	static propTypes = {
@@ -12,12 +15,26 @@ export default class BrowsersBox extends React.Component {
 	}
 	constructor(props) {
 		super(props);
+		this.state = { activeIndex: 0 };
+	}
+	onPieEnter(data, index) {
+		this.setState({ activeIndex: index });
 	}
 	render() {
 		let width = (this.props.browser.completeShare / this.props.maxVal) * 100 + '%';
 		const isOpen = this.props.browser.isOpen;
 		const baseURL = '/projects/' + this.props.projectId + '/' + this.props.scope + '/browsers/';
 		const url = isOpen ? baseURL : baseURL + this.props.browser.alias;
+		const data = this.props.browser.version_usage.map((version) => { return {"name": version.version, "value": version.usage }});
+		const chart = isOpen ? (<ResponsiveContainer>
+								<PieChart width={400} height={200}>
+									<Pie data={data}>
+										{
+											data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]}/>)
+										}
+									</Pie>
+								</PieChart>
+							</ResponsiveContainer>) : '';
 		return (
 			<div className={classnames('browser', isOpen ? 'open' : '')}>
 				<Link
@@ -38,9 +55,14 @@ export default class BrowsersBox extends React.Component {
 				</Link>
 				<div className="browser-detail">
 					<div className="content-container">
-						<h2>Wow, this information is so detailed!</h2>
-						<p>Here we show details about each browser version.
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint </p>
+						<div className="browser-detail-chart">
+							{chart}
+						</div>
+						<div className="">
+							<h2>Wow, this information is so detailed!</h2>
+							<p>Here we show details about each browser version.
+							Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint </p>
+						</div>
 					</div>
 				</div>
 			</div>

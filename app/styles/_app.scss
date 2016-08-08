@@ -671,7 +671,7 @@ a {
 			transform: scale(1.05);
 		}
 		.browser-detail {
-			max-height: 170px;
+			max-height: 250px;
 		}
 	}
 }
@@ -747,6 +747,7 @@ a {
 	color: white;
 	position: relative;
 	.content-container {
+		display: flex;
 		&:before, &:after {
 		    content: '';
 		    display: block;
@@ -765,6 +766,11 @@ a {
 	    	border-left: 20px solid transparent;
 	    	filter: drop-shadow(0 0 5px black);
 	    	width: calc(100% - calc(100% - 1280px) / 2 - 50px);
+		}
+		.browser-detail-chart {
+			width: 400px;
+			height: 200px;
+			position: relative;
 		}
 	}
 }
