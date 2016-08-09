@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 import classnames from 'classnames';
-import { PieChart, Pie, Cell, Sector, ResponsiveContainer, XAxis } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Sector, ResponsiveContainer, XAxis } from 'recharts';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#F02839'];
 
 export default class BrowsersBox extends React.Component {
 	static propTypes = {
@@ -33,6 +33,7 @@ export default class BrowsersBox extends React.Component {
 											data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]}/>)
 										}
 									</Pie>
+									<Tooltip/>
 								</PieChart>
 							</ResponsiveContainer>) : '';
 		return (
@@ -42,6 +43,7 @@ export default class BrowsersBox extends React.Component {
 					className="browser-container content-container">
 					<div className="browserbox">
 						<h3><span className={classnames('icon-' + this.props.browser.alias)}></span>{this.props.browser.browser}</h3>
+						<span>{this.props.browser.completeShare.toFixed(2) + ' %'}</span>
 					</div>
 					<div className="separator"></div>
 					<div className="percentagebox">
@@ -59,7 +61,7 @@ export default class BrowsersBox extends React.Component {
 							{chart}
 						</div>
 						<div className="">
-							<h2>Wow, this information is so detailed!</h2>
+							<h2>{this.props.browser.browser}</h2>
 							<p>Here we show details about each browser version.
 							Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint </p>
 						</div>

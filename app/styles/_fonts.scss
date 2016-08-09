@@ -45,16 +45,16 @@ $url-14: url('../fonts/icomoon.svg#icomoon');
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-safari:before {
+.icon-safari:before, .icon-ios_saf:before {
     content: "\f267";
 }
-.icon-chrome:before {
+.icon-chrome:before, .icon-and_chr:before {
     content: "\f268";
 }
 .icon-firefox:before {
     content: "\f269";
 }
-.icon-opera:before {
+.icon-opera:before, .icon-op_mini:before {
     content: "\f26a";
 }
 .icon-ie:before {

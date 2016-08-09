@@ -59,6 +59,11 @@
 			transition: margin .25s;
 			z-index: 10;
 		}
+		&:visited {
+			.link {
+				color: white;
+			}
+		}
 	}
 }
 .toggle {
@@ -76,6 +81,7 @@
 		display: inline-flex;
 		align-items: center;
 		vertical-align: center;
+		color: white;
 		> :first-child {
 			margin-right: $spacing-small;
 		}
@@ -91,6 +97,9 @@
 		}
 		&:nth-child(3) {
 			border-radius: 0 $border-radius-large $border-radius-large 0;
+		}
+		&:visited:not(.active) {
+			color: white;
 		}
 	}
 	.helper {
