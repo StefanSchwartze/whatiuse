@@ -2,13 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 
-import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line} from 'recharts';
-import HistoryTooltip from '../../shared/history-tooltip';
-
-import moment from 'moment';
-import {orderBy} from 'lodash';
-
+import Timeline from './timeline';
 import ElementsList from '../../shared/elements-list';
+import ElementsChart from '../../shared/elements-chart';
 import BrowsersList from '../../shared/browsers-list';
 
 export default class StatisticsContainer extends React.Component {
@@ -21,6 +17,7 @@ export default class StatisticsContainer extends React.Component {
 		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
+		console.log('render');
 		let pageElem;
 		let timeline;
 		if(Object.keys(this.props.page).length > 0) {
@@ -30,50 +27,28 @@ export default class StatisticsContainer extends React.Component {
 				const page = this.props.page;
 				const snapshots = this.props.snapshots || [];
 				let elements = snapshots[snapshots.length - 1].elementCollection || [];
-				let lastCheck = page.isChecking ? (<span><i className="icon icon-spinner8 animate rotate"></i>Currently checking…</span>) : moment(snapshots[snapshots.length - 1].captured).calendar();
 
 				if(snapshots.length > 1) {
-					timeline = <div className="history-container">
-									<div className="description">
-										<span>Timeline</span>
-										<span>Last check: {lastCheck}</span>
-									</div>
-									<HistoryTooltip/>
-									<div className="chart">
-										<ResponsiveContainer>
-											<LineChart data={snapshots} height={100} width={1000}>
-												<Line type='monotone' dataKey='pageSupport' stroke='#25bcca' strokeWidth={1} />
-												<Tooltip content={<HistoryTooltip/>}/>
-											</LineChart>
-										</ResponsiveContainer>
-									</div>
-								</div>
+					timeline = <Timeline
+									snapshots={snapshots}
+									isChecking={page.isChecking || false} 
+								/>
 				}
 
 				pageElem = 	<div>
 							{timeline}
 							<div className="description">
-								<p>Most used elements:</p>
-							</div>
-							<ElementsList elements={elements} orderProp="count" />
-							<div className="description">
-								<p>Most crashing elements:</p>
+								<p>Features with missing support:</p>
 							</div>
 							<ElementsList elements={elements} orderProp="impactMissing" unit="%" />
-							<div className="charts-container">
-								<div className="chart-container">
-									<ResponsiveContainer>
-										<BarChart
-											data={orderBy(elements, 'count', 'desc')}>
-											<XAxis dataKey="name"/>
-											<YAxis/>
-											<CartesianGrid />
-											<Tooltip/>
-											<Bar dataKey="count" fill="#25bcca" />
-										</BarChart>
-									</ResponsiveContainer>
-								</div>
+							<div className="description">
+								<p>Features with partial support:</p>
 							</div>
+							<ElementsList elements={elements} orderProp="impactPartial" unit="%" />
+							<div className="description">
+								<p>Frequency of the affected Features:</p>
+							</div>
+							<ElementsChart elements={elements} orderProp="count" />
 						</div>;
 			} else {
 				pageElem = <span>Not investigated yet.</span>;

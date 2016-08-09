@@ -75,13 +75,11 @@ export default class PagesList extends React.Component {
 							<span onClick={this.toggleOrder.bind(this, false)} className="icon-keyboard_arrow_down"></span>
 							<span onClick={this.toggleOrder.bind(this, true)} className="icon-keyboard_arrow_up"></span>
 						</div>
-						<button className="button button--accent" onClick={this.showModal.bind(this)}><span className="icon-add"></span>Add page</button>
+						<button className="button button--accent" onClick={this.showModal.bind(this)}>Add page</button>
 					</div>
 					<div className={classnames('slider', this.state.rtl ? 'orderReverse' : '')}>
 						{globalTile}
-						{this.props.pages && this.props.pages
-								/*.sort((a, b) => b.latestSupport - a.latestSupport)*/
-								.map((item, index) =>
+						{this.props.pages && this.props.pages.map((item, index) =>
 							<Page key={index} scope={this.props.currentScope} page={item} isActive={this.props.currentPageId === item._id} />)
 						}
 					</div>
