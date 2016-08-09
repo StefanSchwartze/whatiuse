@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 import classnames from 'classnames';
 import { PieChart, Pie, Cell, Tooltip, Sector, ResponsiveContainer, XAxis } from 'recharts';
+import SimpleTooltip from 'rc-tooltip';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#F02839'];
 
@@ -49,7 +50,35 @@ export default class BrowsersBox extends React.Component {
 					<div className="percentagebox">
 						<div className="percentagebox-content" style={{width: width}}>
 							{this.props.browser.version_usage && this.props.browser.version_usage.map((item, index) =>
-								<div className="browser-version" key={index} style={{width: (this.props.browser.version_usage[index].usage / this.props.browser.completeShare) * 100 + '%'}}></div>
+								<SimpleTooltip
+									overlayClassName="tooltip--simple" 
+									key={index} 
+									placement="top"
+									mouseEnterDelay={0}
+									mouseLeaveDelay={0}
+									destroyTooltipOnHide={true}
+									overlay={
+										<div style={{maxWidth: 320}}>
+											{
+												this.props.browser.browser + 
+												' ' +
+												this.props.browser.version_usage[index].version + 
+												' is used by ' +
+												this.props.browser.version_usage[index].usage.toFixed(2) +
+												' % of your users.'
+											}
+										</div>
+									}
+								>
+									<div 
+										className="browser-version"
+										style={{
+											width: (this.props.browser.version_usage[index].usage / this.props.browser.completeShare) * 100 + '%',
+											background: COLORS[index % COLORS.length]
+										}}>
+										<span>{this.props.browser.version_usage[index].usage > 2 ? item.version : ''}</span>
+									</div>
+						        </SimpleTooltip>
 							)}
 						</div>
 

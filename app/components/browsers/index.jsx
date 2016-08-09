@@ -49,31 +49,19 @@ export default class Browsers extends React.Component {
 		return (
 			<div>
 				<div className="browsers-list">
-					<div className="content-container edged browsers-container">
-						<ResponsiveContainer>
-							<BarChart 
-								data={browsers}
-								margin={{top: 20, right: 20, left: 0, bottom: 0}}
-							>
-								<XAxis dataKey="browser"/>
-								<YAxis/>
-								<CartesianGrid />
-								<Tooltip/>
-								<Bar dataKey="completeShare" stackId="a" fill="#8884d8" />
-							</BarChart>
-						</ResponsiveContainer>
+					<div className="content-container browsers-container">
+						<h1>Browser share of users</h1>
+						<h2>in your <strong className="label">{scope}</strong> data scope</h2>
 					</div>
 				</div>
-				<div className="content-containe">
-					{browsers && browsers.map((item, index) =>
-						<BrowserBox 
-							key={index} 
-							scope={scope}
-							projectId={this.props.params.projectid}
-							browser={item} 
-							maxVal={browsers[0].completeShare} />
-					)}
-				</div>
+				{browsers.length > 0 ? browsers.map((item, index) =>
+					<BrowserBox 
+						key={index} 
+						scope={scope}
+						projectId={this.props.params.projectid}
+						browser={item} 
+						maxVal={browsers[0].completeShare} />
+				) : <div className="content-container"><p>No data provided</p></div>}
 			</div>
 		);
 	}
