@@ -9,15 +9,13 @@ import BrowsersList from '../../shared/browsers-list';
 
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
-		page: React.PropTypes.object,
+		page: React.PropTypes.object.isRequired,
 		snapshots: React.PropTypes.array.isRequired
 	}
 	constructor(props) {
 		super(props);
-		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
-		console.log('render');
 		let pageElem;
 		let timeline;
 		if(Object.keys(this.props.page).length > 0) {
