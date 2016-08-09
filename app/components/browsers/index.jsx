@@ -51,7 +51,7 @@ export default class Browsers extends React.Component {
 				<div className="browsers-list">
 					<div className="content-container browsers-container">
 						<h1>Browser share of users</h1>
-						<h2>in your <strong className="label">{scope}</strong> data scope</h2>
+						<h2>from your <strong className="label">{scope}</strong> data scope</h2>
 					</div>
 				</div>
 				{browsers.length > 0 ? browsers.map((item, index) =>

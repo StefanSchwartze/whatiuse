@@ -246,6 +246,19 @@ h1, h2 {
 		}
 	}
 }
+/*
+*	PercentagePie component
+*/
+.percentagepie {
+	position: relative;
+	padding: $spacing-small;
+	.value {
+		font-size: .75rem;
+		position: absolute;
+		top: 20px;
+		left: 15px;
+	}
+}
 
 /*
 *	Modal component
