@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 const PageSchema = new mongoose.Schema({
 	title: 			String,
 	url: 			String,
-	latestSupport: String,
+	globalSupport: String,
+	customSupport: String,
+	fdxSupport: String,
 	imgSrc: String,
 	user: {
 		type: mongoose.Schema.Types.ObjectId,

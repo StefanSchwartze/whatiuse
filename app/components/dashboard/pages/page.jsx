@@ -5,6 +5,7 @@ import {floor} from 'lodash';
 import { Link } from 'react-router';
 
 import PagesActions from 'actions/pages-actions';
+import SnapshotsActions from 'actions/snapshots-actions';
 
 export default class Page extends React.Component {
 	static propTypes = {
@@ -24,8 +25,14 @@ export default class Page extends React.Component {
 	onLoad() {
 		this.setState({ isLoading: false });
 	}
-	setActive() {
-		PagesActions.selectPage(this.props.page._id);
+	setActive(pageid, scope) {
+		PagesActions.selectPage(pageid);
+		SnapshotsActions.fetch({
+			"conditions": { 
+				pageId: pageid,
+				scope: scope
+			}
+		});
 	}
 	checkUrl() {
 		PagesActions.triggerURLCheck(this.props.page);
@@ -34,8 +41,9 @@ export default class Page extends React.Component {
 		let support = '- %';
 		let state;
 		let progress;
-		if(this.props.page.latestSupport) {
-			support = floor(this.props.page.latestSupport, 2) + '%';
+		const scope = this.props.scope;
+		if(this.props.page[scope + 'Support']) {
+			support = floor(this.props.page[scope + 'Support'], 2) + '%';
 		}
 		state = <span>{support}</span>;
 		if(this.props.page.isChecking) {
@@ -62,7 +70,7 @@ export default class Page extends React.Component {
 						{
 							!this.props.isActive ? 
 								<Link
-									onClick={this.setActive.bind(this)}
+									onClick={this.setActive.bind(this, this.props.page._id, this.props.scope)}
 									to={'/projects/' + this.props.page.projectId + '/' + this.props.scope + '/pages/' + this.props.page._id + ''} 
 									className="button button--wide button--strong button--accent"
 								>Open</Link> : ""

@@ -19,6 +19,7 @@ import LoginActions from 'actions/login-actions';
 import StatusActions from 'actions/status-actions';
 import BrowserActions from 'actions/browsers-actions';
 import ProjectActions from 'actions/projects-actions';
+import SnapshotsActions from 'actions/snapshots-actions';
 
 @connectToStores
 export default class Navbar extends React.Component {
@@ -54,7 +55,13 @@ export default class Navbar extends React.Component {
 	}
 	selectBrowserScope(scope) {
 		BrowserActions.fetch(scope, this.props.params.projectid);
-		BrowserActions.selectScope.bind(this, scope);
+		BrowserActions.selectScope(scope);
+		SnapshotsActions.fetch({
+			"conditions": { 
+				pageId: this.props.params.pageid,
+				scope: scope
+			}
+		});
 	}
 	showModal(){
 		BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);

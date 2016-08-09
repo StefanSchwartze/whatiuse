@@ -63,7 +63,7 @@ class PagesActions {
             const scope = store.currentScope;
             const browsers = clone(store.browserscopes[scope].browsers);
 
-            socket.emit('triggerURL', { url: page.url, browsers: browsers, id: page._id, page: page }, 
+            socket.emit('triggerURL', { url: page.url, browsers: browsers, id: page._id, page: page, scope: scope }, 
                 function (err) {
                     if (err) {
                         console.error('Error deleting user:', err);

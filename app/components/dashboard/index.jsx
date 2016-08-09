@@ -30,10 +30,16 @@ export default class Dashboard extends React.Component {
 		super(props);
 	}
 	componentWillMount() {
-		PagesActions.fetch({ projectId: this.props.params.projectid});
-		SnapshotsActions.fetch({ 
-			page: this.props.params.pageid, 
-			scope: this.props.params.scope
+		PagesActions.fetch({
+			"conditions": { 
+				projectId: this.props.params.projectid
+			}
+		});
+		SnapshotsActions.fetch({
+			"conditions": { 
+				pageId: this.props.params.pageid,
+				scope: this.props.params.scope
+			}
 		});
 	}
 	componentDidMount() {
@@ -104,7 +110,7 @@ export default class Dashboard extends React.Component {
 		const pages = this.props.pages;
 		const snapshots = this.props.snapshots;
 		const currentPageId = this.props.params.pageid || '';
-		const currentProjectId = this.props.params.id || '';
+		const currentProjectId = this.props.params.projectid || '';
 		let statistics = <div></div>
 		if(pages.length > 0) {
 			statistics = <StatisticsContainer 

@@ -229,7 +229,8 @@ io.on('connection', function(socket){
 
 		const url = data.url;
 		const id = data.id;
-		const page = data.page;
+		const scope = data.scope;
+		let page = data.page;
 		let browsers = data.browsers;
 		let browserNames = [];
 		for (var i = 0; i < browsers.length; i++) {
@@ -389,8 +390,10 @@ io.on('connection', function(socket){
 				browserCollection: browsers,
 				pageSupport: (100 - getPercentage(missingBrowserss, browsers)).toFixed(2),
 				pageId: id,
-				scope: 'global'
+				scope: scope
 			}
+
+			page[scope + 'Support'] = send.pageSupport;
 
 			function updatePage() {
 				return axios.put('http://localhost:3000/api/pages/' + page._id, page);
