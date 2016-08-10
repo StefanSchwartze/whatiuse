@@ -133,6 +133,10 @@ h1, h2 {
 		&:hover {
 			color: black;
 		}
+		&:focus {
+			box-shadow: none;
+			color: black;
+		}
 	}
 	&--delete {
 		border: solid 1px $grey;
@@ -590,6 +594,11 @@ h1, h2 {
 /*
 *	Component: ElementsList
 */
+.elements-list {
+	.box:nth-last-child(2) {
+		opacity: .35;
+	}
+}
 .pile {
 	display: inline-block;
 	padding: $spacing-extra-small $spacing-medium;
@@ -854,6 +863,18 @@ h1, h2 {
 	}
 }
 
+
+.list-overlay {
+	&:before {
+		content: '';
+		width: 100%;
+		height: 60px;
+		background: linear-gradient(to bottom, rgba(248,248,248,0) 0%,rgba(248,248,248,1) 100%);
+		display: block;
+		position: relative;
+		margin-top: -60px;
+	}
+}
 
 
 

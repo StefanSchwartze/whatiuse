@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
+import classnames from 'classnames';
 
 export default class ElementsList extends React.Component {
 	static propTypes = {
@@ -23,7 +24,8 @@ export default class ElementsList extends React.Component {
 		}
 	}
 	render() {
-		const elemLength = this.props.elements.length;
+		const elements = this.props.elements.filter(element => element[this.props.orderProp]) || [];
+		const elemLength = elements.length;
 		if(elemLength === 0) {
 			return <p>No elements</p>
 		}
@@ -31,24 +33,30 @@ export default class ElementsList extends React.Component {
 		const excerpt = this.props.excerpt;
 		const maxElems = excerpt ? (this.props.showMax || elemLength) : elemLength;
 		const afterElem = this.props.showMax ?
-						(excerpt ? 
-							<button 
-								className="button"
-								onClick={this.handleClick.bind(this)}
-							>Show more
-							</button> : 
-							<button 
-								className="button"
-								onClick={this.handleClick.bind(this)}
-							>Show less
-							</button>) :
-						(<p></p>);
+						(
+							layout === 'pile' ? 
+								<div 
+									className="pile"
+									onClick={this.handleClick.bind(this)}
+								>
+									<span className="icon-piles"></span>
+									<span>{excerpt ? (elemLength - maxElems) : ''}</span>
+								</div> : 				
+								<button 
+									className={classnames('button button--icon button--full ', excerpt && layout !== 'pile' ? 'list-overlay' : '')}
+									onClick={this.handleClick.bind(this)}
+								>
+									<div>
+										<span className={excerpt ? 'icon-keyboard_arrow_down' : 'icon-keyboard_arrow_up'}></span>
+										<span>{excerpt ? (elemLength - maxElems) : ''}</span>
+									</div>
+								</button>
+						) :
+						('');
 		return (
 			<div className="elements-list">
 				{
-					this.props.elements && 
-					this.props.elements
-						.filter(element => element[this.props.orderProp])
+					elements
 						.sort((a, b) => b[this.props.orderProp] - a[this.props.orderProp])
 						.splice(0, maxElems)
 						.map((item, index) =>
