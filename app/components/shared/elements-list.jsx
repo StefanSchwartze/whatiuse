@@ -30,9 +30,9 @@ export default class ElementsList extends React.Component {
 			return <p>No elements</p>
 		}
 		const layout = this.props.layout;
-		const excerpt = this.props.excerpt;
+		const excerpt = this.props.excerpt ? (this.props.showMax < elemLength) : false;
 		const maxElems = excerpt ? (this.props.showMax || elemLength) : elemLength;
-		const afterElem = this.props.showMax ?
+		const afterElem = this.props.showMax < elemLength ?
 						(
 							layout === 'pile' ? 
 								<div 
@@ -54,7 +54,7 @@ export default class ElementsList extends React.Component {
 						) :
 						('');
 		return (
-			<div className="elements-list">
+			<div className={classnames('elements-list', excerpt ? 'hideLast' : '')}>
 				{
 					elements
 						.sort((a, b) => b[this.props.orderProp] - a[this.props.orderProp])
@@ -79,7 +79,7 @@ export default class ElementsList extends React.Component {
 								        </Tooltip>
 									</div>) :
 									(<div key={index} className="box box--element">
-										<h3><span className=""></span>{item.name}</h3>
+										<h3><span className=""></span>{item.title}</h3>
 										<span>{item[this.props.orderProp]}{this.props.unit}</span>
 									</div>)
 							}

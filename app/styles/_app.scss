@@ -594,7 +594,7 @@ h1, h2 {
 /*
 *	Component: ElementsList
 */
-.elements-list {
+.elements-list.hideLast {
 	.box:nth-last-child(2) {
 		opacity: .35;
 	}
