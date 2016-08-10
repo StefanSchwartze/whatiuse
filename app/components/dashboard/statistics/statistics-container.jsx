@@ -64,7 +64,7 @@ export default class StatisticsContainer extends React.Component {
 										orderProp="impactMissing"
 										unit="%"
 										showMax={4}
-										excerpt={this.state.showMoreMissing}
+										excerpt={!this.state.showMoreMissing}
 										handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
 									/>
 								</div>
@@ -78,7 +78,7 @@ export default class StatisticsContainer extends React.Component {
 										orderProp="impactPartial"
 										unit="%"
 										showMax={4}
-										excerpt={this.state.showMorePartial}
+										excerpt={!this.state.showMorePartial}
 										handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
 									/>
 								</div>
