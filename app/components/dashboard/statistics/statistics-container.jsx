@@ -7,6 +7,8 @@ import ElementsList from '../../shared/elements-list';
 import ElementsChart from '../../shared/elements-chart';
 import BrowsersList from '../../shared/browsers-list';
 
+import classnames from 'classnames';
+
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
 		page: React.PropTypes.object.isRequired,
@@ -14,6 +16,9 @@ export default class StatisticsContainer extends React.Component {
 	}
 	constructor(props) {
 		super(props);
+		this.state = {
+			showDetailed: true
+		}
 	}
 	render() {
 		let pageElem;
@@ -36,13 +41,34 @@ export default class StatisticsContainer extends React.Component {
 				pageElem = 	<div>
 							{timeline}
 							<div className="description">
+								<p>Results of last check:</p>
+								<button 
+									className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
+									onClick={() => this.setState({ showDetailed: true })} 
+								/>								
+								<button 
+									className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
+									onClick={() => this.setState({ showDetailed: false })} 
+								/>								
+							</div>
+							<div className="description">
 								<p>Features with missing support:</p>
 							</div>
-							<ElementsList elements={elements} orderProp="impactMissing" unit="%" />
+							<ElementsList 
+								layout={this.state.showDetailed ? 'detail' : 'pile'} 
+								elements={elements} 
+								orderProp="impactMissing"
+								unit="%" 
+							/>
 							<div className="description">
 								<p>Features with partial support:</p>
 							</div>
-							<ElementsList elements={elements} orderProp="impactPartial" unit="%" />
+							<ElementsList 
+								layout={this.state.showDetailed ? 'detail' : 'pile'} 
+								elements={elements} 
+								orderProp="impactPartial"
+								unit="%" 
+							/>
 							<div className="description">
 								<p>Frequency of the affected Features:</p>
 							</div>

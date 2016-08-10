@@ -7,7 +7,8 @@ export default class ElementsList extends React.Component {
 	static propTypes = {
 		elements: React.PropTypes.array.isRequired,
 		orderProp: React.PropTypes.string.isRequired,
-		unit: React.PropTypes.string
+		unit: React.PropTypes.string,
+		layout: React.PropTypes.string
 	}
 	constructor(props) {
 		super(props);
@@ -17,6 +18,7 @@ export default class ElementsList extends React.Component {
 		if(this.props.elements.length === 0) {
 			return <p>No elements</p>
 		}
+		const layout = this.props.layout;
 		return (
 			<div className="elements-list">
 				{
@@ -25,22 +27,31 @@ export default class ElementsList extends React.Component {
 						.filter(element => element[this.props.orderProp])
 						.sort((a, b) => b[this.props.orderProp] - a[this.props.orderProp])
 						.map((item, index) =>
-							<div className="pile" key={index}>
-								<Tooltip
-									overlayClassName="tooltip--simple"
-									placement="top"
-									mouseEnterDelay={0}
-									mouseLeaveDelay={0}
-									destroyTooltipOnHide={true}
-									overlay={
-										<div style={{maxWidth: 320}}>
-											{item.message}
+							{
+								return layout !== 'detail' ? (
+									<div className="pile" key={index}>
+										<Tooltip
+											overlayClassName="tooltip--simple"
+											placement="top"
+											mouseEnterDelay={0}
+											mouseLeaveDelay={0}
+											destroyTooltipOnHide={true}
+											overlay={
+												<div style={{maxWidth: 320}}>
+													{item.message}
+												</div>
+											}
+										>
+											<span><span>{item[this.props.orderProp]}{this.props.unit}</span><span>|</span><span>{item.name}</span></span>
+								        </Tooltip>
+									</div>) :
+									(<div key={index} className="browser-container">
+										<div className="browserbox">
+											<h3><span className=""></span>{item.name}</h3>
+											<span>{item[this.props.orderProp]}{this.props.unit}</span>
 										</div>
-									}
-								>
-									<span><span>{item[this.props.orderProp]}{this.props.unit}</span><span>|</span><span>{item.name}</span></span>
-						        </Tooltip>
-							</div>
+									</div>)
+							}
 				)}
 			</div>
 		);

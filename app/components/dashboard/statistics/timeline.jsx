@@ -27,7 +27,7 @@ export default class Timeline extends React.Component {
 			<div className="history-container">
 				<div className="description">
 					<span>Timeline</span>
-					<span>Last check: {lastCheck}</span>
+					<span className="align-right">Last check: {lastCheck}</span>
 				</div>
 				<HistoryTooltip/>
 				<div className="chart">

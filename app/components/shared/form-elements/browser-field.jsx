@@ -51,7 +51,7 @@ export default class Browserfield extends React.Component {
 					<button 
 						key={i}
 						className={
-							classnames('icon-' + browser, 'button button--browser', 
+							classnames('icon-' + browser, 'button button--toggle', 
 										this.state.currentBrowser === browser ? 'active' : '')
 						}
 						onClick={this.changeBrowser.bind(this, browser)}>
