@@ -42,7 +42,7 @@ export default class BrowsersBox extends React.Component {
 				<Link
 					to={url} 
 					className="browser-container content-container">
-					<div className="browserbox">
+					<div className="box">
 						<h3><span className={classnames('icon-' + this.props.browser.alias)}></span>{this.props.browser.browser}</h3>
 						<span>{this.props.browser.completeShare.toFixed(2) + ' %'}</span>
 					</div>

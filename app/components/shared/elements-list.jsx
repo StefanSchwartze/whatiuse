@@ -8,17 +8,41 @@ export default class ElementsList extends React.Component {
 		elements: React.PropTypes.array.isRequired,
 		orderProp: React.PropTypes.string.isRequired,
 		unit: React.PropTypes.string,
-		layout: React.PropTypes.string
+		layout: React.PropTypes.string,
+		showMax: React.PropTypes.number,
+		excerpt: React.PropTypes.bool,
+		handleClick: React.PropTypes.func
 	}
 	constructor(props) {
 		super(props);
 		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
+	handleClick() {
+		if(this.props.handleClick) {
+			this.props.handleClick();
+		}
+	}
 	render() {
-		if(this.props.elements.length === 0) {
+		const elemLength = this.props.elements.length;
+		if(elemLength === 0) {
 			return <p>No elements</p>
 		}
 		const layout = this.props.layout;
+		const excerpt = this.props.excerpt;
+		const maxElems = excerpt ? (this.props.showMax || elemLength) : elemLength;
+		const afterElem = this.props.showMax ?
+						(excerpt ? 
+							<button 
+								className="button"
+								onClick={this.handleClick.bind(this)}
+							>Show more
+							</button> : 
+							<button 
+								className="button"
+								onClick={this.handleClick.bind(this)}
+							>Show less
+							</button>) :
+						(<p></p>);
 		return (
 			<div className="elements-list">
 				{
@@ -26,6 +50,7 @@ export default class ElementsList extends React.Component {
 					this.props.elements
 						.filter(element => element[this.props.orderProp])
 						.sort((a, b) => b[this.props.orderProp] - a[this.props.orderProp])
+						.splice(0, maxElems)
 						.map((item, index) =>
 							{
 								return layout !== 'detail' ? (
@@ -45,14 +70,13 @@ export default class ElementsList extends React.Component {
 											<span><span>{item[this.props.orderProp]}{this.props.unit}</span><span>|</span><span>{item.name}</span></span>
 								        </Tooltip>
 									</div>) :
-									(<div key={index} className="browser-container">
-										<div className="browserbox">
-											<h3><span className=""></span>{item.name}</h3>
-											<span>{item[this.props.orderProp]}{this.props.unit}</span>
-										</div>
+									(<div key={index} className="box box--element">
+										<h3><span className=""></span>{item.name}</h3>
+										<span>{item[this.props.orderProp]}{this.props.unit}</span>
 									</div>)
 							}
 				)}
+				{afterElem}
 			</div>
 		);
 	}

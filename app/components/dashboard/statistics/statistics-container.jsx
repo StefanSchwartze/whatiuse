@@ -17,7 +17,9 @@ export default class StatisticsContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showDetailed: true
+			showDetailed: true,
+			showMoreMissing: false,
+			showMorePartial: false
 		}
 	}
 	render() {
@@ -51,24 +53,36 @@ export default class StatisticsContainer extends React.Component {
 									onClick={() => this.setState({ showDetailed: false })} 
 								/>								
 							</div>
-							<div className="description">
-								<p>Features with missing support:</p>
+							<div className="dyn-columns">
+								<div className="col2">
+									<div className="description">
+										<p>Features with missing support:</p>
+									</div>
+									<ElementsList 
+										layout={this.state.showDetailed ? 'detail' : 'pile'} 
+										elements={elements} 
+										orderProp="impactMissing"
+										unit="%"
+										showMax={5}
+										excerpt={this.state.showMoreMissing}
+										handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
+									/>
+								</div>
+								<div className="col2">
+									<div className="description">
+										<p>Features with partial support:</p>
+									</div>
+									<ElementsList 
+										layout={this.state.showDetailed ? 'detail' : 'pile'} 
+										elements={elements} 
+										orderProp="impactPartial"
+										unit="%"
+										showMax={5}
+										excerpt={this.state.showMorePartial}
+										handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
+									/>
+								</div>
 							</div>
-							<ElementsList 
-								layout={this.state.showDetailed ? 'detail' : 'pile'} 
-								elements={elements} 
-								orderProp="impactMissing"
-								unit="%" 
-							/>
-							<div className="description">
-								<p>Features with partial support:</p>
-							</div>
-							<ElementsList 
-								layout={this.state.showDetailed ? 'detail' : 'pile'} 
-								elements={elements} 
-								orderProp="impactPartial"
-								unit="%" 
-							/>
 							<div className="description">
 								<p>Frequency of the affected Features:</p>
 							</div>
