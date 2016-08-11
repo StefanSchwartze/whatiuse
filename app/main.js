@@ -1,5 +1,5 @@
-'use strict';
-
+// created by from @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/app/main.js
 import Iso from 'iso';
 import React from 'react';
 import ReactDOM from 'react-dom';

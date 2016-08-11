@@ -1,3 +1,5 @@
+// forked from @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/app/stores/login-store.js
 import alt from "utils/alt";
 import {defer} from "lodash";
 import api from "utils/api";

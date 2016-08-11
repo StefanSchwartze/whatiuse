@@ -1,3 +1,5 @@
+// forked from @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/webpack/prod.config.js
 'use strict';
 
 /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */

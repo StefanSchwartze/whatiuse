@@ -1,3 +1,5 @@
+// created by @anandthakker and @stefanschwartze
+// source: https://github.com/anandthakker/doiuse.com/blob/master/lib/prune.js
 var through = require('mississippi').through
 var debug = require('debug')('doiuse:prune')
 

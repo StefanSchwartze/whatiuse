@@ -1,3 +1,5 @@
+// forked from @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/app/utils/store-utils.js
 export default {
   findItemById: function(collection, id) {
     return collection.find(x => x._id === id);

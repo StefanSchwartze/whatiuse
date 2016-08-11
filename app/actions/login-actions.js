@@ -1,3 +1,5 @@
+// forked from @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/app/actions/login-actions.js
 import alt from 'utils/alt';
 import axios from 'axios';
 

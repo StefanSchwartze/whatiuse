@@ -1,3 +1,5 @@
+// created by @anandthakker
+// source: https://github.com/anandthakker/doiuse.com/blob/master/lib/source-slice.js
 var debug = require('debug')('doiuse:source-slice')
 
 /* start and end are {line, column}  */

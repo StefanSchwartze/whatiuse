@@ -1,3 +1,5 @@
+// forked from @anandthakker
+// initial source: https://github.com/anandthakker/doiuse.com/blob/master/lib/css-features.js
 import JSONStream from 'JSONStream';
 import { pipe, through, concat } from 'mississippi';
 import next from 'next-stream';

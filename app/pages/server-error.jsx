@@ -1,12 +1,7 @@
-'use strict';
-
 import React from 'react';
 
-export default React.createClass({
-  displayName: 'ServerError',
-  render() {
-    return (
-      <h1>500</h1>
-    );
-  }
-});
+export default class ServerError extends React.Component {
+	render() {
+		return (<h1>500 Internal Server Error</h1>);
+	}
+}

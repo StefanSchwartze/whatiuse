@@ -1,3 +1,5 @@
+// forked from @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/webpack/dev.config.js
 import path from "path";
 import webpack from "webpack";
 import autoprefixer from "autoprefixer";

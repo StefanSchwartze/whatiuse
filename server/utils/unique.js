@@ -1,3 +1,5 @@
+// created by @anandthakker
+// source: https://github.com/anandthakker/doiuse.com/blob/master/lib/unique.js
 var through = require('mississippi').through
 
 module.exports = function unique () {

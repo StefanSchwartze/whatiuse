@@ -1,3 +1,5 @@
+// forked from @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/webpack/utils/clean-dist.js
 'use strict';
 
 import del from 'del';

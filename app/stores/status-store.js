@@ -1,3 +1,5 @@
+// created by @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/app/stores/status-store.js
 import alt from 'utils/alt';
 import axios from 'axios';
 import StatusActions from 'actions/status-actions';

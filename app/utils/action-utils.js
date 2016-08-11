@@ -1,3 +1,5 @@
+// forked from @tomaash
+// initial source: https://github.com/tomaash/react-example-filmdb/blob/master/app/utils/action-utils.js
 import {isFunction} from 'lodash';
 import alt from 'utils/alt';
 import StatusActions from 'actions/status-actions';
