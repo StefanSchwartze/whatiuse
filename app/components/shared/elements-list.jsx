@@ -73,7 +73,8 @@ export default class ElementsList extends React.PureComponent {
 										key={index}
 										element={item}
 										value={item[this.props.orderProp]+this.props.unit}
-										title={item.name}
+										title={item.title}
+										showProp={this.props.orderProp === 'impactMissing' ? 'missing' : 'partial'}
 									/>)
 							}
 				)}
