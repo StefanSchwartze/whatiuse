@@ -17,7 +17,7 @@ import http from "http";
 import router from "./router";
 import config from "./config/init";
 
-import generateApi from "./restable/lib";
+import generateApi from "koa-mongo-rest";
 
 import evaluate from "./utils/features";
 import normalizeBrowsers from "./utils/normalize-browsers";
