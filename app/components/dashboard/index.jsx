@@ -111,11 +111,15 @@ export default class Dashboard extends React.Component {
 		const snapshots = this.props.snapshots;
 		const currentPageId = this.props.params.pageid || '';
 		const currentProjectId = this.props.params.projectid || '';
+		const currentElementId = this.props.params.elementid || '';
 		let statistics = <div></div>
 		if(pages.length > 0) {
 			statistics = <StatisticsContainer 
 							page={this.currentPage(pages, currentPageId)}
 							snapshots={snapshots}
+							currentElementId={currentElementId}
+							currentProjectId={currentProjectId}
+							currentScope={scope}
 						/>
 		}
 		return (

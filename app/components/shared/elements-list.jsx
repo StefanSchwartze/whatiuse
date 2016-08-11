@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
+import Pile from './pile';
+import ElementBox from './element';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import classnames from 'classnames';
+import { Link } from 'react-router';
 
 export default class ElementsList extends React.Component {
 	static propTypes = {
@@ -62,26 +65,18 @@ export default class ElementsList extends React.Component {
 						.map((item, index) =>
 							{
 								return layout !== 'detail' ? (
-									<div className="pile" key={index}>
-										<Tooltip
-											overlayClassName="tooltip--simple"
-											placement="top"
-											mouseEnterDelay={0}
-											mouseLeaveDelay={0}
-											destroyTooltipOnHide={true}
-											overlay={
-												<div style={{maxWidth: 320}}>
-													{item.message}
-												</div>
-											}
-										>
-											<span><span>{item[this.props.orderProp]}{this.props.unit}</span><span>|</span><span>{item.name}</span></span>
-								        </Tooltip>
-									</div>) :
-									(<div key={index} className="box box--element">
-										<h3><span className=""></span>{item.title}</h3>
-										<span>{item[this.props.orderProp]}{this.props.unit}</span>
-									</div>)
+									<Pile 
+										key={index}
+										value={item[this.props.orderProp]+this.props.unit}
+										title={item.name}
+										message={item.message}
+									/>) :
+									(<ElementBox 
+										key={index}
+										element={item}
+										value={item[this.props.orderProp]+this.props.unit}
+										title={item.name}
+									/>)
 							}
 				)}
 				{afterElem}

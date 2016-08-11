@@ -37,7 +37,6 @@ export default (
 		<Route
 			path='projects/:projectid'
 			onEnter={requireAuth} >
-
 			<IndexRedirect to="global" />
 			<Route
 				path=':scope' >
@@ -47,7 +46,11 @@ export default (
 					component={Dashboard} >
 					<Route
 						path=':pageid'
-						component={Dashboard} />
+						component={Dashboard} >
+						<Route
+							path=':elementid'
+							component={Dashboard} />
+					</Route>
 				</Route>
 				<Route
 					path='browsers'
