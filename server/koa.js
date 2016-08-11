@@ -9,7 +9,7 @@ import favicon from "koa-favicon";
 import staticCache from "koa-static-cache";
 import serve from "koa-static";
 import responseTime from "koa-response-time";
-import bodyParser from "koa-bodyparser";
+import bodyParser from "koa-body-parser";
 import koaRouter from "koa-router";
 import {clone, camelCase, flatten, values, find, forEach, uniq, merge, sumBy, groupBy, value, map as _map} from "lodash";
 import http from "http";

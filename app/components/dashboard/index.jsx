@@ -11,10 +11,8 @@ import StatisticsContainer from './statistics/statistics-container';
 import {findItemById} from 'utils/store-utils';
 import {forEach, floor, values, head} from 'lodash';
 
-import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
 
-@authDecorator
 @connectToStores
 export default class Dashboard extends React.Component {
 	static getStores(props) {

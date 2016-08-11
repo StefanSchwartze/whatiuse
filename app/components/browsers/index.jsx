@@ -5,12 +5,10 @@ import BrowsersStore from 'stores/browsers-store';
 import BrowserBox from './browserbox';
 import BrowserActions from 'actions/browsers-actions';
 
-import {authDecorator} from 'utils/component-utils';
 import connectToStores from 'alt-utils/lib/connectToStores';
 
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
 
-@authDecorator
 @connectToStores
 export default class Browsers extends React.Component {
 	static getStores(props) {

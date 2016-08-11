@@ -7,15 +7,5 @@ export default {
       this.setState(state);
     };
     return target;
-  },
-  authDecorator: function(target) {
-    target.willTransitionTo = function(transition) {
-      if (process.env.BROWSER) {
-        if (!localStorage.appUser) {
-          transition.redirect('/login');
-        }
-      }
-    };
-    return target;
   }
 };

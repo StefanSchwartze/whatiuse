@@ -27,7 +27,6 @@ export default class StatisticsContainer extends React.Component {
 		}
 	}
 	render() {
-		console.log(this);
 		let pageElem;
 		let timeline;
 		if(Object.keys(this.props.page).length > 0) {
