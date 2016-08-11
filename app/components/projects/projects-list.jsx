@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 import ProjectForm from './project-form';
 import Project from './project';
 
-export default class ProjectsList extends React.Component {
+export default class ProjectsList extends React.PureComponent {
 	static propTypes = {
 		projects: React.PropTypes.array
 	}

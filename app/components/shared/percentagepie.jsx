@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell, Tooltip, Sector, ResponsiveContainer, XAxis } from
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#F02839'];
 
-export default class PercentagePie extends React.Component {
+export default class PercentagePie extends React.PureComponent {
 	static propTypes = {
 		data: React.PropTypes.array.isRequired,
 	}

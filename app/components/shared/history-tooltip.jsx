@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { floor } from 'lodash';
 import moment from 'moment';
 
-export default class HistoryTooltip extends React.Component {
+export default class HistoryTooltip extends React.PureComponent {
 	static propTypes = {
 		type: React.PropTypes.string,
 		payload: React.PropTypes.array,

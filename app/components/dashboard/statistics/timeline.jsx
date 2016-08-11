@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 import {ResponsiveContainer, Tooltip, LineChart, Line} from 'recharts';
 import HistoryTooltip from '../../shared/history-tooltip';
@@ -8,14 +7,13 @@ import HistoryTooltip from '../../shared/history-tooltip';
 import moment from 'moment';
 import {orderBy} from 'lodash';
 
-export default class Timeline extends React.Component {
+export default class Timeline extends React.PureComponent {
 	static propTypes = {
 		isChecking: React.PropTypes.bool.isRequired,
 		snapshots: React.PropTypes.array.isRequired
 	}
 	constructor(props) {
 		super(props);
-		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
 		const snapshots = this.props.snapshots || [];

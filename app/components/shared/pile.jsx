@@ -4,7 +4,7 @@ import Tooltip from 'rc-tooltip';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import classnames from 'classnames';
 
-export default class Pile extends React.Component {
+export default class Pile extends React.PureComponent {
 	static propTypes = {
 		value: React.PropTypes.string.isRequired,
 		title: React.PropTypes.string.isRequired,
@@ -12,7 +12,6 @@ export default class Pile extends React.Component {
 	}
 	constructor(props) {
 		super(props);
-		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
 		return(

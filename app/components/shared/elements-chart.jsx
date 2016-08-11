@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line} from 'recharts';
 
-export default class ElementsChart extends React.Component {
+export default class ElementsChart extends React.PureComponent {
 	static propTypes = {
 		elements: React.PropTypes.array.isRequired,
 		orderProp: React.PropTypes.string.isRequired
 	}
 	constructor(props) {
 		super(props);
-		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	render() {
 		return (

@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 import ProjectForm from './project-form';
 import ProjectsActions from 'actions/projects-actions';
 
-export default class Project extends React.Component {
+export default class Project extends React.PureComponent {
 	static propTypes = {
 		project: React.PropTypes.object.isRequired
 	}

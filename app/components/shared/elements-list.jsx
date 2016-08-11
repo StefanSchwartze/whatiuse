@@ -3,11 +3,10 @@ import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
 import Pile from './pile';
 import ElementBox from './element';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import classnames from 'classnames';
 import { Link } from 'react-router';
 
-export default class ElementsList extends React.Component {
+export default class ElementsList extends React.PureComponent {
 	static propTypes = {
 		elements: React.PropTypes.array.isRequired,
 		orderProp: React.PropTypes.string.isRequired,
@@ -19,7 +18,6 @@ export default class ElementsList extends React.Component {
 	}
 	constructor(props) {
 		super(props);
-		this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 	}
 	handleClick() {
 		if(this.props.handleClick) {

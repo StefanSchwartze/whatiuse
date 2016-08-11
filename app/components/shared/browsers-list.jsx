@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 
-export default class BrowsersList extends React.Component {
+export default class BrowsersList extends React.PureComponent {
 	static propTypes = {
 		browsers: React.PropTypes.array
 	}

@@ -1,7 +1,7 @@
 import React from 'react';
 import Browserfield from 'components/shared/form-elements/browser-field';
 
-export default class Browserfields extends React.Component {
+export default class Browserfields extends React.PureComponent {
 	static propTypes = {
 		data: React.PropTypes.array,
 		onRemove: React.PropTypes.func,

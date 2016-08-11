@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
-
 import Timeline from './timeline';
 import ElementsList from '../../shared/elements-list';
 import ElementsChart from '../../shared/elements-chart';
