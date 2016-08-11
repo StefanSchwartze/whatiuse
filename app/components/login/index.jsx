@@ -1,3 +1,5 @@
+// created by @tomaash
+// source: https://github.com/tomaash/react-example-filmdb/blob/master/app/components/login-new/index.js
 import React from 'react';
 import AltContainer from 'alt-container';
 

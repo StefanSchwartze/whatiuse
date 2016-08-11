@@ -1,3 +1,5 @@
+// created by @tomaash
+// source: https://github.com/tomaash/react-example-filmdb/blob/master/app/actions/status-actions.js
 import alt from 'utils/alt';
 
 class StatusActions {
