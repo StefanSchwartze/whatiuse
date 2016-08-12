@@ -27,7 +27,7 @@ export default class PercentagePie extends React.PureComponent {
 						endAngle={450}
 					>
 						{
-							data.map((item, index) => <Cell key={index} fill={index === 0 ? colorpalette(item.value, 0, 120) : '#efefef'}/>)
+							data.map((item, index) => <Cell key={index} fill={index === 0 ? colorpalette(item.value, 0, 120, 45, .8) : '#efefef'}/>)
 						}	
 					</Pie>
 				</PieChart>

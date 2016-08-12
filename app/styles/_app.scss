@@ -775,7 +775,7 @@ h1, h2 {
 		}
 	}
 	.box-head {
-		align-items: center;
+		align-items: stretch;
 		justify-content: flex-start;
 		display: flex;
 		background: white;
@@ -794,9 +794,13 @@ h1, h2 {
 		> span {
 			color: $grey-light;
 			padding: 1rem;
+			align-self: center;
 		}
-		> :first-child {
+		> * {
 			border-right: solid 1px $grey-medium;
+		}
+		> :last-child {
+			border: none;
 		}
 	}
 	.box-body {

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import {floor} from 'lodash';
 import { Link } from 'react-router';
+import colorpalette from 'utils/color-array';
 
 import PagesActions from 'actions/pages-actions';
 import SnapshotsActions from 'actions/snapshots-actions';
@@ -43,12 +44,12 @@ export default class Page extends React.Component {
 		let progress;
 		const scope = this.props.scope;
 		if(this.props.page[scope + 'Support']) {
-			support = floor(this.props.page[scope + 'Support'], 2) + '%';
+			support = floor(this.props.page[scope + 'Support'], 2);
 		}
-		state = <span>{support}</span>;
+		state = <span>{support + '%'}</span>;
 		if(this.props.page.isChecking) {
 			if(this.props.page.progress) {
-				progress = floor(this.props.page.progress * 100, 0) + '%';
+				progress = floor(this.props.page.progress * 100, 0);
 			}
 			state = <span><i className="icon icon-spinner8 animate rotate"></i>{progress}</span>;
 		}
@@ -61,7 +62,7 @@ export default class Page extends React.Component {
 							this.props.page.isChecking ? 'isChecking' : '', 
 							this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : ''
 							)}>
-				<div className="page-overlay">
+				<div className="page-overlay" style={{backgroundColor: colorpalette(support, 0, 120, 28, .5)}}>
 					<div className="percentage">
 						{state}
 					</div>

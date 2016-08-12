@@ -26,7 +26,8 @@ export default class ElementBox extends React.PureComponent {
 				className={classnames('box box--element ', this.state.open ? 'open' : 'hide')}>
 				<div className="box-head">
 					<PercentagePie value={parseFloat(this.props.value)} />
-					<h3><span className=""></span>{this.props.title}</h3>
+					<h3>{this.props.title}</h3>
+					<span className={!this.state.open ? 'icon-keyboard_arrow_down arrow' : 'icon-keyboard_arrow_up arrow'}></span>
 				</div>
 				<div className="box-body">
 					<ul>
