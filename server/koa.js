@@ -1,35 +1,28 @@
-import path from "path";
-import debug from "debug";
 import koa from "koa";
+import path from "path";
+import http from "http";
+import debug from "debug";
 import hbs from "koa-hbs";
 import mount from "koa-mount";
+import serve from "koa-static";
 import helmet from "koa-helmet";
 import logger from "koa-logger";
 import favicon from "koa-favicon";
-import staticCache from "koa-static-cache";
-import serve from "koa-static";
-import responseTime from "koa-response-time";
 import bodyParser from "koa-body-parser";
-import koaRouter from "koa-router";
-import {clone, camelCase, flatten, values, find, forEach, uniq, merge, sumBy, groupBy, value, map as _map} from "lodash";
-import http from "http";
+import staticCache from "koa-static-cache";
+import responseTime from "koa-response-time";
 
 import router from "./router";
+import routes from "./routes";
+import restify from './rest-api';
 import config from "./config/init";
 
-import generateApi from "koa-mongo-rest";
-
-import evaluate from "./utils/features";
-import normalizeBrowsers from "./utils/normalize-browsers";
-import browserslist from "browserslist";
-
-import urlToImage from "url-to-image";
-
 import axios from "axios";
+import { flatten } from "lodash";
+import { evaluate, sumObjectArrayByProp, getMissingBrowserVersions, getPercentage, getPercentageSum, addVersionUsage } from "./utils/features";
 
 const app = koa();
 const env = process.env.NODE_ENV || "development";
-
 
 app.use(responseTime());
 app.use(logger());
@@ -85,139 +78,16 @@ app.use(serve(__dirname + '/../public'));
 // Parse body
 app.use(bodyParser({jsonLimit: '50mb'}));
 
-import bcrypt from "bcrypt";
-import uuid from "node-uuid";
+// connect database
+const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0.1:27017/whatiuse";
+const mongoose = require("mongoose");
+mongoose.connect(mongoUrl);
 
-import User from "./models/user";
-import Page from "./models/page";
-import Project from "./models/project";
-import Stat from "./models/stat";
-import Snapshot from "./models/snapshot";
+// connect rest-API and routes
+restify(app);
+routes(app);
 
-	const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0.1:27017/whatiuse";
-	const mongoose = require("mongoose");
-
-	mongoose.connect(mongoUrl);
-
-	var ProjectController = generateApi(app, Project, "/api");
-	ProjectController.mount();
-
-	var PagesController = generateApi(app, Page, "/api");
-	PagesController.mount();
-
-	var StatController = generateApi(app, Stat, "/api");
-	StatController.mount();
-
-	var SnapshotController = generateApi(app, Snapshot, "/api");
-	SnapshotController.mount();
-
-	var authRouter = koaRouter();
-
-	authRouter.post("/auth/register", function*(next) {
-		yield next;
-		const SALT_WORK_FACTOR = 10;
-		const error = {message: "Username already exists"};
-		try {
-			const body = this.request.body;
-			const salt = yield bcrypt.genSalt.bind(this, SALT_WORK_FACTOR);
-			const hash = yield bcrypt.hash.bind(this, body.password, salt);
-			body.password = hash;
-			body.token = uuid.v1();
-			const result = yield User.create(body);
-			this.status = 201;
-			this.body = result;
-		} catch (err) {
-			this.status = 409;
-			this.body = error;
-		}
-	});
-
-	authRouter.post("/auth/login", function*(next) {
-		yield next;
-		try {
-			const body = this.request.body;
-			const error = { message: "Username and password doesn't match" };
-			const user = yield User.findOne({
-				username: body.username
-			});
-			if (!user) throw error;
-			const match = yield bcrypt.compare.bind(this, body.password, user.password);
-			if (!match) throw error;
-			user.token = uuid.v1();
-			this.status = 201;
-			this.body = yield user.save();
-		} catch (err) {
-			this.status = 401;
-			this.body = err;
-		}
-	});
-
-	app
-		.use(authRouter.routes())
-		.use(authRouter.allowedMethods());
-
-	var imageRouter = koaRouter();
-
-	imageRouter.post("/image", function*() {
-
-		this.set({
-			'Content-Type' : 'application/json',
-			'Access-Control-Allow-Origin' : '*'
-		});
-
-		let options = {
-		    width: 1280,
-		    height: 800,
-		    cropHeight: true,
-		    fileQuality: 100,
-		    requestTimeout: 100
-		}
-		let fileName = camelCase(this.request.body.title + new Date().getTime()) + '.png';
-		let filePath = (__dirname + '/../public/' + fileName);
-		let self = this;
-		yield urlToImage(this.request.body.url, filePath, options).then(function() {
-			self.status = 200;
-			self.body = { message: "Image was created successfully!", imgSrc: fileName };
-		}).catch(function(err) {
-			console.error(err);
-			self.body = { err: err, message: "Image could not be created!" };
-		});
-
-	});
-
-	app
-		.use(imageRouter.routes())
-		.use(imageRouter.allowedMethods());
-
-	var uploadRouter = koaRouter();
-
-	uploadRouter.post("/browsers/validate", function*() {
-
-		this.set({
-			'Content-Type' : 'application/json',
-			'Access-Control-Allow-Origin' : '*'
-		});
-
-		let data = normalizeBrowsers(this.request.body.browsers);
-		this.status = 200;
-		this.body = { message: "Browsers evaluated successfully!", browsers: data };
-
-	});
-
-	app
-		.use(uploadRouter.routes())
-		.use(uploadRouter.allowedMethods());
-
-	var statusRouter = koaRouter();
-
-	statusRouter.get("/status", function*() {
-		this.status = 200;
-	});
-
-	app
-		.use(statusRouter.routes())
-		.use(statusRouter.allowedMethods());
-		
+// connect app-router
 app.use(router);
 
 var server = http.createServer(app.callback());
@@ -255,113 +125,6 @@ io.on('connection', function(socket){
 				elementCollection.push(data[i].elementCollection);
 			}
 			let newElems = flatten(elementCollection);
-
-			const sumObjectArrayByProp = (array, reduceProp, unifyingProps) => {
-
-				return values(array.reduce((prev, current, index, array) => {
-	                if(!(current[reduceProp] in prev.result)) {
-	                    prev.result[current[reduceProp]] = current;
-	                }
-					else if(prev.result[current[reduceProp]]) {
-
-						for (var i = 0; i < unifyingProps.length; i++) {
-							const currProp = unifyingProps[i];
-							const additionalElementsOfProp = current[currProp];
-
-							if(additionalElementsOfProp) {
-							
-								let additionalElements = current[currProp];
-
-								if(prev.result[current[reduceProp]][currProp]) {
-									if(typeof additionalElements === 'string') {
-										prev.result[current[reduceProp]][currProp] += ('\n' + additionalElements);
-									} else {
-										for (var j = 0; j < additionalElements.length; j++) {
-											prev.result[current[reduceProp]][currProp].push(additionalElements[j]);
-										}
-									}
-								} else {
-									prev.result[current[reduceProp]][currProp] = additionalElements;
-								}
-							}
-
-						}
-
-					}
-	               return prev;
-	            },{result: {}}).result);
-
-			}
-			const getMissingBrowserVersions = (features, type) => {
-	            let browsers = [];
-
-	            for (var i = 0; i < features.length; i++) {
-	            	if(features[i][type]) {
-		                browsers.push.apply(browsers, flatten(features[i][type]));
-	            	}
-	            }
-	            return sumBrowserVersions(browsers);
-	        }
-	        const sumBrowserVersions = (browsers) => {
-
-	        	return values(browsers.reduce((prev, current, index, array) => {
-	                if(!(current.alias in prev.result)) {
-	                    prev.result[current.alias] = current;
-	                } 
-	               else if(prev.result[current.alias]) {
-                        prev.result[current.alias].versions = uniq(prev.result[current.alias].versions.concat(current.versions));
-                    }
-	               return prev;
-	            },{result: {}}).result);
-	        }
-		    const getPercentage = (browserset, browsersWithPercentages) => {
-		        let sum = 0;
-		        forEach(browserset, function(browser, key) {
-		            forEach(browser.versions, function(value, key) {
-		                let obje = find(browsersWithPercentages, function(o) {
-		                    return (o.alias === browser.alias); 
-		                });
-		                if(obje) {
-		                	let val = find(obje.version_usage, function(o) {
-			                    return (o.version === value); 
-			                });
-		                	sum += parseFloat(val.usage);	
-		            	}
-		            })
-		        })
-
-		        return sum;
-		    }
-		    const getPercentageTwo = (browser) => {
-		        let sum = 0;
-		        forEach(browser, function(browser, key) {
-		            sum += browser.version_usage.reduce((prev, current, index) => {
-		            	return prev + browser.version_usage[index].usage;
-		            }, 0);
-		        })
-		        return sum;
-		    }
-		    const addVersionUsage = (browsers, browsersWithPercentages) => {
-		    	return browsers.map((browser) => {
-		    		let percBrowser = find(browsersWithPercentages, function(item) {
-	                    return item.alias === browser.alias; 
-	                });
-	                let version_usage = [];
-	                for (var i = 0; i < browser.versions.length; i++) {
-	                	const version = find(percBrowser.version_usage, function(item) {
-		                    return item.version === browser.versions[i]; 
-		                });
-	                	version_usage.push({ version: version.version, usage: version.usage});
-	                }
-		    		return {
-		    			browser: browser.browser,
-		    			alias: browser.alias,
-		    			versions: browser.versions,
-		    			version_usage: version_usage
-		    		}
-		    	})
-		    }
-
 			let elements = sumObjectArrayByProp(newElems, 'feature', ['missing', 'partial']);
 
 			for (var i = 0; i < elements.length; i++) {
@@ -373,13 +136,13 @@ io.on('connection', function(socket){
 					let missing = sumObjectArrayByProp(element.missing, 'alias', ['versions']);
 					messages.push('not supported by: ' + missing.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
 					element.missing = addVersionUsage(missing, browsers);
-					element.impactMissing = (getPercentageTwo(element.missing)).toFixed(2);
+					element.impactMissing = (getPercentageSum(element.missing)).toFixed(2);
 				}
 				if(element.partial) {
 					let partial = sumObjectArrayByProp(element.partial, 'alias', ['versions']);
 					messages.push('only partially supported by: ' + partial.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
 					element.partial = addVersionUsage(element.partial, browsers);
-					element.impactPartial = (getPercentageTwo(element.partial)).toFixed(2);
+					element.impactPartial = (getPercentageSum(element.partial)).toFixed(2);
 				}
 				element.message = element.title + ' ' + messages.join(' and ');
 			}
@@ -402,7 +165,8 @@ io.on('connection', function(socket){
 				return axios.post('http://localhost:3000/api/snapshots/', send);
 			}
 
-			axios.all([updatePage(), saveSnapshot()])
+			axios
+				.all([updatePage(), saveSnapshot()])
 				.then(axios.spread((page, snapshot) => {
 					io.emit('triggerComplete', { data: snapshot.data });
 				})
@@ -412,9 +176,7 @@ io.on('connection', function(socket){
 
 });
 
-var port = process.env.PORT || config.port || 3000;
-
-server.listen(port);
+server.listen(process.env.PORT || config.port || 3000);
 
 console.log(`Application started on port ${config.port}`);
 if (process.send) {
