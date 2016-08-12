@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import debug from 'debug';
 
-import { Router, createMemoryHistory } from 'react-router';
+import { Router, createMemoryHistory, match, RouterContext } from 'react-router';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 
@@ -14,7 +14,11 @@ import routes from 'routes';
 import Iso from 'iso';
 import alt from 'utils/alt';
 
-export default function *() {
+const runRouter = (location, routes) =>
+  new Promise((resolve) =>
+    match({ routes, location }, (...args) => resolve(args)));
+
+export default function *(next) {
   const isCashed = this.cashed ? yield *this.cashed() : false;
   if (!isCashed) {
 
@@ -22,10 +26,14 @@ export default function *() {
     alt.bootstrap(JSON.stringify({}));
     var iso = new Iso();
 
-    const history = createMemoryHistory(this.request.url);
+    const [ error, redirect, renderProps ] = yield runRouter(this.request.url, routes);
+
+    if (!renderProps) {
+        return next;
+    }
 
     // We use react-router to run the URL that is provided in routes.jsx
-    const node = ReactDOM.renderToString(<Router history={history}>{routes}</Router>);
+    const node = ReactDOM.renderToString(<RouterContext { ...renderProps } />);
 
     iso.add(node, alt.flush());
     var content = iso.render();
