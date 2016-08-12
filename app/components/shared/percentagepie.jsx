@@ -1,31 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { PieChart, Pie, Cell, Tooltip, Sector, ResponsiveContainer, XAxis } from 'recharts';
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#F02839'];
+import { PieChart, Pie, Cell } from 'recharts';
+import colorpalette from 'utils/color-array';
 
 export default class PercentagePie extends React.PureComponent {
 	static propTypes = {
-		data: React.PropTypes.array.isRequired,
+		value: React.PropTypes.number.isRequired,
 	}
 	constructor(props) {
 		super(props);
 	}
 	render() {
+		const value = this.props.value;
+		const data = [
+			{name: 'unsupported', value: value},
+			{name: 'supported', value: 100 - value}
+		];
 		return (
 			<div className="percentagepie">
 				<PieChart width={40} height={40}>
 					<Pie 
 						data={data} 
 						innerRadius={15} 
-						outerRadius={20} 
+						outerRadius={20}
+						startAngle={90}
+						endAngle={450}
 					>
 						{
-							data.map((entry, index) => <Cell key={index} fill={index === 0 ? '#25bcca' : ''}/>)
+							data.map((item, index) => <Cell key={index} fill={index === 0 ? colorpalette(item.value, 0, 120) : '#efefef'}/>)
 						}	
 					</Pie>
 				</PieChart>
-				<span className="value"></span>
+				<span className="value">{data[0].value}</span>
 			</div>
 		);
 	}

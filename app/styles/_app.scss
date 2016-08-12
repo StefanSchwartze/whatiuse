@@ -291,6 +291,7 @@ h1, h2 {
 		position: absolute;
 		top: 20px;
 		left: 15px;
+		color: $grey-light;
 	}
 }
 
@@ -775,7 +776,7 @@ h1, h2 {
 	}
 	.box-head {
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-start;
 		display: flex;
 		background: white;
 		cursor: pointer;
@@ -783,6 +784,7 @@ h1, h2 {
 			margin: 0;
 			padding: 1rem;
 			display: inline-flex;
+			flex-grow: 1;
 			align-items: center;
 			color: $black-ninety;
 			span {
@@ -792,7 +794,9 @@ h1, h2 {
 		> span {
 			color: $grey-light;
 			padding: 1rem;
-			border-left: solid 1px $grey-medium;
+		}
+		> :first-child {
+			border-right: solid 1px $grey-medium;
 		}
 	}
 	.box-body {

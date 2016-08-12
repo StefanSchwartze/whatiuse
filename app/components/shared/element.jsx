@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
 import Pile from './pile';
+import PercentagePie from './percentagepie';
 import classnames from 'classnames';
 
 export default class ElementBox extends React.PureComponent {
@@ -24,8 +25,8 @@ export default class ElementBox extends React.PureComponent {
 				onClick={() => this.setState( { open: !this.state.open })} 
 				className={classnames('box box--element ', this.state.open ? 'open' : 'hide')}>
 				<div className="box-head">
+					<PercentagePie value={parseFloat(this.props.value)} />
 					<h3><span className=""></span>{this.props.title}</h3>
-					<span>{this.props.value}</span>
 				</div>
 				<div className="box-body">
 					<ul>

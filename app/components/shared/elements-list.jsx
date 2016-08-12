@@ -72,7 +72,7 @@ export default class ElementsList extends React.PureComponent {
 									(<ElementBox 
 										key={index}
 										element={item}
-										value={item[this.props.orderProp]+this.props.unit}
+										value={item[this.props.orderProp]}
 										title={item.title}
 										showProp={this.props.orderProp === 'impactMissing' ? 'missing' : 'partial'}
 									/>)

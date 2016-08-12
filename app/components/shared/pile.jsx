@@ -16,7 +16,6 @@ export default class Pile extends React.PureComponent {
 	}
 	render() {
 		const message = this.props.message || '';
-		console.log(message);
 		const content = (<span><span>{this.props.value}</span><span>|</span><span>{this.props.title}</span></span>);
 		return(
 		<div className={classnames('pile', this.props.size && this.props.size === 'tiny' ? 'tiny' : '')}>
