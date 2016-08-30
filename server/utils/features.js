@@ -270,5 +270,8 @@ export default {
             }, 0);
         })
         return sum;
+    },
+    whatIfIDelete: (element) => {
+    	return 'You are lucky!';
     }
 }
