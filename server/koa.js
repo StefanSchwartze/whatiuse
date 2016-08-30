@@ -18,7 +18,7 @@ import restify from './rest-api';
 import config from "./config/init";
 
 import axios from "axios";
-import { flatten } from "lodash";
+import { flatten, intersectionWith, isEqual } from "lodash";
 import { evaluate, sumObjectArrayByProp, getMissingBrowserVersions, getPercentage, getPercentageSum, addVersionUsage, whatIfIDelete } from "./utils/features";
 
 const app = koa();
@@ -151,115 +151,79 @@ io.on('connection', function(socket){
 
 				let searchElement = elements[k];
 
-				const elementHasBrowser = (compareBrowser) => {
-					return (element) => {
-						let hasBrowser = false;
-						if(element.partial) {
-							const containsBrowser = element.partial.find((browser) => {
-								if(browser.versions.indexOf(compareBrowser.version) >= 0 &&
-									browser.alias === compareBrowser.alias
-								) {
-									return true;
-								}
-								return false;
-							});
-							if(containsBrowser) {
-								hasBrowser = true;
-							}
+				const getAllElementBrowsers = (element) => {
+					let allBrowsers = [];
+					if(element.partial) {
+						let browsers = getShortBrowsers(element.partial);
+						allBrowsers.push.apply(allBrowsers, browsers);
 						}
-						if(element.missing) {
-							const containsBrowser = element.missing.find((browser) => {
-								if(browser.versions.indexOf(compareBrowser.version) >= 0 &&
-									browser.alias === compareBrowser.alias
-								) {
-									return true;
-								}
-								return false;
-							});
-							if(containsBrowser) {
-								hasBrowser = true;
-							}
-						}
-						return hasBrowser;						
+					if(element.missing) {
+						let browsers = getShortBrowsers(element.missing);
+						allBrowsers.push.apply(allBrowsers, browsers);
 					}
+					return allBrowsers;
 				}
+				const getShortBrowsers = (collection) => {
+					let shortBrowsers = [];
+					for (var i = 0; i < collection.length; i++) {
+						const browser = collection[i];
+						for (var j = 0; j < browser.versions.length; j++) {
+							shortBrowsers.push({
+								alias: browser.alias,
+								version: browser.versions[j]
+							});
+						}
+					}
+					return shortBrowsers;
+				}
+				const elementHasBrowsers = (checkElement, compareBrowsers, excludeElement = {}) => {
+					let exclude = excludeElement.feature ? (excludeElement.feature === checkElement.feature) : false;
+					if(!exclude) {
 
-				const getImprovementsByBrowsers = (searchElement, elements) => {
+						let checkElemBrowsers = getAllElementBrowsers(checkElement);
+						const diff = intersectionWith(checkElemBrowsers, compareBrowsers, isEqual);
+						return diff.length > 0;
+					}	
+					return false;
+				}
+				const getElementsByBrowsers = (browsers, elementCollection) => {
+					return elementCollection
+						.filter(element => elementHasBrowsers(element, browsers))
+						.map(elem => elem.feature);
+				}
+				const getSortedBrowsersByElement = (element, elementCollection) => {
 
-					let improvements = [];
+					let allBrowsers = getAllElementBrowsers(element);
+					let repeatedlyUsedBrowsers = [];
+					let uniqueBrowsers = [];
 
-					const getResults = (browser, type) => {
-
-						let result = [];
-
-						for (var i = 0; i < browser.version_usage.length; i++) {
-							
-							let improvementPartial = 0;
-							let improvementMissing = 0;
-
-							const commonElements = elements
-								.filter((element) => { return element.feature !== searchElement.feature})
-								.filter(elementHasBrowser({alias: browser.alias, version: browser.version_usage[i].version}))
-								.map((elem) => elem.feature);
-
-							if(commonElements.length > 0) {
+					for (var i = 0; i < allBrowsers.length; i++) {
+						const browser = allBrowsers[i];
+						let isUniq = true;
+						let j = 0;
+						while(j < elementCollection.length && isUniq) {
+							const hasBrowser = elementHasBrowsers(elementCollection[j], [browser], element);
+							if(hasBrowser) {
+								isUniq = false;
 							} else {
-								if(type === 'partial') {
-									improvementPartial = browser.version_usage[i].usage;
-								} else if(type === 'missing') {
-									improvementMissing = browser.version_usage[i].usage;
-								}
-							}
-
-							result.push({
-								name: browser.alias,
-								improvementPartial: improvementPartial,
-								improvementMissing: improvementMissing,
-								commonElements: commonElements
-							});
-						}
-
-						return result;
-					}
-
-					if(searchElement.missing) {
-						console.log('Some missing');
-						for (var l = 0; l < searchElement.missing.length; l++) {
-							const results = getResults(searchElement.missing[l], 'missing');
-							for (var i = 0; i < results.length; i++) {
-								improvements.push(results[i]);
+								j++;
 							}
 						}
-					}
-					if(searchElement.partial) {
-						console.log('Some partial');
-						for (var m = 0; m < searchElement.partial.length; m++) {
-							const results = getResults(searchElement.partial[m], 'partial');
-							for (var i = 0; i < results.length; i++) {
-								improvements.push(results[i]);
-							}
+						if(isUniq) {
+							uniqueBrowsers.push(browser);
+						} else {
+							repeatedlyUsedBrowsers.push(browser);
 						}
 					}
-
-					return improvements;
-				}
-				let relatedElements = getImprovementsByBrowsers(searchElement, elements);
-
-				let improvementPartial = 0;
-				let improvementMissing = 0;
-
-				for (var i = 0; i < relatedElements.length; i++) {
-					if(relatedElements[i].commonElements.length === 0) {
-						improvementPartial += relatedElements[i].improvementPartial;
-						improvementMissing += relatedElements[i].improvementMissing;
+					return {
+						uniqueBrowsers: uniqueBrowsers,
+						repeatedlyUsedBrowsers: repeatedlyUsedBrowsers
 					}
 				}
+				const sortedBrowsers = getSortedBrowsersByElement(searchElement, elements);
+				console.log('Unique browsers by ' + searchElement.feature + ': ' + sortedBrowsers.uniqueBrowsers);
+				console.log('Common elements by ' + searchElement.feature + ': ' + getElementsByBrowsers(sortedBrowsers.repeatedlyUsedBrowsers, elements.filter(element => element.feature !== searchElement.feature)));
 
-				console.log('Direct improvements: ');
-				console.log('Partial: ' + improvementPartial);
-				console.log('Missing: ' + improvementMissing);
-
-				console.log('Related elements to ' + searchElement.feature + ': ' + JSON.stringify(relatedElements));
 			}
 
 			const missingBrowserss = getMissingBrowserVersions(elements, 'missing');
