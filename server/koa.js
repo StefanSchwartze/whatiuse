@@ -179,7 +179,6 @@ io.on('connection', function(socket){
 				const elementHasBrowsers = (checkElement, compareBrowsers, excludeElement = {}) => {
 					let exclude = excludeElement.feature ? (excludeElement.feature === checkElement.feature) : false;
 					if(!exclude) {
-
 						let checkElemBrowsers = getAllElementBrowsers(checkElement);
 						const diff = intersectionWith(checkElemBrowsers, compareBrowsers, isEqual);
 						return diff.length > 0;
@@ -221,7 +220,7 @@ io.on('connection', function(socket){
 					}
 				}
 				const sortedBrowsers = getSortedBrowsersByElement(searchElement, elements);
-				console.log('Unique browsers by ' + searchElement.feature + ': ' + sortedBrowsers.uniqueBrowsers);
+				console.log('Unique browsers by ' + searchElement.feature + ': ' + JSON.stringify(sortedBrowsers.uniqueBrowsers));
 				console.log('Common elements by ' + searchElement.feature + ': ' + getElementsByBrowsers(sortedBrowsers.repeatedlyUsedBrowsers, elements.filter(element => element.feature !== searchElement.feature)));
 
 			}
