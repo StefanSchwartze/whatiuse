@@ -34,16 +34,20 @@ export default class ElementBox extends React.PureComponent {
 					<ul>
 						<li>{this.props.showProp} browsers:<br/>
 							{element[this.props.showProp] && element[this.props.showProp].map((browser, index) => {
+								let browserPiles = [];
+								console.log(browser);
 								for (var i = 0; i < browser.version_usage.length; i++) {
-									return(
+									//console.log(browser.version_usage[i].version);
+									browserPiles.push(
 										<Pile 
 											size="tiny"
 											key={index+i}
 											value={browser.version_usage[i].usage.toFixed(2) + '%'}
 											title={browser.browser + ' ' + browser.version_usage[i].version}
 										/>
-									)
+									);
 								}
+								return browserPiles;
 							})}
 						</li>
 					</ul>
