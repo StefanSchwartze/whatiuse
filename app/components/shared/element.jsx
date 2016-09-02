@@ -35,9 +35,7 @@ export default class ElementBox extends React.PureComponent {
 						<li>{this.props.showProp} browsers:<br/>
 							{element[this.props.showProp] && element[this.props.showProp].map((browser, index) => {
 								let browserPiles = [];
-								console.log(browser);
 								for (var i = 0; i < browser.version_usage.length; i++) {
-									//console.log(browser.version_usage[i].version);
 									browserPiles.push(
 										<Pile 
 											size="tiny"
