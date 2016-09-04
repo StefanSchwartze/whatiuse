@@ -174,7 +174,7 @@ export default {
 	sumObjectArrayByProp: (array, reduceProp, unifyingProps) => { 
 
 		return values(array.reduce((prev, current, index, array) => {
-            if(!(current[reduceProp] in prev.result)) {
+			if(!(current[reduceProp] in prev.result)) {
                 prev.result[current[reduceProp]] = current;
             }
 			else if(prev.result[current[reduceProp]]) {
@@ -185,14 +185,16 @@ export default {
 
 					if(additionalElementsOfProp) {
 					
-						let additionalElements = current[currProp];
+						const additionalElements = current[currProp];
 
 						if(prev.result[current[reduceProp]][currProp]) {
 							if(typeof additionalElements === 'string') {
 								prev.result[current[reduceProp]][currProp] += ('\n' + additionalElements);
 							} else {
 								for (var j = 0; j < additionalElements.length; j++) {
-									prev.result[current[reduceProp]][currProp].push(additionalElements[j]);
+									if(prev.result[current[reduceProp]][currProp].indexOf(additionalElements[j]) < 0) {
+										prev.result[current[reduceProp]][currProp].push(additionalElements[j]);
+									}
 								}
 							}
 						} else {

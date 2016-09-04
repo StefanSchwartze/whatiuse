@@ -18,7 +18,7 @@ import restify from './rest-api';
 import config from "./config/init";
 
 import axios from "axios";
-import { flatten, intersectionWith, isEqual, find } from "lodash";
+import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray } from "lodash";
 import { evaluate, sumObjectArrayByProp, getMissingBrowserVersions, getPercentage, getPercentageSum, addVersionUsage, whatIfIDelete } from "./utils/features";
 
 const app = koa();
@@ -127,21 +127,26 @@ io.on('connection', function(socket){
 			let newElems = flatten(elementCollection);
 			let elements = sumObjectArrayByProp(newElems, 'feature', ['missing', 'partial']);
 
+			//console.log('Just look from here, not earlier!');
 			for (var i = 0; i < elements.length; i++) {
 
 				let element = elements[i];
 				let messages = [];
 
 				if(element.missing) {
+					//console.log('Before: ' + JSON.stringify(element.missing));
 					let missing = sumObjectArrayByProp(element.missing, 'alias', ['versions']);
+					//console.log('After: ' + JSON.stringify(missing));
 					messages.push('not supported by: ' + missing.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
 					element.missing = addVersionUsage(missing, browsers);
 					element.impactMissing = (getPercentageSum(element.missing)).toFixed(2);
 				}
 				if(element.partial) {
+					//console.log('Before: ' + JSON.stringify(element.partial));
 					let partial = sumObjectArrayByProp(element.partial, 'alias', ['versions']);
+					//console.log('After: ' + JSON.stringify(partial));
 					messages.push('only partially supported by: ' + partial.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
-					element.partial = addVersionUsage(element.partial, browsers);
+					element.partial = addVersionUsage(partial, browsers);
 					element.impactPartial = (getPercentageSum(element.partial)).toFixed(2);
 				}
 				element.message = element.title + ' ' + messages.join(' and ');
@@ -219,47 +224,32 @@ io.on('connection', function(socket){
 						repeatedlyUsedBrowsers: repeatedlyUsedBrowsers
 					}
 				}
-
 				const getUniqueBrowsersByElements = (searchElements, elementCollection, browserset) => {
 
 					const uniqueBrowsers = browserset.filter((browser) => {
 						let isOkay = true;
 						let countOfMatchElems = 0;
-						// check all elements for browser
-
 						let j = 0;
+						// check all elements for browser
 						while(j < elementCollection.length && isOkay) {
-//console.log('Round ' + j);
-//console.log(isOkay);
+
 							const currentElement = elementCollection[j];
 							const browsersFromElement = getAllElementBrowsers(currentElement);
 							const hasBrowser = find(browsersFromElement, (foundBrowser) => { return isEqual(foundBrowser, browser) });
-//console.log('Browsers from ' + currentElement.feature);
-//console.log('Has browser? - ' + hasBrowser);
-
-							// if has browser and element is not from searchElements, return false
-//console.log(hasBrowser);
 							let isOneOf = false;
 							
 							if(hasBrowser) {
-//console.log(currentElement.feature + ' has the browser ' + browser.alias + ' ' + browser.version);
 								// check if matching element is one of the searched ones
 								for (var i = 0; i < searchElements.length; i++) {
-										//console.log('Iteration ' + i);
-										//console.log(searchElements[i]);
 									if(currentElement.feature === searchElements[i]) {
-										//console.log('Treffer');
 										countOfMatchElems = countOfMatchElems + 1;
 										isOneOf = true;
 									}
 								}
 								if(isOneOf) {
-//console.log('Its one of my desirable browsers!');
 									isOkay = true;
 									j++;
 								} else {
-//console.log('It has a browser, but not a desired one :(');
-//console.log(currentElement.feature + ' ' + browser.alias + browser.version);
 									isOkay = false;
 								}
 
@@ -269,36 +259,65 @@ io.on('connection', function(socket){
 						}
 						// when browser has not matched in all searched elements, kick browser
 						if(countOfMatchElems !== searchElements.length) {
-							//console.log('Number not correcT!' + countOfMatchElems + ' ' + searchElements.length);
 							isOkay = false;
 						}
 						return isOkay;
 					});
-					//console.log(uniqueBrowsers);
 					return uniqueBrowsers;
 				}
-//console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+
 				// all browsers of the searched element sorted by group (unique = only used by this element | repeatedly = by more elements used)
 				const sortedBrowsers = getSortedBrowsersByElements(searchElement, elements);
 				// the unique browsers from element; can directly have impact by removing element
-				//console.log('Unique browsers by ' + searchElement.feature + ': ' + JSON.stringify(sortedBrowsers.uniqueBrowsers));
 				// all elements that also use the browsers from the searched element
 				const commonElements = getElementsByBrowsers(sortedBrowsers.repeatedlyUsedBrowsers, elements.filter(element => element.feature !== searchElement.feature));
-				//console.log('hi');
+				
 				// check if the repeatedly used browsers from searched element are unique by an element pair
-				//console.log(JSON.stringify(sortedBrowsers.repeatedlyUsedBrowsers));
-console.log('Unique browsers by ' + searchElement.feature);
-console.log(sortedBrowsers.uniqueBrowsers);
+				console.log('Unique browsers by ' + searchElement.feature);
+				console.log(sortedBrowsers.uniqueBrowsers);
 				if(commonElements.length > 0) {
 					for (var i = 0; i < commonElements.length; i++) {
 						const uniques = getUniqueBrowsersByElements([searchElement.feature, commonElements[i]], elements, sortedBrowsers.repeatedlyUsedBrowsers);
 						if(uniques.length > 0) {
-							//console.log('Common elements by ' + searchElement.feature + ': ' + commonElements);
 							console.log('Browsers that are only used by ' + searchElement.feature + ' and ' + commonElements[i]);
 							console.log(uniques);
 						}
 					}
+					console.log('Final ultimate wtf-combination: ');
+					const newarr = commonElements;
+					newarr.push(searchElement.feature);
+					const sss = getUniqueBrowsersByElements(newarr, elements, sortedBrowsers.repeatedlyUsedBrowsers);
 				}
+
+				const calcValues = (browsers, browsersWithPercentages) => {
+					let sum = 0;
+					for (var i = 0; i < browsers.length; i++) {
+						const currBrowser = browsers[i];
+						let percBrowser = find(browsersWithPercentages, (browser) => {
+			                return browser.alias === currBrowser.alias; 
+			            });
+			            if(percBrowser) {
+			            	const version = find(percBrowser.version_usage, (version) => {
+				                return version.version === currBrowser.version; 
+				            });
+				            sum += parseFloat(version.usage);
+			            }
+					}
+					return sum;
+				}
+
+				const selfDel = {
+					partial: searchElement.partial ? calcValues(sortedBrowsers.uniqueBrowsers, searchElement.partial) : 0,
+					missing: searchElement.missing ? calcValues(sortedBrowsers.uniqueBrowsers, searchElement.partial) : 0
+				}
+
+				const deletePossibilities = {
+					self: selfDel,
+					others: [],
+					all: []
+				}
+
+				searchElement.deletePossibilities = deletePossibilities;
 
 			}
 
