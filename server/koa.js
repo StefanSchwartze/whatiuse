@@ -18,7 +18,7 @@ import restify from './rest-api';
 import config from "./config/init";
 
 import axios from "axios";
-import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray } from "lodash";
+import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith } from "lodash";
 import { evaluate, sumObjectArrayByProp, getMissingBrowserVersions, getPercentage, getPercentageSum, addVersionUsage, whatIfIDelete } from "./utils/features";
 
 const app = koa();
@@ -127,24 +127,19 @@ io.on('connection', function(socket){
 			let newElems = flatten(elementCollection);
 			let elements = sumObjectArrayByProp(newElems, 'feature', ['missing', 'partial']);
 
-			//console.log('Just look from here, not earlier!');
 			for (var i = 0; i < elements.length; i++) {
 
 				let element = elements[i];
 				let messages = [];
 
 				if(element.missing) {
-					//console.log('Before: ' + JSON.stringify(element.missing));
 					let missing = sumObjectArrayByProp(element.missing, 'alias', ['versions']);
-					//console.log('After: ' + JSON.stringify(missing));
 					messages.push('not supported by: ' + missing.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
 					element.missing = addVersionUsage(missing, browsers);
 					element.impactMissing = (getPercentageSum(element.missing)).toFixed(2);
 				}
 				if(element.partial) {
-					//console.log('Before: ' + JSON.stringify(element.partial));
 					let partial = sumObjectArrayByProp(element.partial, 'alias', ['versions']);
-					//console.log('After: ' + JSON.stringify(partial));
 					messages.push('only partially supported by: ' + partial.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
 					element.partial = addVersionUsage(partial, browsers);
 					element.impactPartial = (getPercentageSum(element.partial)).toFixed(2);
@@ -153,7 +148,7 @@ io.on('connection', function(socket){
 			}
 
 			for (var k = 0; k < elements.length; k++) {
-//console.log('Next iter: ' + k);
+
 				let searchElement = elements[k];
 
 				const getAllElementBrowsers = (element) => {
@@ -274,8 +269,6 @@ io.on('connection', function(socket){
 				const commonElements = getElementsByBrowsers(sortedBrowsers.repeatedlyUsedBrowsers, elements.filter(element => element.feature !== searchElement.feature));
 				// check if the repeatedly used browsers from searched element are unique by an element pair
 				
-
-
 				const calcValues = (browsers, browsersWithPercentages) => {
 					let sum = 0;
 					for (var i = 0; i < browsers.length; i++) {
@@ -298,16 +291,10 @@ io.on('connection', function(socket){
 				const isBrowserUniqueInScope = (browser, scope, elementCollection, sourceElement) => {
 					let matchCount = 0;
 					let j = 0;
-					console.log('Investigating ' + JSON.stringify(browser) + ' for uniqueness by --- '+ sourceElement.feature);
 					while(j < elementCollection.length && matchCount < 1) {
 						let hasBrowser = false;
 						if(elementCollection[j].feature !== sourceElement.feature && elementCollection[j][scope]) {
-							//console.log('No excluded element and there is a collection!');
-							console.log(elementCollection[j].feature + ' investigated by ' + sourceElement.feature);
 							const diff = intersectionWith(getShortBrowsers(elementCollection[j][scope]), [browser], isEqual);
-							console.log(getShortBrowsers(elementCollection[j][scope]));
-							console.log([browser]);
-							console.log(diff);
 							hasBrowser = diff.length > 0;
 						}
 						if(hasBrowser) {
@@ -315,7 +302,6 @@ io.on('connection', function(socket){
 						}
 						j++;
 					}
-					console.log(matchCount);
 					return matchCount < 1;
 				}
 
@@ -323,35 +309,13 @@ io.on('connection', function(socket){
 				let repeatedlyUsedInMissing = 0;
 
 				if(searchElement.partial) {
-
-
-					// get the unique browsers from partial
-					// add the percentage value of these to selfDeletePartial
-
-
-
-					// for the rest of the browsers check
-					//	> if it is unique in partial
-					//		+ yes ?
-					//			--> add the percentage value to selfDeletePartial
-					//		- no ?
-					//			--> for all common elements iterate
-					//				> get unique browsers for this pair; take as browseset the repeatedlyused ones
-					//				> calculate the percentage values and push it to a new object
-					//  > 
-
-				// for missing do the same
-
 					repeatedlyUsedInPartial += calcValues(sortedBrowsers.uniqueBrowsers, searchElement.partial);
 					
 					const browsers = sortedBrowsers.repeatedlyUsedBrowsers;
 
 					for (var i = 0; i < browsers.length; i++) {
 						if(isBrowserUniqueInScope(browsers[i], 'partial', elements, searchElement)) {
-
-							console.log('Yes it is!' + JSON.stringify(browsers[i]) + ' - ' + 'partial');
-							repeatedlyUsedInPartial += calcValues([browsers[i]], searchElement.partial); 
-
+							repeatedlyUsedInPartial += calcValues([browsers[i]], searchElement.partial);
 						}
 					}
 					
@@ -363,10 +327,7 @@ io.on('connection', function(socket){
 					
 					for (var i = 0; i < browsers.length; i++) {
 						if(isBrowserUniqueInScope(browsers[i], 'missing', elements, searchElement)) {
-
-							console.log('Yes it is!' + JSON.stringify(browsers[i]) + ' - ' + 'missing');
 							repeatedlyUsedInMissing += calcValues([browsers[i]], searchElement.missing); 
-
 						}
 					}
 				}
@@ -376,22 +337,7 @@ io.on('connection', function(socket){
 					missing: repeatedlyUsedInMissing
 				}
 
-
-
-
-
-
-
-
-
-
-
-
-
 				let othersDel = [];
-console.log('######################################################');
-
-console.log(searchElement.feature + ': ' + commonElements.length);
 
 				for (var i = 0; i < commonElements.length; i++) {
 
@@ -400,11 +346,10 @@ console.log(searchElement.feature + ': ' + commonElements.length);
 					let overallset = getAllElementBrowsers(fullElem);
 					overallset.push.apply(overallset, sortedBrowsers.repeatedlyUsedBrowsers);
 
-					const uniqueBrowsers = getUniqueBrowsersByElements([searchElement.feature, commonElements[i]], elements, overallset);
+					const uniqueBrowsers = getUniqueBrowsersByElements([searchElement.feature, commonElements[i]], elements, uniqWith(overallset, isEqual));
 
 					if(uniqueBrowsers.length > 0) {
-console.log('Unique browsers for ' + searchElement.feature + ' and ' + commonElements[i]);
-console.log(JSON.stringify(uniqueBrowsers));
+
 						othersDel.push({
 							feature: commonElements[i],
 							partial: parseFloat(selfDel.partial) + (fullElem.partial ? calcValues(uniqueBrowsers, fullElem.partial) : 0),
@@ -420,9 +365,8 @@ console.log(JSON.stringify(uniqueBrowsers));
 				}
 
 				searchElement.deletePossibilities = deletePossibilities;
-				//console.log(JSON.stringify(searchElement));
 			}
-console.log('And now, what after that?');
+
 			const missingBrowserss = getMissingBrowserVersions(elements, 'missing');
 			let send = {
 				elementCollection: elements,
