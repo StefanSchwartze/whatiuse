@@ -187,7 +187,11 @@ io.on('connection', function(socket){
 				}
 				const getElementsByBrowsers = (browsers, elementCollection) => {
 					return elementCollection
-						.filter(element => elementHasBrowsers(element, browsers))
+						.filter((element) => {
+							const checkElemBrowsers = getAllElementBrowsers(element);
+							const diff = intersectionWith(checkElemBrowsers, browsers, isEqual);
+							return diff.length > 0;
+						})
 						.map(elem => elem.feature);
 				}
 				const getSortedBrowsersByElements = (element, elementCollection) => {
@@ -347,9 +351,7 @@ io.on('connection', function(socket){
 					overallset.push.apply(overallset, sortedBrowsers.repeatedlyUsedBrowsers);
 
 					const uniqueBrowsers = getUniqueBrowsersByElements([searchElement.feature, commonElements[i]], elements, uniqWith(overallset, isEqual));
-
 					if(uniqueBrowsers.length > 0) {
-
 						othersDel.push({
 							feature: commonElements[i],
 							partial: parseFloat(selfDel.partial) + (fullElem.partial ? calcValues(uniqueBrowsers, fullElem.partial) : 0),
