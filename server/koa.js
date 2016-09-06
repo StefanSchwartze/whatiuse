@@ -18,7 +18,8 @@ import restify from './rest-api';
 import config from "./config/init";
 
 import axios from "axios";
-import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith } from "lodash";
+import { data as caniuseData } from "caniuse-db/fulldata-json/data-1.0";
+import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, xorWith, differenceWith, difference } from "lodash";
 import { evaluate, sumObjectArrayByProp, getMissingBrowserVersions, getPercentage, getPercentageSum, addVersionUsage, whatIfIDelete } from "./utils/features";
 
 const app = koa();
@@ -369,11 +370,56 @@ io.on('connection', function(socket){
 				searchElement.deletePossibilities = deletePossibilities;
 			}
 
-			const missingBrowserss = getMissingBrowserVersions(elements, 'missing');
+			const whatIfIDelete = (element) => {
+				let changes = {
+					missing: 0,
+					partial: 0
+				}
+				return changes;
+			}
+
+			let allCssElements = [];
+			const keys = Object.keys(caniuseData);
+			for (var i = 0; i < keys.length; i++) {
+				if(caniuseData[keys[i]].categories.indexOf('CSS') >= 0 || caniuseData[keys[i]].categories.indexOf('CSS3') >= 0) {
+					allCssElements.push(caniuseData[keys[i]]);
+				}
+			}
+
+			const missingBrowsers = getMissingBrowserVersions(elements, 'missing');
+			const partialBrowsers = getMissingBrowserVersions(elements, 'partial');
+			const allBrowsers = flatten([missingBrowsers, partialBrowsers]);
+
+			const rest = values(browsers.reduce( (prev, current, index, array) => {
+				const browsersWithSameName = allBrowsers.filter(browser => browser.alias === current.alias);
+				
+				if(browsersWithSameName.length > 0) {
+					const allVersionUsage = browsersWithSameName.length > 1 ?
+						flatten([browsersWithSameName[0].version_usage, browsersWithSameName[1].version_usage]) :
+						browsersWithSameName[0].version_usage;
+					const allVersions = browsersWithSameName.length > 1 ?
+						flatten([browsersWithSameName[0].versions, browsersWithSameName[1].versions]) :
+						browsersWithSameName[0].versions;
+
+					const version_usage = differenceWith(current.version_usage, allVersionUsage, isEqual);
+
+					if(version_usage.length > 0) {
+						prev.result[current.alias] = {
+							browser: current.browser,
+							alias: current.alias,
+							version_usage: version_usage
+						};
+					}
+				} else {
+					prev.result[current.alias] = current;
+				}
+				return prev;
+			},{result: {}}).result);
+
 			let send = {
 				elementCollection: elements,
 				browserCollection: browsers,
-				pageSupport: (100 - getPercentage(missingBrowserss, browsers)).toFixed(2),
+				pageSupport: (100 - getPercentage(missingBrowsers, browsers)).toFixed(2),
 				pageId: id,
 				scope: scope
 			}
