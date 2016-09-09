@@ -12,6 +12,7 @@ const SnapshotSchema = new mongoose.Schema({
 	pageSupport: Number,
 	browserCollection: [],
 	elementCollection: [],
+	whatIfIUse: [],
 	scope: String,
 	user: {
 		type: mongoose.Schema.Types.ObjectId,

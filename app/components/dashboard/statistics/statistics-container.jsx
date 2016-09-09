@@ -14,7 +14,6 @@ export default class StatisticsContainer extends React.Component {
 		currentElementId: React.PropTypes.string.isRequired,
 		currentProjectId: React.PropTypes.string.isRequired,
 		currentScope: React.PropTypes.string.isRequired
-
 	}
 	constructor(props) {
 		super(props);
@@ -97,6 +96,9 @@ export default class StatisticsContainer extends React.Component {
 								elements={elements}
 								orderProp="count"
 							/>
+							<div className="description">
+								<p>What if I delete?:</p>
+							</div>
 						</div>;
 			} else {
 				pageElem = <span>Not investigated yet.</span>;

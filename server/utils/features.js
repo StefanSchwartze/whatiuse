@@ -8,7 +8,7 @@ import JSONStream from 'JSONStream';
 import {agents} from './user-agents';
 import fromString from 'from2-string';
 import { pipe, through, concat } from 'mississippi';
-import { values, flatten, findKey, uniq, forEach, find } from 'lodash';
+import { values, flatten, findKey, uniq, uniqWith, forEach, find, isEqual } from 'lodash';
 
 export default {
 
@@ -222,6 +222,7 @@ export default {
             } 
            else if(prev.result[current.alias]) {
                 prev.result[current.alias].versions = uniq(prev.result[current.alias].versions.concat(current.versions));
+                prev.result[current.alias].version_usage = uniqWith(flatten([prev.result[current.alias].version_usage, current.version_usage]), isEqual);
             }
            return prev;
         },{result: {}}).result);
