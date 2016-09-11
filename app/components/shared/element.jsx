@@ -19,7 +19,6 @@ export default class ElementBox extends React.PureComponent {
 		}
 	}
 	render() {
-		//console.log(this.props);
 		const element = this.props.element;
 		return(
 			<div
