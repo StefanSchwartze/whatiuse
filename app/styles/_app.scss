@@ -813,6 +813,15 @@ h1, h2 {
 			margin-bottom: 0;
 		}
 	}
+	&--tiny {
+		padding: .5rem;
+		margin: .25rem;
+		display: inline-flex;
+		min-width: auto;
+		.content > * {
+			margin-left: $spacing-small;
+		}
+	}
 }
 .browser-container {
 	display: flex;

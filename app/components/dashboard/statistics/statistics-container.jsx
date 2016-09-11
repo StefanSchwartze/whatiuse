@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Timeline from './timeline';
+import FilterList from '../../shared/filterable-list';
 import ElementsList from '../../shared/elements-list';
-import ElementsChart from '../../shared/elements-chart';
 import BrowsersList from '../../shared/browsers-list';
+import ElementsChart from '../../shared/elements-chart';
 
 import classnames from 'classnames';
 
@@ -32,7 +33,8 @@ export default class StatisticsContainer extends React.Component {
 			
 				const page = this.props.page;
 				const snapshots = this.props.snapshots || [];
-				let elements = snapshots[snapshots.length - 1].elementCollection || [];
+				const elements = snapshots[snapshots.length - 1].elementCollection || [];
+				const whatifiuse = snapshots[snapshots.length - 1].whatIfIUse;
 
 				if(snapshots.length > 1) {
 					timeline = <Timeline
@@ -97,9 +99,10 @@ export default class StatisticsContainer extends React.Component {
 								orderProp="count"
 							/>
 							<div className="description">
-								<p>What if I delete?:</p>
+								<p>What if I use?:</p>
 							</div>
-						</div>;
+							<FilterList elements={whatifiuse} />
+						</div>
 			} else {
 				pageElem = <span>Not investigated yet.</span>;
 			}
