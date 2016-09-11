@@ -6,7 +6,7 @@ import colorpalette from 'utils/color-array';
 
 export default class FilterList extends React.Component {
 	static propTypes = {
-		elements: React.PropTypes.array.isRequired,
+		elements: React.PropTypes.array.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -14,13 +14,31 @@ export default class FilterList extends React.Component {
 			filter: ''
 		}
 	}
+
+	setFilter(event) {
+		event.preventDefault();
+		this.setState({ filter: new RegExp(event.target.value, 'i') });
+	}
+
 	render() {
 		const elements = this.props.elements;
+		const filter = this.state.filter;
 		return (
 			<div className="boxlist">
+				<div className="description">
+					<p>What if I use?:</p>
+					<input
+			          type="text"
+			          className="input"
+			          onChange={ this.setFilter.bind(this) }
+			          placeholder="Search" />
+				</div>
 				{
-					elements && elements.map((element, index) => 
-					{
+					elements && elements
+					.filter((element) => {
+						return element.name.search(filter) > -1;
+					})
+					.map((element, index) => {
 						let messages = [];
 						const missing = element.missing.toFixed(2);
 						const partial = element.partial.toFixed(2);

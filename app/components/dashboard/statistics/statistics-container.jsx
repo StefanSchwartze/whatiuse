@@ -98,9 +98,6 @@ export default class StatisticsContainer extends React.Component {
 								elements={elements}
 								orderProp="count"
 							/>
-							<div className="description">
-								<p>What if I use?:</p>
-							</div>
 							<FilterList elements={whatifiuse} />
 						</div>
 			} else {
