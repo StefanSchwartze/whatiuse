@@ -61,10 +61,12 @@ export default class ElementBox extends React.PureComponent {
 									<Changes 
 										value={this.props.element.deletePossibilities.self.missing.toFixed(2)}
 										type="missing"
+										invert={true}
 									/>
 									<Changes 
 										value={this.props.element.deletePossibilities.self.partial.toFixed(2)}
 										type="partial"
+										invert={true}
 									/>
 								</li>
 								{this.props.element.deletePossibilities.others && this.props.element.deletePossibilities.others.map((item, index) => {
