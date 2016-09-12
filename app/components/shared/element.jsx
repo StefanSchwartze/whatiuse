@@ -70,32 +70,58 @@ export default class ElementBox extends React.PureComponent {
 									/>
 								</li>
 								{this.props.element.deletePossibilities.others && this.props.element.deletePossibilities.others.map((item, index) => {
+									let messages = [];
+									const missing = item.missing.toFixed(2);
+									const partial = item.partial.toFixed(2);
+									if(missing > 0) {
+										messages.push('' + missing + '% more of your users will fully support all features on your site');
+									}
+									if(partial > 0) {
+										messages.push(partial + '% more than before will fully support it instead of only partially support it');
+									}
+									const message = messages.length > 0 ?
+										'This means that when you remove this/these feature(s) from your code, ' + messages.join(' and ') :
+										'This means that adding this/these feature(s) from your code would not improve the browser support for your website.';
 									return (
-										<li 
-											className="mixed-list-item"
-											key={index}>
-											<div className="piles">
-												<Pile 
-													size="tiny"
-													title="this"
+										<Tooltip
+											key={index}
+											overlayClassName="tooltip--simple"
+											placement="top"
+											mouseEnterDelay={0}
+											mouseLeaveDelay={0}
+											destroyTooltipOnHide={true}
+											overlay={
+												<div style={{maxWidth: 320}}>
+													{message}
+												</div>
+											}
+										>
+											<li 
+												className="mixed-list-item"
+												key={index}>
+												<div className="piles">
+													<Pile 
+														size="tiny"
+														title="this"
+													/>
+													<span> + </span>
+													<Pile 
+														size="tiny"
+														title={item.feature}
+													/>
+												</div>
+												<Changes 
+													value={missing}
+													type="missing"
+													invert={true}
 												/>
-												<span> + </span>
-												<Pile 
-													size="tiny"
-													title={item.feature}
+												<Changes 
+													value={partial}
+													type="partial"
+													invert={true}
 												/>
-											</div>
-											<Changes 
-												value={item.missing.toFixed(2)}
-												type="missing"
-												invert={true}
-											/>
-											<Changes 
-												value={item.partial.toFixed(2)}
-												type="partial"
-												invert={true}
-											/>
-										</li>
+											</li>
+										</Tooltip>
 									)
 								})}
 							</ul>
