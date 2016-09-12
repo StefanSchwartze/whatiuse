@@ -922,6 +922,29 @@ h1, h2 {
 }
 
 
+.mixed-list {
+	padding: 0;
+	.mixed-list-item {
+		display: inline-flex;
+		justify-content: space-between;
+		width: 100%;
+		padding: .5rem 0;
+		border-bottom: dashed 1px #eeeeee;
+		> * {
+			margin: 0;
+		}
+		.piles {
+			flex-basis: 50%;
+		}
+		&:last-child {
+			border: none;
+			padding-bottom: 0;
+		}
+	}
+}
+
+
+
 
 /*
 *	Component: ReactTabs

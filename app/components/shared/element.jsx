@@ -1,9 +1,11 @@
 import React from 'react';
+import Pile from './pile';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
-import Pile from './pile';
-import PercentagePie from './percentagepie';
 import classnames from 'classnames';
+import Changes from './changes';
+import PercentagePie from './percentagepie';
+import colorpalette from 'utils/color-array';
 
 export default class ElementBox extends React.PureComponent {
 	static propTypes = {
@@ -46,6 +48,55 @@ export default class ElementBox extends React.PureComponent {
 								}
 								return browserPiles;
 							})}
+						</li>
+						<li>What if I delete?<br/>
+							<ul className="mixed-list">
+								<li className="mixed-list-item">
+									<div className="piles">
+										<Pile 
+											size="tiny"
+											title="this"
+										/>
+									</div>
+									<Changes 
+										value={this.props.element.deletePossibilities.self.missing.toFixed(2)}
+										type="missing"
+									/>
+									<Changes 
+										value={this.props.element.deletePossibilities.self.partial.toFixed(2)}
+										type="partial"
+									/>
+								</li>
+								{this.props.element.deletePossibilities.others && this.props.element.deletePossibilities.others.map((item, index) => {
+									return (
+										<li 
+											className="mixed-list-item"
+											key={index}>
+											<div className="piles">
+												<Pile 
+													size="tiny"
+													title="this"
+												/>
+												<span> + </span>
+												<Pile 
+													size="tiny"
+													title={item.feature}
+												/>
+											</div>
+											<Changes 
+												value={item.missing.toFixed(2)}
+												type="missing"
+												invert={true}
+											/>
+											<Changes 
+												value={item.partial.toFixed(2)}
+												type="partial"
+												invert={true}
+											/>
+										</li>
+									)
+								})}
+							</ul>
 						</li>
 					</ul>
 				</div>

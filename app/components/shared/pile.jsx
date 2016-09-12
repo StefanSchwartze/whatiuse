@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 export default class Pile extends React.PureComponent {
 	static propTypes = {
-		value: React.PropTypes.string.isRequired,
+		value: React.PropTypes.string,
 		title: React.PropTypes.string.isRequired,
 		message: React.PropTypes.string,
 		size: React.PropTypes.string
@@ -16,7 +16,12 @@ export default class Pile extends React.PureComponent {
 	}
 	render() {
 		const message = this.props.message || '';
-		const content = (<span><span>{this.props.value}</span><span>|</span><span>{this.props.title}</span></span>);
+		const title = this.props.title;
+		const content = (<span>
+							<span>{this.props.value}</span>
+							{this.props.value ? <span>|</span> : ''}
+							<span>{title}</span>
+						</span>);
 		return(
 		<div className={classnames('pile', this.props.size && this.props.size === 'tiny' ? 'tiny' : '')}>
 			{

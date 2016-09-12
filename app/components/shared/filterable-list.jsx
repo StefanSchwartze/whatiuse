@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
 import classnames from 'classnames';
+import Changes from './changes';
 import colorpalette from 'utils/color-array';
 
 export default class FilterList extends React.Component {
@@ -68,26 +69,14 @@ export default class FilterList extends React.Component {
 								<div className="box box--tiny">
 									<span className="title">{element.name}</span>
 									<div className="content">
-										<span className="missing">
-											M: <strong style={
-												{
-													color: missing > 0 ? colorpalette(missing, 60, 0, 28, 1) : colorpalette(missing, 120, 0, 28, 1) 
-												}}>
-													{missing > 0 ? '+' : ''}
-													{missing}
-													%
-												</strong>
-										</span>
-										<span className="partial">
-											P: <strong style={
-												{
-													color: partial > 0 ? colorpalette(partial, 60, 0, 28, 1) : colorpalette(partial, 120, 0, 28, 1) 
-												}}>
-													{element.missing > 0 ? '+' : ''}
-													{partial}
-													%
-												</strong>
-										</span>
+										<Changes 
+											value={missing}
+											type={'missing'}
+										/>
+										<Changes 
+											value={partial}
+											type={'partial'}
+										/>
 									</div>
 								</div>
 							</Tooltip>
