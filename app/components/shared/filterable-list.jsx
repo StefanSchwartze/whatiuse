@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import Changes from './changes';
 import colorpalette from 'utils/color-array';
 
-export default class FilterList extends React.Component {
+export default class FilterList extends React.PureComponent {
 	static propTypes = {
 		elements: React.PropTypes.array.isRequired
 	}
