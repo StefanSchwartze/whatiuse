@@ -44,8 +44,9 @@ export default class Navbar extends React.Component {
 		}
 	}
 	componentWillMount() {
+		console.log(this.props.params.projectid);
 		ProjectActions.get(this.props.params.projectid);
-		this.selectBrowserScope(this.props.params.scope);
+		//this.selectBrowserScope(this.props.params.scope);
 	}
 	retry() {
 		StatusActions.retry();
@@ -54,14 +55,14 @@ export default class Navbar extends React.Component {
 		LoginActions.logout();
 	}
 	selectBrowserScope(scope) {
-		BrowserActions.fetch(scope, this.props.params.projectid);
-		BrowserActions.selectScope(scope);
-		SnapshotsActions.fetch({
+		//BrowserActions.fetch(scope, this.props.params.projectid);
+		//BrowserActions.selectScope(scope);
+		/*SnapshotsActions.fetch({
 			"conditions": { 
 				pageId: this.props.params.pageid,
 				scope: scope
 			}
-		});
+		});*/
 	}
 	showModal(){
 		BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);
@@ -264,6 +265,7 @@ export default class Navbar extends React.Component {
 		let currentProject = findItemById(this.props.projects, this.props.currentProjectId) || '';
 		let currentScope = this.props.params.scope;
 		if (this.props.status.error) {
+			console.log(this.props.status);
 			if (this.props.retryData) {
 				retryComponent = <li className="nav-list-item"><button onClick={this.retry} className="">Retry</button></li>;
 			}

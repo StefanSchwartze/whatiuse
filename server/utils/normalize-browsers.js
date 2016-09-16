@@ -98,7 +98,7 @@ module.exports = (browsers) => {
 
 	const sumByNameAndVersion = (browsers) => {
 		return values(browsers.reduce(function(prev, current, index, array){
-			const identifier = current.name + current.version;
+			const identifier = current.alias + current.version;
 			if(!(identifier in prev.result)) {
 				prev.result[identifier] = current;  
 			} 
@@ -106,6 +106,31 @@ module.exports = (browsers) => {
 				prev.result[identifier].share += current.share;
 			}  
 
+		   return prev;
+		},{result: {}}).result);
+	}
+
+	const completeBrowserData = (browsers) => {
+		return values(browsers.reduce(function(prev, current, index, array){
+			const identifier = current.alias;
+			if(!(identifier in prev.result)) {
+				prev.result[identifier] = {
+					alias: identifier,
+					browser: agents[identifier].browser,
+					completeShare: current.share,
+					version_usage: [{
+						version: current.version,
+						share: current.share
+					}]
+				};  
+			} 
+			else if(prev.result[identifier]) {
+				prev.result[identifier].completeShare += parseFloat(current.share);
+				prev.result[identifier].version_usage.push({
+					version: current.version,
+					share: current.share
+				});
+			}  
 		   return prev;
 		},{result: {}}).result);
 	}
@@ -119,7 +144,7 @@ module.exports = (browsers) => {
 		const version = name ? getNormalizedVersion(name, browsers[i].version) : false;
 		if(name && version) {
 			const browser = {
-				name: name,
+				alias: name,
 				version: version.origin,
 				share: browsers[i].share
 			}
@@ -128,9 +153,11 @@ module.exports = (browsers) => {
 			unknownBrowsersList.push(browsers[i]);
 		}
 	}
+	const summedBrowsers = sumByNameAndVersion(validBrowsersList);
+	const cleanBrowserList = completeBrowserData(summedBrowsers);
 
 	let data = {
-		browsers: sumByNameAndVersion(validBrowsersList),
+		browsers: cleanBrowserList,
 		unknown: sumByNameAndVersion(unknownBrowsersList)
 	}
 	return data;

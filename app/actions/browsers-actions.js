@@ -6,6 +6,7 @@ import {findItemById} from 'utils/store-utils';
 import {networkAction} from 'utils/action-utils';
 import StatusActions from './status-actions';
 import ProjectsActions from './projects-actions';
+import ProjectsStore from '../stores/projects-store';
 
 class BrowsersActions {
     constructor() {
@@ -29,7 +30,7 @@ class BrowsersActions {
                 case 'custom':
                     this.fetchCustom(projectId);
                     break;
-                case 'custom':
+                case 'fdx':
                     this.fetchFdx(projectId);
                     break;
             }
@@ -61,10 +62,12 @@ class BrowsersActions {
 
             try {
                 const response = await axios.post('/browsers/validate', { browsers: browsers });
-                const projectStore = alt.stores.ProjectsStore.state;
+                const projectStore = ProjectsStore.getState();
                 let project = findItemById(projectStore.projects, projectStore.currentProjectId);
-                project.browserscopes.fdx = response.data.browsers;
-                ProjectsActions.update(projectStore.currentProjectId, project);
+                project.browserscopes.fdx = response.data.browsers || {};
+                console.log(response.data.browsers);
+                console.log(project);
+                ProjectsActions.update(project._id, project);
                 dispatch({ok: true, data: response.data.browsers });
             } catch (err) {
                 console.error(err);

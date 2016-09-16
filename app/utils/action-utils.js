@@ -15,6 +15,7 @@ export default {
       StatusActions.done();
 
     } catch (err) {
+      console.log(err);
       if (err.status === 401 && process.env.BROWSER) {
         LoginActions.logout();
       }

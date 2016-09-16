@@ -21,6 +21,7 @@ class ProjectsStore {
 	    }, {});
 	}
 	onGet(project) {
+		console.log(project)
 		if(this.projects.length === 0) {
 			this.projects.push(project);
 		}

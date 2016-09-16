@@ -21,8 +21,8 @@ export default class Browsers extends React.Component {
 		super(props);
 	}
 	componentWillMount() {
-		BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);
-		BrowserActions.selectScope(this.props.params.scope);
+		//BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);
+		//BrowserActions.selectScope(this.props.params.scope);
 	}
 	render() {
 		const scope = this.props.params.scope;

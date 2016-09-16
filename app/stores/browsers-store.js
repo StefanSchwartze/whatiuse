@@ -34,12 +34,14 @@ class BrowsersStore {
 		this.browserscopes.global.browsers = browserCollection;
 	}
 	onFetchFdx(project) {
-		this.browserscopes.fdx.browsers = project ? project.browserscopes.fdx.browsers : [];
+		console.log(project);
+		this.browserscopes.fdx = project ? project.browserscopes.fdx : {};
 	}
 	onFetchCustom(project) {
 		this.browserscopes.custom.browsers = project ? project.browserscopes.config.browsers : [];
 	}
 	onValidateBrowserset(data) {
+		console.log(data);
 		this.browserscopes.fdx = data.data;
 	}
 	onSelectScope(scope) {

@@ -79,6 +79,7 @@ export default (app) => {
 			'Access-Control-Allow-Origin' : '*'
 		});
 		let data = normalizeBrowsers(this.request.body.browsers);
+		console.log(data.browsers);
 		this.status = 200;
 		this.body = { message: "Browsers evaluated successfully!", browsers: data };
 	});
