@@ -25,6 +25,7 @@ export default class Browsers extends React.Component {
 	render() {
 		const scope = this.props.params.scope;
 		const currentBrowser = this.props.params.browserid;
+		let totalCoverage = 0;
 		let browsers = [];
 		if(scope && this.props.browserscopes[scope].browsers.length > 0) {
 			for (var i = 0; i < this.props.browserscopes[scope].browsers.length; i++) {
@@ -34,14 +35,23 @@ export default class Browsers extends React.Component {
 					return sum += share;
 				}, 0);
 				browsers.push(newBrowser);
+				totalCoverage += newBrowser.completeShare;
 			}
 		}
 		return (
 			<div>
 				<div className="browsers-list">
 					<div className="content-container browsers-container">
-						<h1>Browser share of users</h1>
-						<h2>from your <strong className="label">{scope}</strong> data scope</h2>
+						<div className="dyn-columns">
+							<div className="col2">
+								<h1>Browser share of users</h1>
+								<h2>from your <strong className="label">{scope}</strong> data scope</h2>
+							</div>
+							<div className="col2 coverage-title">
+								<h1>{totalCoverage.toFixed(2) + '%'}</h1>
+								<h3>Total coverage</h3>
+							</div>
+						</div>
 					</div>
 				</div>
 				{browsers.length > 0 ? 

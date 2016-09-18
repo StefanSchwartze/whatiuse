@@ -675,6 +675,16 @@ h1, h2 {
 .browsers-list {
 	background-color: $grey-medium;
 }
+.coverage-title {
+	h1 {
+		font-size: 4rem;
+		margin: 0;
+		font-family: Source Sans Pro;
+	}
+	h3 {
+		margin: 0;
+	}
+}
 
 /*
 *	Component: Chartcontainer
