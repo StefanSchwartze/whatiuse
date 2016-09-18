@@ -34,7 +34,6 @@ class BrowsersStore {
 		this.browserscopes.global.browsers = browserCollection;
 	}
 	onFetchFdx(project) {
-		console.log(project);
 		this.browserscopes.fdx = project ? project.browserscopes.fdx : {};
 	}
 	onFetchCustom(project) {

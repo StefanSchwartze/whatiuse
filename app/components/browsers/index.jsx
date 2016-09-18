@@ -7,8 +7,6 @@ import BrowserActions from 'actions/browsers-actions';
 
 import connectToStores from 'alt-utils/lib/connectToStores';
 
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
-
 @connectToStores
 export default class Browsers extends React.Component {
 	static getStores(props) {
@@ -21,28 +19,22 @@ export default class Browsers extends React.Component {
 		super(props);
 	}
 	componentWillMount() {
-		//BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);
-		//BrowserActions.selectScope(this.props.params.scope);
+		BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);
+		BrowserActions.selectScope(this.props.params.scope);
 	}
 	render() {
 		const scope = this.props.params.scope;
 		const currentBrowser = this.props.params.browserid;
 		let browsers = [];
 		if(scope && this.props.browserscopes[scope].browsers.length > 0) {
-			browsers = this.props.browserscopes[scope].browsers;
-			for (var i = 0; i < browsers.length; i++) {
-
-				let newBrowser = browsers[i];
-				newBrowser.isOpen = newBrowser.alias === currentBrowser;
+			for (var i = 0; i < this.props.browserscopes[scope].browsers.length; i++) {
+				let newBrowser = this.props.browserscopes[scope].browsers[i];
 				newBrowser.completeShare = newBrowser.version_usage.reduce((sum, version, index) => {
-					return sum += newBrowser.version_usage[index].usage;
+					const share = version.usage || version.share;
+					return sum += share;
 				}, 0);
-				browsers[i] = newBrowser;
-
+				browsers.push(newBrowser);
 			}
-			browsers = browsers.sort((a, b) => { 
-				return a.completeShare < b.completeShare ? 1 : -1;
-			});
 		}
 		return (
 			<div>
@@ -52,14 +44,23 @@ export default class Browsers extends React.Component {
 						<h2>from your <strong className="label">{scope}</strong> data scope</h2>
 					</div>
 				</div>
-				{browsers.length > 0 ? browsers.map((item, index) =>
-					<BrowserBox 
-						key={index} 
-						scope={scope}
-						projectId={this.props.params.projectid}
-						browser={item} 
-						maxVal={browsers[0].completeShare} />
-				) : <div className="content-container"><p>No data provided</p></div>}
+				{browsers.length > 0 ? 
+					browsers
+						.sort((a, b) => { return a.completeShare < b.completeShare ? 1 : -1; })
+						.map((item, index) => {
+							return(
+							<BrowserBox 
+								key={index} 
+								scope={scope}
+								isOpen={item.alias === currentBrowser}
+								projectId={this.props.params.projectid}
+								browser={item} 
+								maxVal={browsers[0].completeShare} />
+							)
+						}
+						) : 
+					<div className="content-container"><p>No data provided</p></div>
+				}
 			</div>
 		);
 	}

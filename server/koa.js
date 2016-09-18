@@ -457,7 +457,7 @@ io.on('connection', function(socket){
 				scope: scope,
 				whatIfIUse: whatIfIUseElements || []
 			}
-			
+
 			page[scope + 'Support'] = send.pageSupport;
 
 			function updatePage() {

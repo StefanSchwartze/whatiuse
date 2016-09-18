@@ -31,7 +31,7 @@ export default function *(next) {
     if (!renderProps) {
         return next;
     }
-console.log(renderProps);
+
     // We use react-router to run the URL that is provided in routes.jsx
     const node = ReactDOM.renderToString(<RouterContext { ...renderProps } />);
 

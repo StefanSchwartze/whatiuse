@@ -12,7 +12,8 @@ export default class BrowsersBox extends React.Component {
 		browser: React.PropTypes.object.isRequired,
 		maxVal: React.PropTypes.number.isRequired,
 		scope: React.PropTypes.string.isRequired,
-		projectId: React.PropTypes.string.isRequired
+		projectId: React.PropTypes.string.isRequired,
+		isOpen: React.PropTypes.bool.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -23,7 +24,7 @@ export default class BrowsersBox extends React.Component {
 	}
 	render() {
 		let width = (this.props.browser.completeShare / this.props.maxVal) * 100 + '%';
-		const isOpen = this.props.browser.isOpen;
+		const isOpen = this.props.isOpen;
 		const baseURL = '/projects/' + this.props.projectId + '/' + this.props.scope + '/browsers/';
 		const url = isOpen ? baseURL : baseURL + this.props.browser.alias;
 		const data = this.props.browser.version_usage.map((version) => { return {"name": version.version, "value": version.usage }});

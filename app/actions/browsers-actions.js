@@ -65,8 +65,6 @@ class BrowsersActions {
                 const projectStore = ProjectsStore.getState();
                 let project = findItemById(projectStore.projects, projectStore.currentProjectId);
                 project.browserscopes.fdx = response.data.browsers || {};
-                console.log(response.data.browsers);
-                console.log(project);
                 ProjectsActions.update(project._id, project);
                 dispatch({ok: true, data: response.data.browsers });
             } catch (err) {

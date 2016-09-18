@@ -30,7 +30,7 @@ module.exports = (browsers) => {
 		"blackberry browser" : "bb"
 	}
 
-	const calculateShares = (browsers) => {
+	const calculateUsages = (browsers) => {
 
 		let numberOfBrowsers = 0;
 		forEach(browsers, (browser) => {
@@ -40,7 +40,7 @@ module.exports = (browsers) => {
 
 		return browsers.map((browser) => {
 			let browserN = browser;
-			browserN.share = browserN.count / numberOfBrowsers;
+			browserN.usage = browserN.count / numberOfBrowsers;
 			return browserN;
 		});
 
@@ -103,7 +103,7 @@ module.exports = (browsers) => {
 				prev.result[identifier] = current;  
 			} 
 			else if(prev.result[identifier]) {
-				prev.result[identifier].share += current.share;
+				prev.result[identifier].usage += current.usage;
 			}  
 
 		   return prev;
@@ -117,26 +117,24 @@ module.exports = (browsers) => {
 				prev.result[identifier] = {
 					alias: identifier,
 					browser: agents[identifier].browser,
-					completeShare: current.share,
 					version_usage: [{
 						version: current.version,
-						share: current.share
+						usage: current.usage
 					}]
 				};  
 			} 
 			else if(prev.result[identifier]) {
-				prev.result[identifier].completeShare += parseFloat(current.share);
 				prev.result[identifier].version_usage.push({
 					version: current.version,
-					share: current.share
+					usage: current.usage
 				});
 			}  
 		   return prev;
 		},{result: {}}).result);
 	}
 
-	if(head(browsers).count >= 1 || head(browsers).share >= 1) {
-		browsers = calculateShares(browsers);
+	if(head(browsers).count >= 1 || head(browsers).usage >= 1) {
+		browsers = calculateUsages(browsers);
 	}
 
 	for (var i = 0; i < browsers.length; i++) {
@@ -146,7 +144,7 @@ module.exports = (browsers) => {
 			const browser = {
 				alias: name,
 				version: version.origin,
-				share: browsers[i].share
+				usage: browsers[i].usage
 			}
 			validBrowsersList.push(browser);
 		} else {
