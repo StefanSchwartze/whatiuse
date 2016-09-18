@@ -52,7 +52,9 @@ export default class BrowsersBox extends React.Component {
 					<div className="separator"></div>
 					<div className="percentagebox">
 						<div className="percentagebox-content" style={{width: width}}>
-							{this.props.browser.version_usage && this.props.browser.version_usage.map((item, index) =>
+							{this.props.browser.version_usage && this.props.browser.version_usage
+								.sort((a, b) => { return a.version === b.version ? : (a.version > b.version ? 1 : -1) : 0; })
+								.map((item, index) =>
 								<SimpleTooltip
 									overlayClassName="tooltip--simple" 
 									key={index} 
