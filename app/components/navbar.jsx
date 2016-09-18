@@ -56,6 +56,12 @@ export default class Navbar extends React.Component {
 	selectBrowserScope(scope) {
 		BrowserActions.fetch(scope, this.props.params.projectid);
 		BrowserActions.selectScope(scope);
+		SnapshotsActions.fetch({
+			"conditions": { 
+				pageId: this.props.params.pageid,
+				scope: scope
+			}
+		});
 	}
 	showModal(){
 		BrowserActions.fetch(this.props.params.scope, this.props.params.projectid);
