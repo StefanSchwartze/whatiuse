@@ -40,7 +40,6 @@ class BrowsersStore {
 		this.browserscopes.custom.browsers = project ? project.browserscopes.config.browsers : [];
 	}
 	onValidateBrowserset(data) {
-		console.log(data);
 		this.browserscopes.fdx = data.data;
 	}
 	onSelectScope(scope) {

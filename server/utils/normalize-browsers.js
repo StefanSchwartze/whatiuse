@@ -34,13 +34,12 @@ module.exports = (browsers) => {
 
 		let numberOfBrowsers = 0;
 		forEach(browsers, (browser) => {
-			let val = browser.count;
-			numberOfBrowsers += val;
+			numberOfBrowsers += parseInt(browser.count);
 		});
 
 		return browsers.map((browser) => {
 			let browserN = browser;
-			browserN.usage = browserN.count / numberOfBrowsers;
+			browserN.usage = browserN.count / numberOfBrowsers * 100;
 			return browserN;
 		});
 
@@ -59,7 +58,7 @@ module.exports = (browsers) => {
 			let versions = {};
 
 			forEach(validVersions, (version) => {
-				let minusIndex = version.indexOf("-");
+				const minusIndex = version.indexOf("-");
 				if(minusIndex > -1) {
 					const versionRangeStart = parseInt(version.substring(version.indexOf('.') + 1, minusIndex));
 					const versionRangeEnd = parseInt(version.substring(version.lastIndexOf('.') + 1, version.length));
