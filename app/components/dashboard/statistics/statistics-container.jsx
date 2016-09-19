@@ -42,10 +42,11 @@ export default class StatisticsContainer extends React.Component {
 				const page = this.props.page;
 				const snapshots = this.props.snapshots || [];
 				const lastSnapshot = snapshots[snapshots.length - 1];
-				const partialSupport = parseFloat(lastSnapshot.partialSupport.toFixed(2));
-				const missingSupport = parseFloat(lastSnapshot.missingSupport.toFixed(2));
 				const elements = lastSnapshot.elementCollection || [];
 				const whatifiuse = lastSnapshot.whatIfIUse;
+				let partialSupportElem;
+				let missingSupportElem;
+				let fullSupport = 100;
 
 				if(snapshots.length > 1) {
 					timeline = <Timeline
@@ -53,66 +54,80 @@ export default class StatisticsContainer extends React.Component {
 									isChecking={page.isChecking || false} 
 								/>
 				}
+				if(lastSnapshot.partialSupport) {
+					const partialSupport = parseFloat(lastSnapshot.partialSupport.toFixed(2)) || 0;
+					fullSupport -= partialSupport;
+					partialSupportElem = 
+						<Tooltip
+							overlayClassName="tooltip--simple"
+							placement="top"
+							mouseEnterDelay={0}
+							mouseLeaveDelay={0}
+							destroyTooltipOnHide={true}
+							overlay={
+								<div style={{maxWidth: 320}}>
+									{
+										<ul>
+											<li>{partialSupport} % of your users just partially support one or more features on this page.</li>
+											<li>Partial support means a feature just works with vendor prefixes or does not have the full functionality.</li>
+											<li>In most cases, there is no difference between fully and partially supported features.</li>
+										</ul>
+									}
+								</div>
+							}
+						>
+							<div className="box box--element">
+								<div className="box-head">
+									<PercentagePie 
+										value={partialSupport} 
+										color="#e0cd28"
+									/>
+									<h3>Partially supported</h3>
+								</div>
+							</div>
+						</Tooltip> 
+				}
+				if(lastSnapshot.missingSupport) {
+					const missingSupport = parseFloat(lastSnapshot.missingSupport.toFixed(2)) || 0;
+					fullSupport -= missingSupport;
+					missingSupportElem = 
+						<Tooltip
+							overlayClassName="tooltip--simple"
+							placement="top"
+							mouseEnterDelay={0}
+							mouseLeaveDelay={0}
+							destroyTooltipOnHide={true}
+							overlay={
+								<div style={{maxWidth: 320}}>
+									{missingSupport + '% of your users do not support one or more features on this page.'}
+								</div>
+							}
+						>
+							<div className="box box--element">
+								<div className="box-head">
+									<PercentagePie 
+										value={missingSupport} 
+										color="#bd1010"
+									/>
+									<h3>Not supported</h3>
+								</div>
+							</div>
+						</Tooltip>
+				}
 
 				pageElem = 	<div>
 							{progressbar}
 							{timeline}
 							<div className="description">
 								<h1 className="big">Latest result:</h1>
-								<Tooltip
-									overlayClassName="tooltip--simple"
-									placement="top"
-									mouseEnterDelay={0}
-									mouseLeaveDelay={0}
-									destroyTooltipOnHide={true}
-									overlay={
-										<div style={{maxWidth: 320}}>
-											{missingSupport + '% of your users do not support one or more features on this page.'}
-										</div>
-									}
-								>
-									<div className="box box--element">
-										<div className="box-head">
-											<PercentagePie 
-												value={missingSupport} 
-												color="#bd1010"
-											/>
-											<h3>Not supported</h3>
-										</div>
-									</div>
-								</Tooltip>
-								<Tooltip
-									overlayClassName="tooltip--simple"
-									placement="top"
-									mouseEnterDelay={0}
-									mouseLeaveDelay={0}
-									destroyTooltipOnHide={true}
-									overlay={
-										<div style={{maxWidth: 320}}>
-											{
-												<ul>
-													<li>{partialSupport} % of your users just partially support one or more features on this page.</li>
-													<li>Partial support means a feature just works with vendor prefixes or does not have the full functionality.</li>
-													<li>In most cases, there is no difference between fully and partially supported features.</li>
-												</ul>
-											}
-										</div>
-									}
-								>
-									<div className="box box--element">
-										<div className="box-head">
-											<PercentagePie 
-												value={partialSupport} 
-												color="#e0cd28"
-											/>
-											<h3>Partially supported</h3>
-										</div>
-									</div>
-								</Tooltip>
+								
+								{missingSupportElem}
+								{partialSupportElem}
+
 								<div className="box box--element">
 									<div className="box-head">
 										<PercentagePie 
-											value={100 - missingSupport - partialSupport} 
+											value={parseFloat(fullSupport.toFixed(2))} 
 											color="rgb(71, 191, 109)"
 										/>
 										<h3>Fully supported</h3>
