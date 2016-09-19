@@ -22,6 +22,8 @@ import { data as caniuseData } from "caniuse-db/fulldata-json/data-1.0";
 import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, xorWith, differenceBy, difference, findIndex } from "lodash";
 import { evaluate, sumObjectArrayByProp, getMissingBrowserVersions, getPercentage, getPercentageSum, addVersionUsage, whatIfIDelete } from "./utils/features";
 
+process.env.UV_THREADPOOL_SIZE = 128;
+
 const app = koa();
 const env = process.env.NODE_ENV || "development";
 
@@ -113,10 +115,15 @@ io.on('connection', function(socket){
 
     	const evaluateForFeatures = (item, index, that) => {
 			return new Promise((resolve, reject) => {
-				evaluate({ url : url, browser: item }).then(function(results) {
-					io.emit('progress', { progress: (++progress) / that.length, pageId: id });
-					resolve(results);
-				});
+				evaluate({ url : url, browser: item })
+					.then(function(results) {
+						io.emit('progress', { progress: (++progress) / that.length, pageId: id });
+						resolve(results);
+					})
+					.catch((e) => {
+						console.log('Oh no, an error has been catched!');
+						console.log(e);
+					});
 			});
 		}
 

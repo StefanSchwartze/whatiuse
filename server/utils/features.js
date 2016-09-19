@@ -19,7 +19,7 @@ export default {
 			const url = args.url || '';
 			const browser = args.browser || '';
 			const options = {
-				timeout: 5000,
+				timeout: 10000,
 				headers: { 
 					'User-Agent': browser 
 				}
@@ -35,12 +35,11 @@ export default {
 					let limit = limitstream(1e6);
 					let features = prune();
 
-
 					streams = streams.concat([
 						limit,
 						doiuse({ browsers: browser, skipErrors: true }, url.trim().length ? url : 'pasted content')
 						.on('warning',  (warn) => {
-							console.log(warn);
+							console.warn(warn);
 							errorsAndWarnings.push(warn);
 						}),
 						uniqe.features,
@@ -87,6 +86,7 @@ export default {
 						usageData = data;
 					});
 					finalStream.on('error', (err) => {
+						console.log('I am an error');
 						reject(err);
 					});
 					finalStream.on('end', (err) => {
@@ -142,6 +142,7 @@ export default {
 					    }
 
 					    let data = {};
+					
 					    const features = transformBrowserVersion(usageData.features);
 					    data.elementCollection = features.map((value, prop) => {
 				            let feature = {};
@@ -159,12 +160,14 @@ export default {
 				            feature.title = value.title;
 				            return feature;
 				        });
+				        data.syntaxErrors = usageData.errors;
 
 						resolve(data);
 					});
 				    
 				})
 			  	.catch((error) => {
+			  		console.log('ERRRRROORR!!!');
 			    	console.error(error);
 			    	reject(error);
 			    });
