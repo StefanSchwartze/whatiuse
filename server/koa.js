@@ -472,15 +472,20 @@ io.on('connection', function(socket){
 					whatIfIUseElements.push(pushableElement);
 				}
 			}
+			const missingSupport = getPercentage(missingBrowsers, browsers);
+			const partialSupport = getPercentage(partialBrowsers, browsers);
+			console.log(missingSupport, partialSupport);
 
 			let send = {
 				elementCollection: elements,
 				browserCollection: browsers,
-				pageSupport: (100 - getPercentage(missingBrowsers, browsers)).toFixed(2),
+				pageSupport: (100 - missingSupport).toFixed(2),
 				pageId: id,
 				scope: scope,
 				whatIfIUse: whatIfIUseElements || [],
-				syntaxErrors: uniqueSyntaxErrors
+				syntaxErrors: uniqueSyntaxErrors,
+				missingSupport: missingSupport,
+				partialSupport: partialSupport
 			}
 
 			page[scope + 'Support'] = send.pageSupport;

@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Tooltip from 'rc-tooltip';
 import Timeline from './timeline';
+import classnames from 'classnames';
+import PercentagePie from '../../shared/percentagepie';
 import FilterList from '../../shared/filterable-list';
 import ElementsList from '../../shared/elements-list';
 import BrowsersList from '../../shared/browsers-list';
 import ElementsChart from '../../shared/elements-chart';
 import ProgressBar from '../../shared/progressbar';
 
-import classnames from 'classnames';
 
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
@@ -39,8 +41,11 @@ export default class StatisticsContainer extends React.Component {
 			
 				const page = this.props.page;
 				const snapshots = this.props.snapshots || [];
-				const elements = snapshots[snapshots.length - 1].elementCollection || [];
-				const whatifiuse = snapshots[snapshots.length - 1].whatIfIUse;
+				const lastSnapshot = snapshots[snapshots.length - 1];
+				const partialSupport = parseFloat(lastSnapshot.partialSupport.toFixed(2));
+				const missingSupport = parseFloat(lastSnapshot.missingSupport.toFixed(2));
+				const elements = lastSnapshot.elementCollection || [];
+				const whatifiuse = lastSnapshot.whatIfIUse;
 
 				if(snapshots.length > 1) {
 					timeline = <Timeline
@@ -52,6 +57,59 @@ export default class StatisticsContainer extends React.Component {
 				pageElem = 	<div>
 							{progressbar}
 							{timeline}
+							<div className="description">
+								<h1 className="big">Latest result:</h1>
+								<Tooltip
+									overlayClassName="tooltip--simple"
+									placement="top"
+									mouseEnterDelay={0}
+									mouseLeaveDelay={0}
+									destroyTooltipOnHide={true}
+									overlay={
+										<div style={{maxWidth: 320}}>
+											{missingSupport + '% of your users do not support one or more features on this page.'}
+										</div>
+									}
+								>
+									<div className="box box--element">
+										<div className="box-head">
+											<PercentagePie value={missingSupport} />
+											<h3>Not supported</h3>
+										</div>
+									</div>
+								</Tooltip>
+								<Tooltip
+									overlayClassName="tooltip--simple"
+									placement="top"
+									mouseEnterDelay={0}
+									mouseLeaveDelay={0}
+									destroyTooltipOnHide={true}
+									overlay={
+										<div style={{maxWidth: 320}}>
+											{
+												<ul>
+													<li>{partialSupport} % of your users just partially support one or more features on this page.</li>
+													<li>Partial support means a feature just works with vendor prefixes or does not have the full functionality.</li>
+													<li>In most cases, there is no difference between fully and partially supported features.</li>
+												</ul>
+											}
+										</div>
+									}
+								>
+									<div className="box box--element">
+										<div className="box-head">
+											<PercentagePie value={partialSupport} />
+											<h3>Partially supported</h3>
+										</div>
+									</div>
+								</Tooltip>
+								<div className="box box--element">
+									<div className="box-head">
+										<PercentagePie value={100 - missingSupport - partialSupport} />
+										<h3>Fully supported</h3>
+									</div>
+								</div>
+							</div>
 							<div className="description">
 								<button 
 									className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}

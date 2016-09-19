@@ -10,6 +10,8 @@ const SnapshotSchema = new mongoose.Schema({
 		default: 	Date.now
 	},
 	pageSupport: Number,
+	missingSupport: Number,
+	partialSupport: Number,
 	browserCollection: [],
 	elementCollection: [],
 	syntaxErrors: [],

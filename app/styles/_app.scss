@@ -229,11 +229,31 @@ h1, h2 {
 	color: $grey-dark;
 	margin: 0 0 $spacing-small 0;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 	width: 100%;
 	align-items: center;
+	.big {
+		font-size: $font-size-large;
+		width: 100%;
+		flex-grow: 10;
+	}
 	.align-right {
 		margin-left: auto;
+	}
+	.box {
+		min-width: 100%;
+	}
+	@media only screen and (min-width: 781px) {
+		flex-wrap: nowrap;
+		.big {
+			width: auto;
+		}
+		.box {
+			margin-bottom: 0;
+			margin-left: $spacing-medium;
+			min-width: auto;
+		}
 	}
 }
 
