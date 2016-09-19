@@ -62,7 +62,11 @@ export default class Page extends React.Component {
 							this.props.page.isChecking ? 'isChecking' : '', 
 							this.props.isActive ? 'active' : '', this.state.isLoading ? 'isLoading' : ''
 							)}>
-				<div className="page-overlay" style={{backgroundColor: colorpalette(support, 0, 120, 28, .5)}}>
+				<div 
+					className="page-overlay" 
+					style={{
+						backgroundColor: support >= 0 ? colorpalette(support, 0, 120, 28, .5) : 'rgba(0,0,0,.5)'}
+					}>
 					<div className="percentage">
 						{state}
 					</div>
