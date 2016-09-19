@@ -39,7 +39,7 @@ export default class Page extends React.Component {
 		PagesActions.triggerURLCheck(this.props.page);
 	}
 	render() {
-		let support = '- %';
+		let support = '- ';
 		let state;
 		let progress;
 		const scope = this.props.scope;
