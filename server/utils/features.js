@@ -39,7 +39,7 @@ export default {
 						limit,
 						doiuse({ browsers: browser, skipErrors: true }, url.trim().length ? url : 'pasted content')
 						.on('warning',  (warn) => {
-							console.warn(warn);
+							//console.warn(warn);
 							errorsAndWarnings.push(warn);
 						}),
 						uniqe.features,
@@ -160,7 +160,7 @@ export default {
 				            feature.title = value.title;
 				            return feature;
 				        });
-				        data.syntaxErrors = usageData.errors;
+				        data.syntaxErrors = usageData.errors || [];
 
 						resolve(data);
 					});

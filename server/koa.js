@@ -19,7 +19,7 @@ import config from "./config/init";
 
 import axios from "axios";
 import { data as caniuseData } from "caniuse-db/fulldata-json/data-1.0";
-import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, xorWith, differenceBy, difference, findIndex } from "lodash";
+import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, difference, findIndex } from "lodash";
 import { evaluate, sumObjectArrayByProp, getMissingBrowserVersions, getPercentage, getPercentageSum, addVersionUsage, whatIfIDelete } from "./utils/features";
 
 process.env.UV_THREADPOOL_SIZE = 128;
@@ -117,23 +117,40 @@ io.on('connection', function(socket){
 			return new Promise((resolve, reject) => {
 				evaluate({ url : url, browser: item })
 					.then(function(results) {
-						io.emit('progress', { progress: (++progress) / that.length, pageId: id });
+						io.emit('progress', { 
+							progress: (++progress) / that.length, 
+							pageId: id
+						});
+						console.log(item);
 						resolve(results);
 					})
 					.catch((e) => {
 						console.log('Oh no, an error has been catched!');
 						console.log(e);
+						console.log('Caused by: ' + item);
+						io.emit('progress', {
+							progress: (++progress) / that.length, 
+							pageId: id
+						});
+						resolve([
+							{ 
+								elementCollection: [],
+								syntaxErrors: []
+							}
+						]);
 					});
 			});
 		}
 
 		Promise.all(browserNames.map(evaluateForFeatures)).then(data => {
 			let elementCollection = [];
+			let allSyntaxErrors = [];
 			for (var i = 0; i < data.length; i++) {
 				elementCollection.push(data[i].elementCollection);
+				allSyntaxErrors.push(data[i].syntaxErrors);
 			}
-			let newElems = flatten(elementCollection);
-			let elements = sumObjectArrayByProp(newElems, 'feature', ['missing', 'partial']);
+			const uniqueSyntaxErrors = uniqBy(flatten(allSyntaxErrors), 'message');
+			let elements = sumObjectArrayByProp(flatten(elementCollection), 'feature', ['missing', 'partial']);
 
 			for (var i = 0; i < elements.length; i++) {
 
@@ -462,7 +479,8 @@ io.on('connection', function(socket){
 				pageSupport: (100 - getPercentage(missingBrowsers, browsers)).toFixed(2),
 				pageId: id,
 				scope: scope,
-				whatIfIUse: whatIfIUseElements || []
+				whatIfIUse: whatIfIUseElements || [],
+				syntaxErrors: uniqueSyntaxErrors
 			}
 
 			page[scope + 'Support'] = send.pageSupport;
