@@ -436,15 +436,6 @@ h1, h2 {
 		width: 100%;
 		position: relative;
 		padding: $spacing-small 0 $spacing-large 0;
-		&.orderReverse {
-			direction: rtl;
-			> *:first-child {
-				margin-left: 0;
-			}
-			> *:last-child {
-				margin-left: $spacing-medium;
-			}
-		}
 		> *:first-child {
 			margin-left: $spacing-medium;
 			@media only screen and (min-width: 1281px) {
