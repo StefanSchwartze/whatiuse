@@ -5,7 +5,7 @@ import colorpalette from 'utils/color-array';
 
 export default class Changes extends React.PureComponent {
 	static propTypes = {
-		value: React.PropTypes.object.isRequired,
+		value: React.PropTypes.string.isRequired,
 		type: React.PropTypes.string.isRequired,
 		invert: React.PropTypes.bool
 	}
