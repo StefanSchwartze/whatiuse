@@ -73,7 +73,10 @@ export default class StatisticsContainer extends React.Component {
 								>
 									<div className="box box--element">
 										<div className="box-head">
-											<PercentagePie value={missingSupport} />
+											<PercentagePie 
+												value={missingSupport} 
+												color="#bd1010"
+											/>
 											<h3>Not supported</h3>
 										</div>
 									</div>
@@ -98,14 +101,20 @@ export default class StatisticsContainer extends React.Component {
 								>
 									<div className="box box--element">
 										<div className="box-head">
-											<PercentagePie value={partialSupport} />
+											<PercentagePie 
+												value={partialSupport} 
+												color="#e0cd28"
+											/>
 											<h3>Partially supported</h3>
 										</div>
 									</div>
 								</Tooltip>
 								<div className="box box--element">
 									<div className="box-head">
-										<PercentagePie value={100 - missingSupport - partialSupport} />
+										<PercentagePie 
+											value={100 - missingSupport - partialSupport} 
+											color="rgb(71, 191, 109)"
+										/>
 										<h3>Fully supported</h3>
 									</div>
 								</div>

@@ -6,6 +6,7 @@ import colorpalette from 'utils/color-array';
 export default class PercentagePie extends React.PureComponent {
 	static propTypes = {
 		value: React.PropTypes.number.isRequired,
+		color: React.PropTypes.string
 	}
 	constructor(props) {
 		super(props);
@@ -13,8 +14,16 @@ export default class PercentagePie extends React.PureComponent {
 	render() {
 		const value = this.props.value;
 		const data = [
-			{name: 'unsupported', value: value},
-			{name: 'supported', value: 100 - value}
+			{
+				name: 'unsupported', 
+				value: value,
+				color: this.props.color ? this.props.color : colorpalette(value, 120, 0, 45, .8)
+			},
+			{
+				name: 'supported', 
+				value: 100 - value,
+				color: '#efefef'
+			}
 		];
 		return (
 			<div className="percentagepie">
@@ -27,7 +36,7 @@ export default class PercentagePie extends React.PureComponent {
 						endAngle={450}
 					>
 						{
-							data.map((item, index) => <Cell key={index} fill={index === 0 ? colorpalette(item.value, 120, 0, 45, .8) : '#efefef'}/>)
+							data.map((item, index) => <Cell key={index} fill={item.color}/>)
 						}	
 					</Pie>
 				</PieChart>

@@ -309,9 +309,21 @@ h1, h2 {
 	.value {
 		font-size: .75rem;
 		position: absolute;
-		top: 20px;
-		left: 15px;
 		color: $grey-light;
+	    top: 0;
+	    left: 0;
+	    width: 30px;
+	    height: 30px;
+	    margin: 13px;
+	    display: block;
+	    background: white;
+	    border-radius: $border-radius-rounded;
+	    vertical-align: middle;
+	    display: inline-flex;
+	    justify-content: center;
+	    align-items: center;
+	    line-height: 100%;
+	    box-shadow: 0 1px 14px -3px #999;
 	}
 }
 
