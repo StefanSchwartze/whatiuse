@@ -706,6 +706,23 @@ h1, h2 {
 /*
 *	Component: Historycontainer
 */
+.progress-container {
+	width: 100%;
+	height: 1rem;
+	border-radius: $border-radius-small;
+	margin-bottom: $spacing-medium;
+	background: $grey-light;
+	.progress {
+		border-radius: $border-radius-small;
+		height: 100%;
+		background: $accent-20;
+		display: inline-block;
+		transition: width 3s;
+	}
+}
+/*
+*	Component: Historycontainer
+*/
 .history-container {
 	width: 100%;
 	display: flex;

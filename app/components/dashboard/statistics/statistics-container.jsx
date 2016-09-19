@@ -5,6 +5,7 @@ import FilterList from '../../shared/filterable-list';
 import ElementsList from '../../shared/elements-list';
 import BrowsersList from '../../shared/browsers-list';
 import ElementsChart from '../../shared/elements-chart';
+import ProgressBar from '../../shared/progressbar';
 
 import classnames from 'classnames';
 
@@ -27,8 +28,14 @@ export default class StatisticsContainer extends React.Component {
 	render() {
 		let pageElem;
 		let timeline;
+		let progressbar;
 		if(Object.keys(this.props.page).length > 0) {
 			
+			if(this.props.page.isChecking) {
+				console.log(this.props.page.progress);
+				progressbar = <ProgressBar progress={this.props.page.progress} />;
+			}
+
 			if(this.props.snapshots && this.props.snapshots.length > 0) {
 			
 				const page = this.props.page;
@@ -44,6 +51,7 @@ export default class StatisticsContainer extends React.Component {
 				}
 
 				pageElem = 	<div>
+							{progressbar}
 							{timeline}
 							<div className="description">
 								<button 
@@ -101,7 +109,10 @@ export default class StatisticsContainer extends React.Component {
 							<FilterList elements={whatifiuse} />
 						</div>
 			} else {
-				pageElem = <span>Not investigated yet.</span>;
+				pageElem = <div>
+							{progressbar}
+							<span>Not investigated yet.</span>
+							</div>;
 			}
 		} else {
 			pageElem = <span>No page selected…</span>;
