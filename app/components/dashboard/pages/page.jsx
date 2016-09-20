@@ -80,7 +80,11 @@ export default class Page extends React.Component {
 									className="button button--wide button--strong button--accent"
 								>Open</Link> : ""
 						}
-						<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >CHECK</button>
+						{
+							!this.props.isChecking ? 
+								<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >CHECK</button> : ""
+						}
+						
 					</div>
 					<div className="title">
 						<span>{this.props.page.title}</span>

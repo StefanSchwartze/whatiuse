@@ -18,9 +18,8 @@ import restify from './rest-api';
 import config from "./config/init";
 
 import axios from "axios";
-import { data as caniuseData } from "caniuse-db/fulldata-json/data-1.0";
-import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, difference, findIndex } from "lodash";
-import { evaluate, sumObjectArrayByProp, getMissingBrowserVersions, getPercentage, getPercentageSum, addVersionUsage, whatIfIDelete } from "./utils/features";
+import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
+import { evaluate, sumResults } from "./utils/features";
 
 process.env.UV_THREADPOOL_SIZE = 128;
 
@@ -121,11 +120,9 @@ io.on('connection', function(socket){
 							progress: (++progress) / that.length, 
 							pageId: id
 						});
-						console.log(item);
 						resolve(results);
 					})
-					.catch((e) => {
-						console.log('Oh no, an error has been catched!');
+					.catch(e => {
 						console.log(e);
 						console.log('Caused by: ' + item);
 						io.emit('progress', {
@@ -141,369 +138,68 @@ io.on('connection', function(socket){
 					});
 			});
 		}
-
-		Promise.all(browserNames.map(evaluateForFeatures)).then(data => {
-			let elementCollection = [];
-			let allSyntaxErrors = [];
-			for (var i = 0; i < data.length; i++) {
-				elementCollection.push(data[i].elementCollection);
-				allSyntaxErrors.push(data[i].syntaxErrors);
-			}
-			const uniqueSyntaxErrors = uniqBy(flatten(allSyntaxErrors), 'message');
-			let elements = sumObjectArrayByProp(flatten(elementCollection), 'feature', ['missing', 'partial']);
-
-			for (var i = 0; i < elements.length; i++) {
-
-				let element = elements[i];
-				let messages = [];
-
-				if(element.missing) {
-					let missing = sumObjectArrayByProp(element.missing, 'alias', ['versions']);
-					messages.push('not supported by: ' + missing.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
-					element.missing = addVersionUsage(missing, browsers);
-					element.impactMissing = (getPercentageSum(element.missing)).toFixed(2);
-				}
-				if(element.partial) {
-					let partial = sumObjectArrayByProp(element.partial, 'alias', ['versions']);
-					messages.push('only partially supported by: ' + partial.map((browser) => { return  ' ' + browser.browser + ' (' + browser.versions.join(', ') + ')'}));
-					element.partial = addVersionUsage(partial, browsers);
-					element.impactPartial = (getPercentageSum(element.partial)).toFixed(2);
-				}
-				element.message = element.title + ' ' + messages.join(' and ');
-			}
-
-			for (var k = 0; k < elements.length; k++) {
-
-				let searchElement = elements[k];
-
-				const getAllElementBrowsers = (element) => {
-					let allBrowsers = [];
-					if(element.partial) {
-						let browsers = getShortBrowsers(element.partial);
-						allBrowsers.push.apply(allBrowsers, browsers);
-						}
-					if(element.missing) {
-						let browsers = getShortBrowsers(element.missing);
-						allBrowsers.push.apply(allBrowsers, browsers);
-					}
-					return allBrowsers;
-				}
-				const getShortBrowsers = (collection) => {
-					let shortBrowsers = [];
-					for (var i = 0; i < collection.length; i++) {
-						const browser = collection[i];
-						for (var j = 0; j < browser.versions.length; j++) {
-							shortBrowsers.push({
-								alias: browser.alias,
-								version: browser.versions[j]
-							});
-						}
-					}
-					return shortBrowsers;
-				}
-				const elementHasBrowsers = (checkElement, compareBrowsers, excludeElement = {}) => {
-					let exclude = excludeElement.feature ? (excludeElement.feature === checkElement.feature) : false;
-					if(!exclude) {
-						let checkElemBrowsers = getAllElementBrowsers(checkElement);
-						const diff = intersectionWith(checkElemBrowsers, compareBrowsers, isEqual);
-						return diff.length > 0;
-					}	
-					return false;
-				}
-				const getElementsByBrowsers = (browsers, elementCollection) => {
-					return elementCollection
-						.filter((element) => {
-							const checkElemBrowsers = getAllElementBrowsers(element);
-							const diff = intersectionWith(checkElemBrowsers, browsers, isEqual);
-							return diff.length > 0;
-						})
-						.map(elem => elem.feature);
-				}
-				const getSortedBrowsersByElements = (element, elementCollection) => {
-
-					let allBrowsers = getAllElementBrowsers(element);
-					let repeatedlyUsedBrowsers = [];
-					let uniqueBrowsers = [];
-
-					for (var i = 0; i < allBrowsers.length; i++) {
-						const browser = allBrowsers[i];
-						let isUniq = true;
-						let j = 0;
-						while(j < elementCollection.length && isUniq) {
-							const hasBrowser = elementHasBrowsers(elementCollection[j], [browser], element);
-							if(hasBrowser) {
-								isUniq = false;
-							} else {
-								j++;
-							}
-						}
-						if(isUniq) {
-							uniqueBrowsers.push(browser);
-						} else {
-							repeatedlyUsedBrowsers.push(browser);
-						}
-					}
-					return {
-						uniqueBrowsers: uniqueBrowsers,
-						repeatedlyUsedBrowsers: repeatedlyUsedBrowsers
-					}
-				}
-				const getUniqueBrowsersByElements = (searchElements, elementCollection, browserset) => {
-
-					const uniqueBrowsers = browserset.filter((browser) => {
-						let isOkay = true;
-						let countOfMatchElems = 0;
-						let j = 0;
-						// check all elements for browser
-						while(j < elementCollection.length && isOkay) {
-
-							const currentElement = elementCollection[j];
-							const browsersFromElement = getAllElementBrowsers(currentElement);
-							const hasBrowser = find(browsersFromElement, (foundBrowser) => { return isEqual(foundBrowser, browser) });
-							
-							if(hasBrowser) {
-								let isOneOf = false;
-								// check if matching element is one of the searched ones
-								for (var i = 0; i < searchElements.length; i++) {
-									if(currentElement.feature === searchElements[i]) {
-										countOfMatchElems = countOfMatchElems + 1;
-										isOneOf = true;
-									}
-								}
-								if(isOneOf) {
-									isOkay = true;
-									j++;
-								} else {
-									isOkay = false;
-								}
-
-							} else {
-								j++;
-							}
-						}
-						// when browser has not matched in all searched elements, kick browser
-						if(countOfMatchElems > searchElements.length) {
-							isOkay = false;
-						}
-						return isOkay;
-					});
-					return uniqueBrowsers;
-				}
-
-				// all browsers of the searched element sorted by group (unique = only used by this element | repeatedly = by more elements used)
-				const sortedBrowsers = getSortedBrowsersByElements(searchElement, elements);
-
-				// the unique browsers from element; can directly have impact by removing element
-				// all elements that also use the browsers from the searched element
-				const commonElements = getElementsByBrowsers(sortedBrowsers.repeatedlyUsedBrowsers, elements.filter(element => element.feature !== searchElement.feature));
-				// check if the repeatedly used browsers from searched element are unique by an element pair
-				
-				const calcValues = (browsers, browsersWithPercentages) => {
-					let sum = 0;
-					for (var i = 0; i < browsers.length; i++) {
-						const currBrowser = browsers[i];
-						let percBrowser = find(browsersWithPercentages, (browser) => {
-			                return browser.alias === currBrowser.alias; 
-			            });
-			            if(percBrowser) {
-			            	const version = find(percBrowser.version_usage, (version) => {
-				                return version.version === currBrowser.version; 
-				            });
-				            if(version) {
-				            	sum += parseFloat(version.usage);
-				            }
-			            }
-					}
-					return sum;
-				}
-
-				const isBrowserUniqueInScope = (browser, scope, elementCollection, sourceElement) => {
-					let matchCount = 0;
-					let j = 0;
-					while(j < elementCollection.length && matchCount < 1) {
-						let hasBrowser = false;
-						if(elementCollection[j].feature !== sourceElement.feature && elementCollection[j][scope]) {
-							const diff = intersectionWith(getShortBrowsers(elementCollection[j][scope]), [browser], isEqual);
-							hasBrowser = diff.length > 0;
-						}
-						if(hasBrowser) {
-							matchCount += 1;
-						}
-						j++;
-					}
-					return matchCount < 1;
-				}
-
-				let repeatedlyUsedInPartial = 0;
-				let repeatedlyUsedInMissing = 0;
-
-				if(searchElement.partial) {
-					repeatedlyUsedInPartial += calcValues(sortedBrowsers.uniqueBrowsers, searchElement.partial);
-					
-					const browsers = sortedBrowsers.repeatedlyUsedBrowsers;
-
-					for (var i = 0; i < browsers.length; i++) {
-						if(isBrowserUniqueInScope(browsers[i], 'partial', elements, searchElement)) {
-							repeatedlyUsedInPartial += calcValues([browsers[i]], searchElement.partial);
-						}
-					}
-					
-				}
-				if(searchElement.missing) {
-					repeatedlyUsedInMissing += calcValues(sortedBrowsers.uniqueBrowsers, searchElement.missing);
-					
-					const browsers = sortedBrowsers.repeatedlyUsedBrowsers;
-					
-					for (var i = 0; i < browsers.length; i++) {
-						if(isBrowserUniqueInScope(browsers[i], 'missing', elements, searchElement)) {
-							repeatedlyUsedInMissing += calcValues([browsers[i]], searchElement.missing); 
-						}
-					}
-				}
-
-				const selfDel = {
-					partial: repeatedlyUsedInPartial,					
-					missing: repeatedlyUsedInMissing
-				}
-
-				let othersDel = [];
-
-				for (var i = 0; i < commonElements.length; i++) {
-
-					const fullElem = elements.find(element => element.feature === commonElements[i]);
-
-					let overallset = getAllElementBrowsers(fullElem);
-					overallset.push.apply(overallset, sortedBrowsers.repeatedlyUsedBrowsers);
-
-					const uniqueBrowsers = getUniqueBrowsersByElements([searchElement.feature, commonElements[i]], elements, uniqWith(overallset, isEqual));
-					if(uniqueBrowsers.length > 0) {
-						othersDel.push({
-							feature: commonElements[i],
-							partial: parseFloat(selfDel.partial) + (fullElem.partial ? calcValues(uniqueBrowsers, fullElem.partial) : 0),
-							missing: parseFloat(selfDel.missing) + (fullElem.missing ? calcValues(uniqueBrowsers, fullElem.missing) : 0)
-						});
-					}
-				}
-
-				const deletePossibilities = {
-					self: selfDel,
-					others: othersDel,
-					all: []
-				}
-
-				searchElement.deletePossibilities = deletePossibilities;
-			}
-
-			const missingBrowsers = getMissingBrowserVersions(elements, 'missing');
-			const partialBrowsers = getMissingBrowserVersions(elements, 'partial');
-
-			const getCheckableBrowsers = (alreadyCheckedBrowsers, allBrowsers) => {
-				return values(allBrowsers.reduce( (prev, current, index, array) => {
-					const browsersWithSameName = alreadyCheckedBrowsers.filter(browser => browser.alias === current.alias);
-					if(browsersWithSameName.length > 0) {
-						const allVersionUsage = browsersWithSameName.length > 1 ?
-							flatten([browsersWithSameName[0].version_usage, browsersWithSameName[1].version_usage]) :
-							browsersWithSameName[0].version_usage;
-						const version_usage = differenceBy(current.version_usage, allVersionUsage, 'version');
-						if(version_usage.length > 0) {
-							prev.result[current.alias] = {
-								browser: current.browser,
-								alias: current.alias,
-								version_usage: version_usage
-							};
-						}
-					} else {
-						prev.result[current.alias] = current;
-					}
-					return prev;
-				},{result: {}}).result);
-			}
-			const restPartialBrowsers = getCheckableBrowsers(partialBrowsers, browsers);
-			const restMissingBrowsers = getCheckableBrowsers(missingBrowsers, browsers);
-
-			const whatIfIUse = (rawElement, partialComparableBrowsers = [], missingComparableBrowsers = []) => {
-				let missing = 0;
-				let partial = 0;
-
-				for (let i = 0; i < partialComparableBrowsers.length; i++) {
-					const currBrowser = partialComparableBrowsers[i];
-					if(rawElement.stats[currBrowser.alias]) {
-						for (let j = 0; j < currBrowser.version_usage.length; j++) {
-							if(rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version]) {
-								const support = rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version];
-								if(support.indexOf('a') >= 0) {
-									partial += currBrowser.version_usage[j].usage;
-								}
-							}
-						}
-
-					}
-				}
-
-				for (let i = 0; i < partialComparableBrowsers.length; i++) {
-					const currBrowser = partialComparableBrowsers[i];
-					if(rawElement.stats[currBrowser.alias]) {
-						for (let j = 0; j < currBrowser.version_usage.length; j++) {
-							if(rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version]) {
-								const support = rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version];
-								if((support.indexOf('y') === -1) && (support.indexOf('a') === -1)) {
-									missing += currBrowser.version_usage[j].usage;
-								}
-							}
-						}
-					}
-				}
-
-				return {
-					name: rawElement.title,
-					missing: missing,
-					partial: partial
-				};
-			}
-
-			let whatIfIUseElements = [];
-
-			const keys = Object.keys(caniuseData);
-			for (var i = 0; i < keys.length; i++) {
-				if((caniuseData[keys[i]].categories.indexOf('CSS') >= 0 || 
-					caniuseData[keys[i]].categories.indexOf('CSS3') >= 0) &&
-					findIndex(elements, (element) => { return element.title === caniuseData[keys[i]].title}) < 0) {
-					const pushableElement = whatIfIUse(caniuseData[keys[i]], restPartialBrowsers, restMissingBrowsers);
-					whatIfIUseElements.push(pushableElement);
-				}
-			}
-			const missingSupport = getPercentage(missingBrowsers, browsers);
-			const partialSupport = getPercentage(partialBrowsers, browsers);
-			console.log(missingSupport, partialSupport);
-
-			let send = {
-				elementCollection: elements,
-				browserCollection: browsers,
-				pageSupport: (100 - missingSupport).toFixed(2),
-				pageId: id,
-				scope: scope,
-				whatIfIUse: whatIfIUseElements || [],
-				syntaxErrors: uniqueSyntaxErrors,
-				missingSupport: missingSupport,
-				partialSupport: partialSupport
-			}
-
+		const saveResults = (send) => {
 			page[scope + 'Support'] = send.pageSupport;
-
 			function updatePage() {
 				return axios.put('http://localhost:3000/api/pages/' + page._id, page);
 			}
 			function saveSnapshot() {
 				return axios.post('http://localhost:3000/api/snapshots/', send);
 			}
-
 			axios
 				.all([updatePage(), saveSnapshot()])
 				.then(axios.spread((page, snapshot) => {
 					io.emit('triggerComplete', { data: snapshot.data });
-				})
-			);
-		});
+				}))
+				.catch((e) => {
+					console.log('axios error');
+					console.log(e);
+				});					
+		}
+
+		const readFile = (item, index, array) => {
+			console.log(index, array);
+			return new Promise((resolve, reject) => {
+				setTimeout(() => {
+					resolve(item+1);
+				}, 1000);
+			})
+		}
+
+		const readFiles = (files) => {
+			var p = Promise.resolve();
+			var results = [];
+			return files.reduce((p, file, index, array) => {
+				return p.then(result => { 
+					if(result) {
+						results.push(result);
+					}
+					return evaluateForFeatures(file, index, array); 
+				});
+			}, p)
+			.then((result) => {
+				results.push(result);
+				const send = sumResults(results, browsers, id, scope);
+ 				saveResults(send);
+			});
+		};
+
+		//readFiles(browserNames);
+
+		Promise
+			.all(browserNames.map(evaluateForFeatures))
+			.then(results => {
+
+				const send = sumResults(results, browsers, id, scope);
+				saveResults(send);
+
+			})
+			.catch((e) => {
+				console.log('very late error');
+				console.log(e);
+				io.emit('triggerComplete', { pageId: id, error: e });
+			});
+
 	});
 
 });

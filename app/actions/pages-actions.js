@@ -85,6 +85,10 @@ class PagesActions {
         page.latestSupport = snapshot.pageSupport;
         return page;
     }
+    checkFailed(data) {
+        this.checked(data.pageId);
+        console.log(data.error);
+    }
 }
 
 module.exports = (alt.createActions(PagesActions));
