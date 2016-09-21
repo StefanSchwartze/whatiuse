@@ -51,7 +51,8 @@ export default class StatisticsContainer extends React.Component {
 				if(snapshots.length > 1) {
 					timeline = <Timeline
 									snapshots={snapshots}
-									isChecking={page.isChecking || false} 
+									isChecking={page.isChecking || false}
+									length={snapshots.length}
 								/>
 				}
 				if(lastSnapshot.partialSupport) {

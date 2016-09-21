@@ -10,7 +10,8 @@ import {orderBy} from 'lodash';
 export default class Timeline extends React.PureComponent {
 	static propTypes = {
 		isChecking: React.PropTypes.bool.isRequired,
-		snapshots: React.PropTypes.array.isRequired
+		snapshots: React.PropTypes.array.isRequired,
+		length: React.PropTypes.number.isRequired
 	}
 	constructor(props) {
 		super(props);
