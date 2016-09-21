@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
 import Timeline from './timeline';
+import DetailTimeline from './detailtimeline';
 import classnames from 'classnames';
 import PercentagePie from '../../shared/percentagepie';
 import FilterList from '../../shared/filterable-list';
@@ -49,7 +50,7 @@ export default class StatisticsContainer extends React.Component {
 				let fullSupport = 100;
 
 				if(snapshots.length > 1) {
-					timeline = <Timeline
+					timeline = <DetailTimeline
 									snapshots={snapshots}
 									isChecking={page.isChecking || false}
 									length={snapshots.length}

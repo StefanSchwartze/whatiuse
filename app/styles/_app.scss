@@ -770,6 +770,9 @@ h1, h2 {
 		padding: $spacing-small;
 		background: $grey;
 		border-radius: $border-radius-small;
+		&--extended {
+			height: 150px;
+		}
 	}
 }
 /*
