@@ -82,7 +82,7 @@ class PagesActions {
         SnapshotsActions.save(snapshot);
         this.checked(snapshot.pageId);
         let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId);
-        page.latestSupport = snapshot.pageSupport;
+        page[scope + 'Support'] = snapshot.pageSupport;
         return page;
     }
     checkFailed(data) {

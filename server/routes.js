@@ -2,7 +2,7 @@ import koaRouter from "koa-router";
 import bcrypt from "bcrypt";
 import uuid from "node-uuid";
 import User from "./models/user";
-import urlToImage from "url-to-image";
+import webshot from "webshot";
 import normalizeBrowsers from "./utils/normalize-browsers";
 import { camelCase } from "lodash";
 
@@ -54,22 +54,24 @@ export default (app) => {
 			'Content-Type' : 'application/json',
 			'Access-Control-Allow-Origin' : '*'
 		});
-		let options = {
-		    width: 1280,
-		    height: 800,
-		    cropHeight: true,
-		    fileQuality: 100,
-		    requestTimeout: 100
-		}
+
 		let fileName = camelCase(this.request.body.title + new Date().getTime()) + '.png';
 		let filePath = (__dirname + '/../public/' + fileName);
 		let self = this;
-		yield urlToImage(this.request.body.url, filePath, options).then(function() {
-			self.status = 200;
-			self.body = { message: "Image was created successfully!", imgSrc: fileName };
-		}).catch(function(err) {
-			console.error(err);
-			self.body = { err: err, message: "Image could not be created!" };
+
+		yield new Promise((resolve, reject) => {
+
+			webshot(this.request.body.url, filePath, function(err) {
+				if(err) {
+					console.error(err);
+					self.body = { err: err, message: "Image could not be created!" };
+					resolve();
+				} else {
+					self.status = 200;
+					self.body = { message: "Image was created successfully!", imgSrc: fileName };
+					resolve();
+				}
+			});
 		});
 	});
 
