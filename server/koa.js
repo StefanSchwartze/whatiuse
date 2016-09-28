@@ -21,8 +21,6 @@ import axios from "axios";
 import { flatten, flattenDeep, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
 import { evaluate, sumResults } from "./utils/features";
 
-process.env.UV_THREADPOOL_SIZE = 128;
-
 const app = koa();
 const env = process.env.NODE_ENV || "development";
 

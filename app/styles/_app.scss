@@ -212,6 +212,11 @@ h1, h2 {
 	&.timeline-container {
 		background: white;
 	}
+	&.login {
+		.input {
+			margin-bottom: $spacing-small;
+		}
+	}
 }
 .dyn-columns {
 	@media only screen and (min-width: 781px) {

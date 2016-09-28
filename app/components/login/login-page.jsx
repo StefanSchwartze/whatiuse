@@ -51,7 +51,7 @@ export default class LoginPage extends React.Component {
 				error = <p>{this.props.LoginStore.error}</p>;
 			}
 			return (
-				<div className="content-container content-container--small">
+				<div className="content-container content-container--small login">
 					<h1 className="pagetitle">Codeimpact</h1>
 					<br/>
 					{error}
