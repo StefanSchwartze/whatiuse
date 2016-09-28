@@ -357,13 +357,13 @@ export default class Navbar extends React.Component {
 										</Tabs>
 							</Modal>
 							<li 
-								className={classnames('nav-list-item', this.state.showModal ? 'active' : '')} 
+								className={classnames('options', 'nav-list-item', this.state.showModal ? 'active' : '')} 
 								onClick={this.showModal.bind(this)}
 							>
-								<span className="icon-settings"></span>
+								<span className="icon-settings"></span>Options
 							</li>
-							<li className="nav-list-item" onClick={this.logout.bind(this)}>
-								<a href="#" className="link"><span className="icon-enter"></span></a>
+							<li className="nav-list-item logout" onClick={this.logout.bind(this)}>
+								<a href="#" className="link"><span className="icon-enter"></span>Logout</a>
 							</li>
 						</ul>
 						{busyComponent}
