@@ -118,93 +118,95 @@ export default class StatisticsContainer extends React.Component {
 				}
 
 				pageElem = 	<div>
-							{progressbar}
-							{timeline}
-							<div className="description">
-								<h1 className="big">Latest result:</h1>
-								
-								{missingSupportElem}
-								{partialSupportElem}
+								<div className="content-container content timeline-container">
+									{progressbar}
+									{timeline}
+								</div>
+								<div className="content-container content statistics-container">
+									<div className="description">
+										<h1 className="big">Latest result:</h1>
+										
+										{missingSupportElem}
+										{partialSupportElem}
 
-								<div className="box box--element">
-									<div className="box-head">
-										<PercentagePie 
-											value={parseFloat(fullSupport.toFixed(2))} 
-											color="rgb(71, 191, 109)"
-										/>
-										<h3>Fully supported</h3>
+										<div className="box box--element">
+											<div className="box-head">
+												<PercentagePie 
+													value={parseFloat(fullSupport.toFixed(2))} 
+													color="rgb(71, 191, 109)"
+												/>
+												<h3>Fully supported</h3>
+											</div>
+										</div>
 									</div>
-								</div>
-							</div>
-							<div className="description">
-								<button 
-									className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
-									onClick={() => this.setState({ showDetailed: true })} 
-								/>								
-								<button 
-									className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
-									onClick={() => this.setState({ showDetailed: false })} 
-								/>								
-							</div>
-							<div className="dyn-columns">
-								<div className="col2">
 									<div className="description">
-										<p>Features with missing support:</p>
+										<button 
+											className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
+											onClick={() => this.setState({ showDetailed: true })} 
+										/>								
+										<button 
+											className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
+											onClick={() => this.setState({ showDetailed: false })} 
+										/>								
 									</div>
-									<ElementsList 
-										currentProjectId={this.props.currentProjectId}
-										currentScope={this.props.currentScope}
-										currentElementId={this.props.currentElementId}
-										layout={this.state.showDetailed ? 'detail' : 'pile'} 
-										elements={elements} 
-										orderProp="impactMissing"
-										unit="%"
-										showMax={4}
-										excerpt={!this.state.showMoreMissing}
-										handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
-									/>
-								</div>
-								<div className="col2">
+									<div className="dyn-columns">
+										<div className="col2">
+											<div className="description">
+												<p>Features with missing support:</p>
+											</div>
+											<ElementsList 
+												currentProjectId={this.props.currentProjectId}
+												currentScope={this.props.currentScope}
+												currentElementId={this.props.currentElementId}
+												layout={this.state.showDetailed ? 'detail' : 'pile'} 
+												elements={elements} 
+												orderProp="impactMissing"
+												unit="%"
+												showMax={4}
+												excerpt={!this.state.showMoreMissing}
+												handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
+											/>
+										</div>
+										<div className="col2">
+											<div className="description">
+												<p>Features with partial support:</p>
+											</div>
+											<ElementsList
+												currentProjectId={this.props.currentProjectId}
+												currentScope={this.props.currentScope}
+												currentElementId={this.props.currentElementId}
+												layout={this.state.showDetailed ? 'detail' : 'pile'} 
+												elements={elements} 
+												orderProp="impactPartial"
+												unit="%"
+												showMax={4}
+												excerpt={!this.state.showMorePartial}
+												handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
+											/>
+										</div>
+									</div>
 									<div className="description">
-										<p>Features with partial support:</p>
+										<p>Frequency of the affected Features:</p>
 									</div>
-									<ElementsList
-										currentProjectId={this.props.currentProjectId}
-										currentScope={this.props.currentScope}
-										currentElementId={this.props.currentElementId}
-										layout={this.state.showDetailed ? 'detail' : 'pile'} 
-										elements={elements} 
-										orderProp="impactPartial"
-										unit="%"
-										showMax={4}
-										excerpt={!this.state.showMorePartial}
-										handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
+									<ElementsChart 
+										elements={elements}
+										orderProp="count"
 									/>
+									<FilterList elements={whatifiuse} />
 								</div>
-							</div>
-							<div className="description">
-								<p>Frequency of the affected Features:</p>
-							</div>
-							<ElementsChart 
-								elements={elements}
-								orderProp="count"
-							/>
-							<FilterList elements={whatifiuse} />
-						</div>
+							</div>;
 			} else {
-				pageElem = <div>
-							{progressbar}
-							<span>Not investigated yet.</span>
+				pageElem = <div className="content-container content statistics-container">
+								{progressbar}
+								<span>Not investigated yet.</span>
 							</div>;
 			}
 		} else {
-			pageElem = <span>No page selected…</span>;
+			pageElem = <div className="content-container content statistics-container">
+							<span>No page selected…</span>;
+						</div>;
 		}
-		return (
-			<div className="content-container content statistics-container">
-				{pageElem}
-			</div>
-		);
+		return <div>{pageElem}</div>;
 	}
 }
 

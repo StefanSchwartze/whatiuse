@@ -55,7 +55,7 @@ export default class Page extends React.Component {
 		}
 		let preview = this.props.page.imgSrc ? 
 			<img src={'/' + this.props.page.imgSrc} width="100%" /> : 
-			<iframe ref="iframe" className="page-thumb" src={this.props.page.url} width="1200" height="700"></iframe>; 
+			<iframe ref="iframe" className="page-thumb" src={this.props.page.url} width="1024" height="700"></iframe>; 
 		return (
 			<div className={classnames(
 							'page', 

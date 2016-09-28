@@ -22,7 +22,6 @@ export default class DetailTimeline extends React.PureComponent {
 		};
 		const renderTooltipContent = (o) => {
 			const { payload, label } = o;
-			console.log(label);
 			return (
 				<div className="history-tooltip">
 					<p className="label">{`${label}`}</p>

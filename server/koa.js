@@ -18,7 +18,7 @@ import restify from './rest-api';
 import config from "./config/init";
 
 import axios from "axios";
-import { flatten, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
+import { flatten, flattenDeep, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
 import { evaluate, sumResults } from "./utils/features";
 
 process.env.UV_THREADPOOL_SIZE = 128;
@@ -184,21 +184,21 @@ io.on('connection', function(socket){
 			});
 		};
 
-		//readFiles(browserNames);
+		readFiles(browserNames);
 
-		Promise
-			.all(browserNames.map(evaluateForFeatures))
-			.then(results => {
+		// Promise
+		// 	.all(browserNames.map(evaluateForFeatures))
+		// 	.then(results => {
 
-				const send = sumResults(results, browsers, id, scope);
-				saveResults(send);
+		// 		const send = sumResults(results, browsers, id, scope);
+		// 		saveResults(send);
 
-			})
-			.catch((e) => {
-				console.log('very late error');
-				console.log(e);
-				io.emit('triggerComplete', { pageId: id, error: e });
-			});
+		// 	})
+		// 	.catch((e) => {
+		// 		console.log('very late error');
+		// 		console.log(e);
+		// 		io.emit('triggerComplete', { pageId: id, error: e });
+		// 	});
 
 	});
 

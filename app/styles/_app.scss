@@ -209,6 +209,9 @@ h1, h2 {
 		display: flex;
 		flex-direction: column;
 	}
+	&.timeline-container {
+		background: white;
+	}
 }
 .dyn-columns {
 	@media only screen and (min-width: 781px) {
@@ -518,7 +521,7 @@ h1, h2 {
 		pointer-events: none;
 		margin-top: 0px;
 		border-color: transparent;
-		border-bottom-color: $grey;
+		border-bottom-color: white;
 		border-width: 20px;
 		margin-left: -20px;
 		transition: margin .25s;
@@ -768,7 +771,6 @@ h1, h2 {
 		width: 100%;
 		height: 60px;
 		padding: $spacing-small;
-		background: $grey;
 		border-radius: $border-radius-small;
 		&--extended {
 			height: 150px;
