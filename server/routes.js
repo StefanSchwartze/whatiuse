@@ -58,10 +58,17 @@ export default (app) => {
 		let fileName = camelCase(this.request.body.title + new Date().getTime()) + '.png';
 		let filePath = (__dirname + '/../public/' + fileName);
 		let self = this;
+		const options = {
+			phantomConfig: {
+				"ssl-protocol": "any"
+			},
+			renderDelay: 3000,
+			quality: 50
+		}
 
 		yield new Promise((resolve, reject) => {
 
-			webshot(this.request.body.url, filePath, function(err) {
+			webshot(this.request.body.url, filePath, options, function(err) {
 				if(err) {
 					console.error(err);
 					self.body = { err: err, message: "Image could not be created!" };
