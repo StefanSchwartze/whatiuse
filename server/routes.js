@@ -60,7 +60,8 @@ export default (app) => {
 		let self = this;
 		const options = {
 			phantomConfig: {
-				"ssl-protocol": "any"
+				"ssl-protocol": "ANY",
+				"ignore-ssl-errors": "true"
 			},
 			renderDelay: 3000,
 			quality: 50
