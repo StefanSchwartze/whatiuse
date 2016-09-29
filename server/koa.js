@@ -143,7 +143,7 @@ io.on('connection', function(socket){
 			page[scope + 'Support'] = send.pageSupport;
 			function updatePage() {
 				return new Promise((resolve, reject) => {
-					Page.findOneAndUpdate(page._id, page, (err, page) => {
+					Page.findOneAndUpdate({id: page._id}, page, (err, page) => {
 						if(err) reject(err);
 						resolve(page);
 					});
