@@ -59,6 +59,7 @@ export default (app) => {
 		let filePath = (__dirname + '/../public/' + fileName);
 		let self = this;
 		const options = {
+			phantomPath: require('phantomjs-prebuilt').path,
 			phantomConfig: {
 				"ssl-protocol": "ANY",
 				"ignore-ssl-errors": "true"
