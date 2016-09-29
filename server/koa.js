@@ -21,6 +21,9 @@ import axios from "axios";
 import { flatten, flattenDeep, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
 import { evaluate, sumResults } from "./utils/features";
 
+import Page from "./models/page";
+import Snapshot from "./models/snapshot";
+
 const app = koa();
 const env = process.env.NODE_ENV || "development";
 
@@ -139,18 +142,29 @@ io.on('connection', function(socket){
 		const saveResults = (send) => {
 			page[scope + 'Support'] = send.pageSupport;
 			function updatePage() {
-				return axios.put('http://localhost:3000/api/pages/' + page._id, page);
+				return new Promise((resolve, reject) => {
+					Page.findOneAndUpdate(page._id, page, (err, page) => {
+						if(err) reject(err);
+						resolve(page);
+					});
+				});
 			}
 			function saveSnapshot() {
-				return axios.post('http://localhost:3000/api/snapshots/', send);
+				return new Promise((resolve, reject) => {
+					const snapshot = new Snapshot(send);
+					snapshot.save(send, (err, snapshott) => {
+						if(err) reject(err);
+						resolve(snapshott);
+					});
+				});
 			}
-			axios
+			Promise
 				.all([updatePage(), saveSnapshot()])
-				.then(axios.spread((page, snapshot) => {
-					io.emit('triggerComplete', { data: snapshot.data });
-				}))
-				.catch((e) => {
-					console.log('axios error');
+				.then(result => {
+					io.emit('triggerComplete', { data: result[1] });
+				})
+				.catch(e => {
+					console.log('Error on saving entity to DB');
 					console.log(e);
 				});					
 		}
