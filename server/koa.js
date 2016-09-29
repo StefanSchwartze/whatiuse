@@ -143,6 +143,7 @@ io.on('connection', function(socket){
 			page[scope + 'Support'] = send.pageSupport;
 			function updatePage() {
 				return new Promise((resolve, reject) => {
+					console.log(page._id);
 					Page.findOneAndUpdate({id: page._id}, page, (err, page) => {
 						if(err) reject(err);
 						resolve(page);
@@ -151,8 +152,8 @@ io.on('connection', function(socket){
 			}
 			function saveSnapshot() {
 				return new Promise((resolve, reject) => {
-					const snapshot = new Snapshot(send);
-					snapshot.save(send, (err, snapshott) => {
+					var snapshot = new Snapshot(send);
+					snapshot.save((err, snapshott) => {
 						if(err) reject(err);
 						resolve(snapshott);
 					});
