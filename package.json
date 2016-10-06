@@ -56,6 +56,7 @@
     "iso": "^4.1.0",
     "jsdom": "^5.6.0",
     "json-loader": "^0.5.4",
+    "json2csv": "^3.7.0",
     "koa": "^1.2.4",
     "koa-body-parser": "^1.1.2",
     "koa-cash": "^1.0.1",

@@ -20,6 +20,7 @@ import config from "./config/init";
 import axios from "axios";
 import { flatten, flattenDeep, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
 import { evaluate, sumResults } from "./utils/features";
+import json2csv from "json2csv";
 
 import Page from "./models/page";
 import Snapshot from "./models/snapshot";
@@ -117,7 +118,7 @@ io.on('connection', function(socket){
 			return new Promise((resolve, reject) => {
 				evaluate({ url : url, browser: item })
 					.then(function(results) {
-						io.emit('progress', { 
+						io.emit('progress', {
 							progress: (++progress) / that.length, 
 							pageId: id
 						});
@@ -170,7 +171,6 @@ io.on('connection', function(socket){
 		}
 
 		const readFile = (item, index, array) => {
-			console.log(index, array);
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
 					resolve(item+1);
@@ -192,6 +192,125 @@ io.on('connection', function(socket){
 			.then((result) => {
 				results.push(result);
 				const send = sumResults(results, browsers, id, scope);
+
+
+
+				const saveCsv = (item, index, that) => {
+					return new Promise((resolve, reject) => {
+						try {
+							var options = {
+								data: item,
+								quotes: "",
+								hasCSVColumnTitle: false
+							}
+							var result = json2csv(options);
+							resolve(result);	
+						} catch (err) {
+							console.error(err);
+							reject(err);
+						}
+					});
+				}
+
+
+
+
+
+				const elements = send.elementCollection;
+
+
+				//console.log('********************FEATURE-COUNT*********************');
+				const newE = elements.map((element) => {return {
+					name: element.feature,
+					count: element.count
+				}});
+
+				//console.log('********************BROWSER-SHARE*********************');
+				const getBrowserVersionShare = (collection) => {
+					let shortBrowsers = [];
+					for (var i = 0; i < collection.length; i++) {
+						const browser = collection[i];
+						for (var j = 0; j < browser.version_usage.length; j++) {
+							const currVersion = browser.version_usage[j];
+							shortBrowsers.push({
+								"nameVersion": browser.alias+currVersion.version,
+								"share": currVersion.usage
+							});
+						}
+					}
+					return shortBrowsers;
+				}
+				const browserShare = getBrowserVersionShare(send.missingBrowsers);
+
+				//console.log('********************FEATURE-BROWSER*********************');
+
+				var combos = []
+
+				for (var i = 0; i < elements.length; i++) {
+
+					const getElementBrowserVersion = (collection, elemname) => {
+						let shortBrowsers = [];
+						for (var i = 0; i < collection.length; i++) {
+							const browser = collection[i];
+							for (var j = 0; j < browser.version_usage.length; j++) {
+								const currVersion = browser.version_usage[j];
+								shortBrowsers.push({
+									"name": elemname,
+									"browserVersion": browser.alias+currVersion.version,
+								});
+							}
+						}
+						return shortBrowsers;
+					}
+
+					const elem = elements[i];
+
+					if(elem.missing) {
+						const combosss = getElementBrowserVersion(elem.missing, elem.feature);
+						combos.push.apply(combos, combosss);
+					}
+
+				}
+
+
+				Promise
+					.all([newE, browserShare, combos].map(saveCsv))
+					.then(results => {
+
+						//console.log(results);
+
+						var child = require('child_process');
+						var python = child.spawn('python', [__dirname + '/compute_input.py']),
+							array = [1,2,3,4,5,6,7,8,9],
+							dataString = '';
+
+						python.stdout.on('data', function(data){
+							console.log('Data: ' + data);
+							//dataString += data.toString();
+						});
+						python.stdout.on('end', function(){
+							//console.log('Sum of numbers=',dataString);
+						});
+						python.stderr.on('data', function (data) {
+							console.log('stderr: ' + data);
+						});
+						python.on('close', function (code) {
+							console.log('child process exited with code ' + code);
+						});
+						//console.log(results);
+						python.stdin.write(JSON.stringify(results.join('/u')));
+						python.stdin.end();
+
+					})
+					.catch((e) => {
+						console.log('very late error');
+						console.log(e);
+					});
+
+
+
+
+
  				saveResults(send);
 			});
 		};

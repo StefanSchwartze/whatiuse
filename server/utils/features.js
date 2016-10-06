@@ -313,8 +313,8 @@ var self = module.exports = {
 		}
 
 		for (var k = 0; k < elements.length; k++) {
-
 			let searchElement = elements[k];
+/*
 
 			const getAllElementBrowsers = (element) => {
 				let allBrowsers = [];
@@ -532,10 +532,18 @@ var self = module.exports = {
 					});
 				}
 			}
-
 			const deletePossibilities = {
 				self: selfDel,
 				others: othersDel,
+				all: []
+			}*/
+
+			const deletePossibilities = {
+				self: {
+					partial: 0,					
+					missing: 0
+				},
+				others: [],
 				all: []
 			}
 
@@ -651,7 +659,9 @@ var self = module.exports = {
 			whatIfIUse: whatIfIUseElements || [],
 			syntaxErrors: uniqueSyntaxErrors,
 			missingSupport: missingSupport,
-			partialSupport: partialSupport
+			partialSupport: partialSupport,
+			missingBrowsers,
+			partialBrowsers
 		}
 
     	return send;
