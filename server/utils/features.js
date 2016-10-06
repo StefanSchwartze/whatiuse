@@ -279,22 +279,9 @@ var self = module.exports = {
         })
         return sum;
     },
-    sumResults: (data, allbrowsers, pageId, dataScope) => {
-
-    	const browsers = allbrowsers;
-    	const id = pageId;
-    	const scope = dataScope;
-    	let elementCollection = [];
-		let allSyntaxErrors = [];
-		for (var i = 0; i < data.length; i++) {
-			elementCollection.push(data[i].elementCollection);
-			allSyntaxErrors.push(data[i].syntaxErrors);
-		}
-		const uniqueSyntaxErrors = uniqBy(flatten(allSyntaxErrors), 'message');
-		let elements = self.sumObjectArrayByProp(flatten(elementCollection), 'feature', ['missing', 'partial']);
-
-		for (var i = 0; i < elements.length; i++) {
-
+    enrichElementWithBrowserData: (elements, browsers) => {
+    	const enrichedElements = [];
+    	for (var i = 0; i < elements.length; i++) {
 			let element = elements[i];
 			let messages = [];
 
@@ -311,12 +298,24 @@ var self = module.exports = {
 				element.impactPartial = (self.getPercentageSum(element.partial)).toFixed(2);
 			}
 			element.message = element.title + ' ' + messages.join(' and ');
+			enrichedElements.push(element);
 		}
+		return enrichedElements;
+    },
+    sumResults: (data, browserCollection, pageId, scope) => {
+
+    	const browsers = browserCollection;
+    	let elementCollection = [];
+		let allSyntaxErrors = [];
+		for (var i = 0; i < data.length; i++) {
+			elementCollection.push.apply(elementCollection, data[i].elementCollection);
+			allSyntaxErrors.push(data[i].syntaxErrors);
+		}
+		const uniqueSyntaxErrors = uniqBy(flatten(allSyntaxErrors), 'message');
+		const elements = self.enrichElementWithBrowserData(self.sumObjectArrayByProp(elementCollection, 'feature', ['missing', 'partial']), browsers);
 
 		for (var k = 0; k < elements.length; k++) {
-			let searchElement = elements[k];
-
-			const deletePossibilities = {
+			elements[k].deletePossibilities = {
 				self: {
 					partial: 0,					
 					missing: 0
@@ -324,126 +323,112 @@ var self = module.exports = {
 				others: [],
 				all: []
 			}
-
-			searchElement.deletePossibilities = deletePossibilities;
 		}
 
 		const missingBrowsers = self.getMissingBrowserVersions(elements, 'missing');
 		const partialBrowsers = self.getMissingBrowserVersions(elements, 'partial');
+		const restPartialBrowsers = self.getCheckableBrowsers(partialBrowsers, browsers);
+		const restMissingBrowsers = self.getCheckableBrowsers(missingBrowsers, browsers);
 
-		const getCheckableBrowsers = (alreadyCheckedBrowsers, allBrowsers) => {
-			return values(allBrowsers.reduce( (prev, current, index, array) => {
-				const browsersWithSameName = alreadyCheckedBrowsers.filter(browser => browser.alias === current.alias);
-				if(browsersWithSameName.length > 0) {
-					const allVersionUsage = browsersWithSameName.length > 1 ?
-						flatten([browsersWithSameName[0].version_usage, browsersWithSameName[1].version_usage]) :
-						browsersWithSameName[0].version_usage;
-					const version_usage = differenceBy(current.version_usage, allVersionUsage, 'version');
-					if(version_usage.length > 0) {
-						prev.result[current.alias] = {
-							browser: current.browser,
-							alias: current.alias,
-							version_usage: version_usage
-						};
-					}
-				} else {
-					prev.result[current.alias] = current;
-				}
-				return prev;
-			},{result: {}}).result);
-		}
-		const restPartialBrowsers = getCheckableBrowsers(partialBrowsers, browsers);
-		const restMissingBrowsers = getCheckableBrowsers(missingBrowsers, browsers);
+		const whatIfIUse = self.getWhatIfIUseElements(elements, restPartialBrowsers, restMissingBrowsers) || [];
 
-		const whatIfIUse = (rawElement, partialComparableBrowsers = [], missingComparableBrowsers = []) => {
-			let missing = 0;
-			let partial = 0;
-
-			for (let i = 0; i < partialComparableBrowsers.length; i++) {
-				const currBrowser = partialComparableBrowsers[i];
-				if(rawElement.stats[currBrowser.alias]) {
-					for (let j = 0; j < currBrowser.version_usage.length; j++) {
-						if(rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version]) {
-							const support = rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version];
-							if(support.indexOf('a') >= 0) {
-								partial += currBrowser.version_usage[j].usage;
-							}
-						}
-					}
-
-				}
-			}
-
-			for (let i = 0; i < partialComparableBrowsers.length; i++) {
-				const currBrowser = partialComparableBrowsers[i];
-				if(rawElement.stats[currBrowser.alias]) {
-					for (let j = 0; j < currBrowser.version_usage.length; j++) {
-						if(rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version]) {
-							const support = rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version];
-							if((support.indexOf('y') === -1) && (support.indexOf('a') === -1)) {
-								missing += currBrowser.version_usage[j].usage;
-							}
-						}
-					}
-				}
-			}
-
-			return {
-				name: rawElement.title,
-				missing: missing,
-				partial: partial
-			};
-		}
-		const getShortBrowsersWithUsage = (collection) => {
-			let shortBrowsers = [];
-			for (var i = 0; i < collection.length; i++) {
-				const browser = collection[i];
-				for (var j = 0; j < browser.version_usage.length; j++) {
-					shortBrowsers.push({
-						alias: browser.alias,
-						version: browser.version_usage[j].version,
-						usage: browser.version_usage[j].usage
-					});
-				}
-			}
-			return shortBrowsers;
-		}
-
-		let whatIfIUseElements = [];
-
-		const keys = Object.keys(caniuseData);
-		for (var i = 0; i < keys.length; i++) {
-			if((caniuseData[keys[i]].categories.indexOf('CSS') >= 0 || 
-				caniuseData[keys[i]].categories.indexOf('CSS3') >= 0) &&
-				findIndex(elements, (element) => { return element.title === caniuseData[keys[i]].title}) < 0) {
-				const pushableElement = whatIfIUse(caniuseData[keys[i]], restPartialBrowsers, restMissingBrowsers);
-				whatIfIUseElements.push(pushableElement);
-			}
-		}
 		const missingSupport = self.getPercentage(missingBrowsers, browsers);
 		let partialSupport = 0;
 
-		const partialRest = differenceWith(getShortBrowsersWithUsage(partialBrowsers), getShortBrowsersWithUsage(missingBrowsers), isEqual);
+		const partialRest = differenceWith(self.getShortBrowsersWithUsage(partialBrowsers), self.getShortBrowsersWithUsage(missingBrowsers), isEqual);
 		for (var i = 0; i < partialRest.length; i++) {
 			partialSupport += partialRest[i].usage;
 		}
 
 		let send = {
 			elementCollection: elements,
-			browserCollection: browsers,
 			pageSupport: (100 - missingSupport).toFixed(2),
-			pageId: id,
-			scope: scope,
-			whatIfIUse: whatIfIUseElements || [],
 			syntaxErrors: uniqueSyntaxErrors,
-			missingSupport: missingSupport,
-			partialSupport: partialSupport,
+			browserCollection,
+			pageId,
+			scope,
+			whatIfIUse,
+			missingSupport,
+			partialSupport,
 			missingBrowsers,
 			partialBrowsers
 		}
 
     	return send;
     },
+    getWhatIfIUseElements: (elements, partialBrowsers, missingBrowsers) => {
+    	let whatIfIUseElements = [];
+		const keys = Object.keys(caniuseData);
+		for (var i = 0; i < keys.length; i++) {
+			if((caniuseData[keys[i]].categories.indexOf('CSS') >= 0 || 
+				caniuseData[keys[i]].categories.indexOf('CSS3') >= 0) &&
+				findIndex(elements, (element) => { return element.title === caniuseData[keys[i]].title}) < 0) {
+				const pushableElement = self.whatIfIUse(caniuseData[keys[i]], partialBrowsers, missingBrowsers);
+				whatIfIUseElements.push(pushableElement);
+			}
+		}
+		return whatIfIUseElements;
+    },
+    whatIfIUse: (rawElement, partialComparableBrowsers = [], missingComparableBrowsers = []) => {
+		let missing = 0;
+		let partial = 0;
+
+		for (let i = 0; i < partialComparableBrowsers.length; i++) {
+			const currBrowser = partialComparableBrowsers[i];
+			if(rawElement.stats[currBrowser.alias]) {
+				for (let j = 0; j < currBrowser.version_usage.length; j++) {
+					if(rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version]) {
+						const support = rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version];
+						if(support.indexOf('a') >= 0) {
+							partial += currBrowser.version_usage[j].usage;
+						}
+					}
+				}
+
+			}
+		}
+
+		for (let i = 0; i < partialComparableBrowsers.length; i++) {
+			const currBrowser = partialComparableBrowsers[i];
+			if(rawElement.stats[currBrowser.alias]) {
+				for (let j = 0; j < currBrowser.version_usage.length; j++) {
+					if(rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version]) {
+						const support = rawElement.stats[currBrowser.alias][currBrowser.version_usage[j].version];
+						if((support.indexOf('y') === -1) && (support.indexOf('a') === -1)) {
+							missing += currBrowser.version_usage[j].usage;
+						}
+					}
+				}
+			}
+		}
+
+		return {
+			name: rawElement.title,
+			missing: missing,
+			partial: partial
+		}
+	},
+	getCheckableBrowsers: (alreadyCheckedBrowsers, allBrowsers) => {
+		return values(allBrowsers.reduce( (prev, current, index, array) => {
+			const browsersWithSameName = alreadyCheckedBrowsers.filter(browser => browser.alias === current.alias);
+			if(browsersWithSameName.length > 0) {
+				const allVersionUsage = browsersWithSameName.length > 1 ?
+					flatten([browsersWithSameName[0].version_usage, browsersWithSameName[1].version_usage]) :
+					browsersWithSameName[0].version_usage;
+				const version_usage = differenceBy(current.version_usage, allVersionUsage, 'version');
+				if(version_usage.length > 0) {
+					prev.result[current.alias] = {
+						browser: current.browser,
+						alias: current.alias,
+						version_usage: version_usage
+					};
+				}
+			} else {
+				prev.result[current.alias] = current;
+			}
+			return prev;
+		},{result: {}}).result);
+	},
     getBrowserVersionShare: (collection) => {
 		let shortBrowsers = [];
 		for (var i = 0; i < collection.length; i++) {
@@ -453,6 +438,20 @@ var self = module.exports = {
 				shortBrowsers.push({
 					"nameVersion": browser.alias+currVersion.version,
 					"share": currVersion.usage
+				});
+			}
+		}
+		return shortBrowsers;
+	},
+	getShortBrowsersWithUsage: (collection) => {
+		let shortBrowsers = [];
+		for (var i = 0; i < collection.length; i++) {
+			const browser = collection[i];
+			for (var j = 0; j < browser.version_usage.length; j++) {
+				shortBrowsers.push({
+					alias: browser.alias,
+					version: browser.version_usage[j].version,
+					usage: browser.version_usage[j].usage
 				});
 			}
 		}

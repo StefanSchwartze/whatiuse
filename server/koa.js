@@ -173,41 +173,42 @@ io.on('connection', function(socket){
 				});
 			}
 
-			var p = Promise.resolve();
-			var results = [];
-			return browserNames.reduce((p, browser, index, array) => {
+			const p = Promise.resolve();
+			const allEvaluationResults = [];
+			browserNames.reduce((p, browser, index, array) => {
 				return p.then(result => { 
 					if(result) {
-						results.push(result);
+						allEvaluationResults.push(result);	
 					}
 					return evaluateForFeatures(browser, index, array); 
 				});
 			}, p)
-			.then(result => {
-				results.push(result);
-				const send = sumResults(results, browsers, id, scope);
+			.then(lastEvaluationResult => {
+				allEvaluationResults.push(lastEvaluationResult);
+				const send = sumResults(allEvaluationResults, browsers, id, scope);
  				saveResults(send);
 
 				const elements = send.elementCollection;
 
+				const elementCountImpact = elements
+					.filter(element => element.missing)
+					.map((element) => {
+						return {
+							name: element.feature,
+							count: element.count,
+							impact: impacts[element.feature]['impact']
+						}
+					});
 
-				//console.log('********************FEATURE-COUNT*********************');
-				const elementCountImpact = elements.map((element) => {return {
-					name: element.feature,
-					count: element.count,
-					impact: impacts[element.feature]['impact']
-				}});
-
-				//console.log('********************BROWSER-SHARE*********************');
 				const browserShare = getBrowserVersionShare(send.missingBrowsers);
 
-				//console.log('********************FEATURE-BROWSER*********************');
-				const featureBrowser = []
+				const featureBrowser = [];
 				for (var i = 0; i < elements.length; i++) {
 					if(elements[i].missing) {
 						featureBrowser.push.apply(featureBrowser, getElementBrowserVersion(elements[i].missing, elements[i].feature));
 					}
 				}
+
 				return [elementCountImpact, browserShare, featureBrowser];
 			})
 			.then(checkResultData => {
@@ -215,7 +216,7 @@ io.on('connection', function(socket){
 				Promise
 					.all(checkResultData.map(saveCSV))
 					.then(csvFiles => {
-
+console.log(csvFiles);
 						var child = require('child_process');
 						var python = child.spawn('python', [__dirname + '/compute_input.py']),
 							dataString = '';

@@ -7,17 +7,29 @@ import random
 import math
 import sys
 
+#Read data from stdin
+def get_data():
+    lines = sys.stdin.readline().strip('"').split('/u')
 
+    elements={}
+    for line in string.split(lines[0], '\\n'):
+      name,count,impact=line.strip().split(',')
+      elements.setdefault((name),[])
+      elements[(name)].append( ( int(count), float(impact) ) )
 
+    browsers={}
+    for line in string.split(lines[1], '\\n'):
+      nameVersion,share=line.strip().split(',')
+      browsers.setdefault((nameVersion),[])
+      browsers[(nameVersion)].append((float(share)))
 
+    elements_to_browser={}
+    for line in string.split(lines[2], '\\n'):
+      el_name,browser_name=line.strip().split(',')
+      elements_to_browser.setdefault((el_name),[])
+      elements_to_browser[(el_name)].append((browser_name))
 
-
-
-
-
-
-
-
+    return elements, browsers, elements_to_browser
 
 def p(s):
     powerset = []
@@ -50,11 +62,20 @@ def get_set(sol):
 
     return el_set
 
+def get_removed(sol):
+    z = 0
+    el_set = ()
+    for e in sol:
+        if e == 0:
+            el_set = el_set + (all_elements[z],)
+        z = z +1
+
+    return el_set
 
 def compute_total_cost(sol):
     #print "--------"
     #print "vector:"
-    print sol
+    #print sol
     #pos = get_pos(sol)
     #print "pos: " + str(pos)
     
@@ -100,7 +121,9 @@ def compute_total_cost(sol):
 
 
     print "gained share" + str(initial_lost_browser_share - lost_browser_share)
-    #print "code impact" + str(code_impact)
+    sys.stdout.flush()
+    print "code impact" + str(code_impact)
+    sys.stdout.flush()
 
     delta_code_impact = initial_code_impact - code_impact
 
@@ -114,7 +137,7 @@ def compute_total_cost(sol):
     else:
         total_cost = 10000000
 
-    print "total cost: " + str(total_cost)
+    #print "total cost: " + str(total_cost)
     return total_cost
 
 def delete_graph():
@@ -138,7 +161,7 @@ def create_graph(subset, elements, browsers, elements_to_browser):
             search_str = "MATCH (a:Element { name: '" + el_name + "'} ), (b:Browser { name: '" + b_name + "'} ) CREATE (a)-[:not_supported_by]->(b)"
             result = session.run(search_str) 
 
-def geneticoptimize(domain,costf,popsize=10,step=1, mutprob=0.6,elite=0.2,maxiter=15):
+def geneticoptimize(domain,costf,popsize=10,step=1, mutprob=0.6,elite=0.2,maxiter=20):
     iterations = 0
 
     # Mutation Operation
@@ -172,12 +195,12 @@ def geneticoptimize(domain,costf,popsize=10,step=1, mutprob=0.6,elite=0.2,maxite
     # How many winners from each generation?
     topelite=int(elite*popsize)
 
-    print "initial population:"
-    print pop
-    print "---------------------------------------------------"
-    print "topelite:"
-    print topelite
-    print "---------------------------------------------------"
+    # print "initial population:"
+    # print pop
+    # print "---------------------------------------------------"
+    # print "topelite:"
+    # print topelite
+    # print "---------------------------------------------------"
     # Main loop 
     for i in range(maxiter):
         scores=[(costf(v),v) for v in pop]
@@ -201,9 +224,13 @@ def geneticoptimize(domain,costf,popsize=10,step=1, mutprob=0.6,elite=0.2,maxite
                 pop.append(crossover(ranked[c1],ranked[c2]))
 
         # Print current best score
+        print "Best score"
+        sys.stdout.flush()
         print scores[0][0]
+        sys.stdout.flush()
 
     print "after iterations: " + str(iterations)
+    sys.stdout.flush()
     return scores[0][1]
 
 def compute_total_cost_all():
@@ -232,49 +259,6 @@ def compute_total_cost_all():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Read data from stdin
-def get_data():
-    lines = sys.stdin.readline().strip('"').split('/u')
-
-    elements={}
-    for line in string.split(lines[0], '\\n'):
-      name,count,impact=line.strip().split(',')
-      elements.setdefault((name),[])
-      elements[(name)].append( ( int(count), float(impact) ) )
-    #print elements
-
-    browsers={}
-    for line in string.split(lines[1], '\\n'):
-      nameVersion,share=line.strip().split(',')
-      browsers.setdefault((nameVersion),[])
-      browsers[(nameVersion)].append((float(share)))
-    #print browsers
-
-    elements_to_browser={}
-    for line in string.split(lines[2], '\\n'):
-      el_name,browser_name=line.strip().split(',')
-      elements_to_browser.setdefault((el_name),[])
-      elements_to_browser[(el_name)].append((browser_name))
-    #print elements_to_browser
-
-    return elements, browsers, elements_to_browser
-
 #def main():
 
 #sys.stdout.flush()
@@ -298,12 +282,17 @@ delete_graph()
 create_graph(elements, elements, browsers, elements_to_browser)
 initial_lost_browser_share, initial_code_impact = compute_total_cost_all()
 
-# print "initial graph"
-# print elements
+print "initial graph"
+sys.stdout.flush()
+print elements
+sys.stdout.flush()
 
-#print "initial_lost_browser_share: " + str(initial_lost_browser_share)
-#print "initial_code_impact: " + str(initial_code_impact)
-#print initial_code_impact / initial_lost_browser_share
+print "initial_lost_browser_share: " + str(initial_lost_browser_share)
+sys.stdout.flush()
+print "initial_code_impact: " + str(initial_code_impact)
+sys.stdout.flush()
+print initial_code_impact / initial_lost_browser_share
+sys.stdout.flush()
 
 num_of_els = len(all_elements)
 #print num_of_els
@@ -316,10 +305,22 @@ total_number = math.pow(2, len(all_elements))
 domain=[(0,1)]*(num_of_els)
 
 best = geneticoptimize(domain,compute_total_cost)
+gained_share = compute_total_cost(best)
 
 print "BEST"
+sys.stdout.flush()
 print best
+sys.stdout.flush()
+print "------------------------"
+sys.stdout.flush()
+print gained_share
+sys.stdout.flush()
 print get_set(best)
+sys.stdout.flush()
+print "Remove:"
+sys.stdout.flush()
+print get_removed(best)
+sys.stdout.flush()
 
 session.close()
 
