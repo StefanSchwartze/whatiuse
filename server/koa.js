@@ -19,8 +19,8 @@ import config from "./config/init";
 
 import axios from "axios";
 import { flatten, flattenDeep, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
-import { evaluate, sumResults } from "./utils/features";
-import json2csv from "json2csv";
+import { evaluate, sumResults, getBrowserVersionShare, getElementBrowserVersion, saveCSV } from "./utils/features";
+import impacts from "./utils/feature-impact";
 
 import Page from "./models/page";
 import Snapshot from "./models/snapshot";
@@ -114,53 +114,27 @@ io.on('connection', function(socket){
 		}
 		let progress = 0;
 
-    	const evaluateForFeatures = (item, index, that) => {
-			return new Promise((resolve, reject) => {
-				evaluate({ url : url, browser: item })
-					.then(function(results) {
-						io.emit('progress', {
-							progress: (++progress) / that.length, 
-							pageId: id
-						});
-						resolve(results);
-					})
-					.catch(e => {
-						console.log(e);
-						console.log('Caused by: ' + item);
-						io.emit('progress', {
-							progress: (++progress) / that.length, 
-							pageId: id
-						});
-						resolve([
-							{ 
-								elementCollection: [],
-								syntaxErrors: []
-							}
-						]);
-					});
-			});
-		}
 		const saveResults = (send) => {
 			page[scope + 'Support'] = send.pageSupport;
-			function updatePage() {
+			function updatePage(page) {
 				return new Promise((resolve, reject) => {
-					Page.findOneAndUpdate({id: page._id}, page, (err, page) => {
+					Page.findOneAndUpdate({id: page._id}, page, (err, result) => {
 						if(err) reject(err);
-						resolve(page);
+						resolve(result);
 					});
 				});
 			}
-			function saveSnapshot() {
+			function saveSnapshot(data) {
 				return new Promise((resolve, reject) => {
-					var snapshot = new Snapshot(send);
-					snapshot.save((err, snapshott) => {
+					var snapshot = new Snapshot(data);
+					snapshot.save((err, result) => {
 						if(err) reject(err);
-						resolve(snapshott);
+						resolve(result);
 					});
 				});
 			}
 			Promise
-				.all([updatePage(), saveSnapshot()])
+				.all([updatePage(page), saveSnapshot(send)])
 				.then(result => {
 					io.emit('triggerComplete', { data: result[1] });
 				})
@@ -170,118 +144,80 @@ io.on('connection', function(socket){
 				});					
 		}
 
-		const readFile = (item, index, array) => {
-			return new Promise((resolve, reject) => {
-				setTimeout(() => {
-					resolve(item+1);
-				}, 1000);
-			})
-		}
+		const getUnsupportedFeaturesByBrowsers = (browserNames) => {
 
-		const readFiles = (files) => {
+			const evaluateForFeatures = (browser, index, that) => {
+				return new Promise((resolve, reject) => {
+					evaluate({ url : url, browser: browser })
+						.then(function(results) {
+							io.emit('progress', {
+								progress: (++progress) / that.length, 
+								pageId: id
+							});
+							resolve(results);
+						})
+						.catch(e => {
+							console.log(e);
+							console.log('Caused by: ' + browser);
+							io.emit('progress', {
+								progress: (++progress) / that.length, 
+								pageId: id
+							});
+							resolve([
+								{ 
+									elementCollection: [],
+									syntaxErrors: []
+								}
+							]);
+						});
+				});
+			}
+
 			var p = Promise.resolve();
 			var results = [];
-			return files.reduce((p, file, index, array) => {
+			return browserNames.reduce((p, browser, index, array) => {
 				return p.then(result => { 
 					if(result) {
 						results.push(result);
 					}
-					return evaluateForFeatures(file, index, array); 
+					return evaluateForFeatures(browser, index, array); 
 				});
 			}, p)
-			.then((result) => {
+			.then(result => {
 				results.push(result);
 				const send = sumResults(results, browsers, id, scope);
-
-
-
-				const saveCsv = (item, index, that) => {
-					return new Promise((resolve, reject) => {
-						try {
-							var options = {
-								data: item,
-								quotes: "",
-								hasCSVColumnTitle: false
-							}
-							var result = json2csv(options);
-							resolve(result);	
-						} catch (err) {
-							console.error(err);
-							reject(err);
-						}
-					});
-				}
-
-
-
-
+ 				saveResults(send);
 
 				const elements = send.elementCollection;
 
 
 				//console.log('********************FEATURE-COUNT*********************');
-				const newE = elements.map((element) => {return {
+				const elementCountImpact = elements.map((element) => {return {
 					name: element.feature,
-					count: element.count
+					count: element.count,
+					impact: impacts[element.feature]['impact']
 				}});
 
 				//console.log('********************BROWSER-SHARE*********************');
-				const getBrowserVersionShare = (collection) => {
-					let shortBrowsers = [];
-					for (var i = 0; i < collection.length; i++) {
-						const browser = collection[i];
-						for (var j = 0; j < browser.version_usage.length; j++) {
-							const currVersion = browser.version_usage[j];
-							shortBrowsers.push({
-								"nameVersion": browser.alias+currVersion.version,
-								"share": currVersion.usage
-							});
-						}
-					}
-					return shortBrowsers;
-				}
 				const browserShare = getBrowserVersionShare(send.missingBrowsers);
 
 				//console.log('********************FEATURE-BROWSER*********************');
-
-				var combos = []
-
+				const featureBrowser = []
 				for (var i = 0; i < elements.length; i++) {
-
-					const getElementBrowserVersion = (collection, elemname) => {
-						let shortBrowsers = [];
-						for (var i = 0; i < collection.length; i++) {
-							const browser = collection[i];
-							for (var j = 0; j < browser.version_usage.length; j++) {
-								const currVersion = browser.version_usage[j];
-								shortBrowsers.push({
-									"name": elemname,
-									"browserVersion": browser.alias+currVersion.version,
-								});
-							}
-						}
-						return shortBrowsers;
+					if(elements[i].missing) {
+						featureBrowser.push.apply(featureBrowser, getElementBrowserVersion(elements[i].missing, elements[i].feature));
 					}
-
-					const elem = elements[i];
-
-					if(elem.missing) {
-						const combosss = getElementBrowserVersion(elem.missing, elem.feature);
-						combos.push.apply(combos, combosss);
-					}
-
 				}
-
+				return [elementCountImpact, browserShare, featureBrowser];
+			})
+			.then(checkResultData => {
 
 				Promise
-					.all([newE, browserShare, combos].map(saveCsv))
-					.then(results => {
-
-						//console.log(results);
+					.all(checkResultData.map(saveCSV))
+					.then(csvFiles => {
 
 						var child = require('child_process');
 						var python = child.spawn('python', [__dirname + '/compute_input.py']),
-							array = [1,2,3,4,5,6,7,8,9],
 							dataString = '';
 
 						python.stdout.on('data', function(data){
@@ -297,8 +233,7 @@ io.on('connection', function(socket){
 						python.on('close', function (code) {
 							console.log('child process exited with code ' + code);
 						});
-						//console.log(results);
-						python.stdin.write(JSON.stringify(results.join('/u')));
+						python.stdin.write(JSON.stringify(csvFiles.join('/u')));
 						python.stdin.end();
 
 					})
@@ -307,15 +242,12 @@ io.on('connection', function(socket){
 						console.log(e);
 					});
 
-
-
-
-
- 				saveResults(send);
 			});
-		};
 
-		readFiles(browserNames);
+		}
+		
+
+		getUnsupportedFeaturesByBrowsers(browserNames);
 
 		// Promise
 		// 	.all(browserNames.map(evaluateForFeatures))
