@@ -100,7 +100,6 @@ var io = require('socket.io')(server);
 io.on('connection', function(socket){
 
 	socket.on('triggerURL', function (data) {
-
 		const url = data.url;
 		const id = data.id;
 		const scope = data.scope;
@@ -108,11 +107,17 @@ io.on('connection', function(socket){
 		const browsers = data.browsers;
 		let browserNames = [];
 		for (var i = 0; i < browsers.length; i++) {
-			const browserName = browsers[i].alias;
+			const browserAlias = browsers[i].alias;
+			const browserName = browsers[i].browser;
 			const versions = browsers[i].version_usage;
-			browserNames = browserNames.concat(versions.map((version) => browserName + ' ' + version.version));
+			browserNames = browserNames.concat(versions.map((version) => {return { 
+				short: browserAlias + ' ' + version.version,
+				full: browserName + ' ' + version.version,
+			}}));
 		}
-		let progress = 0;
+		let progressComplete = 0;
+		let progressCheck = 0;
+		let progressReco = 0;
 
 		const saveResults = (send) => {
 			page[scope + 'Support'] = send.pageSupport;
@@ -148,21 +153,25 @@ io.on('connection', function(socket){
 
 			const evaluateForFeatures = (browser, index, that) => {
 				return new Promise((resolve, reject) => {
-					evaluate({ url : url, browser: browser })
+					evaluate({ url : url, browser: browser.short })
 						.then(function(results) {
 							io.emit('progress', {
-								progress: (++progress) / that.length, 
-								pageId: id
+								progress: progressComplete, 
+								pageId: id,
+								status: "Checking " + browser.full + "..."
 							});
+							progressComplete = progressComplete + ((1 / that.length) * 0.6);
 							resolve(results);
 						})
 						.catch(e => {
 							console.log(e);
 							console.log('Caused by: ' + browser);
 							io.emit('progress', {
-								progress: (++progress) / that.length, 
-								pageId: id
+								progress: progressComplete, 
+								pageId: id,
+								status: "Checking " + browser.full + "..."
 							});
+							progressComplete = progressComplete + ((1 / that.length) * 0.6);
 							resolve([
 								{ 
 									elementCollection: [],
@@ -186,7 +195,7 @@ io.on('connection', function(socket){
 			.then(lastEvaluationResult => {
 				allEvaluationResults.push(lastEvaluationResult);
 				const send = sumResults(allEvaluationResults, browsers, id, scope);
- 				saveResults(send);
+ 				//saveResults(send);
 
 				const elements = send.elementCollection;
 
@@ -216,13 +225,19 @@ io.on('connection', function(socket){
 				Promise
 					.all(checkResultData.map(saveCSV))
 					.then(csvFiles => {
-console.log(csvFiles);
+
 						var child = require('child_process');
 						var python = child.spawn('python', [__dirname + '/compute_input.py']),
 							dataString = '';
 
 						python.stdout.on('data', function(data){
 							console.log('Data: ' + data);
+							io.emit('progress', {
+								progress: progressComplete, 
+								pageId: id,
+								status: "Calculating optimizations..."
+							});
+							progressComplete = progressComplete + ((1 / 20) * 0.4);
 							//dataString += data.toString();
 						});
 						python.stdout.on('end', function(){

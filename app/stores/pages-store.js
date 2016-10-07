@@ -47,6 +47,7 @@ class PagesStore {
 	onProgress(data) {
 		let page = findItemById(this.pages, data.pageId);
 		page.progress = data.progress;
+		page.status = data.info;
 		assign(findItemById(this.pages, data.pageId), page);
 	}
 	onCheckComplete(item) {

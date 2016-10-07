@@ -10,11 +10,13 @@ export default class Progressbar extends React.PureComponent {
 	}
 	render() {
 		const progress = this.props.progress || 0;
+		const status = this.props.status || '';
 		return (
 			<div className="progress-container">
 				<span 
 					className="progress"
 					style={{width: progress * 100 + '%'}}>
+					{status}
 				</span>
 			</div>
 		);

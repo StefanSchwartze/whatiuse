@@ -35,7 +35,10 @@ export default class StatisticsContainer extends React.Component {
 		if(Object.keys(this.props.page).length > 0) {
 			
 			if(this.props.page.isChecking) {
-				progressbar = <ProgressBar progress={this.props.page.progress} />;
+				progressbar = 	<ProgressBar 
+									progress={this.props.page.progress || 0} 
+									status={this.props.page.status} 
+								/>;
 			}
 
 			if(this.props.snapshots && this.props.snapshots.length > 0) {

@@ -120,10 +120,10 @@ def compute_total_cost(sol):
     lost_browser_share = lost_share
 
 
-    print "gained share" + str(initial_lost_browser_share - lost_browser_share)
-    sys.stdout.flush()
-    print "code impact" + str(code_impact)
-    sys.stdout.flush()
+    # print "gained share" + str(initial_lost_browser_share - lost_browser_share)
+    # sys.stdout.flush()
+    # print "code impact" + str(code_impact)
+    # sys.stdout.flush()
 
     delta_code_impact = initial_code_impact - code_impact
 
@@ -224,13 +224,12 @@ def geneticoptimize(domain,costf,popsize=10,step=1, mutprob=0.6,elite=0.2,maxite
                 pop.append(crossover(ranked[c1],ranked[c2]))
 
         # Print current best score
-        print "Best score"
-        sys.stdout.flush()
+        #print "Best score"
         print scores[0][0]
         sys.stdout.flush()
 
-    print "after iterations: " + str(iterations)
-    sys.stdout.flush()
+    # print "after iterations: " + str(iterations)
+    # sys.stdout.flush()
     return scores[0][1]
 
 def compute_total_cost_all():
@@ -257,22 +256,14 @@ def compute_total_cost_all():
         
     return lost_share, code_impact
 
-
-
-#def main():
-
-#sys.stdout.flush()
-
 driver = GraphDatabase.driver("bolt://127.0.0.1", auth=basic_auth("neo4j", "sevenval123"))
 session = driver.session()
 
-all_elements = []
 
 elements, browsers, elements_to_browser = get_data()
-#print elements
+all_elements = []
 for el in elements:
     all_elements.append(el)
-
 # print "################"
 # print "all elements:"
 # print all_elements
@@ -283,16 +274,11 @@ create_graph(elements, elements, browsers, elements_to_browser)
 initial_lost_browser_share, initial_code_impact = compute_total_cost_all()
 
 print "initial graph"
-sys.stdout.flush()
 print elements
-sys.stdout.flush()
 
 print "initial_lost_browser_share: " + str(initial_lost_browser_share)
-sys.stdout.flush()
 print "initial_code_impact: " + str(initial_code_impact)
-sys.stdout.flush()
-print initial_code_impact / initial_lost_browser_share
-sys.stdout.flush()
+print "initial cost: " + str(initial_code_impact / initial_lost_browser_share)
 
 num_of_els = len(all_elements)
 #print num_of_els
@@ -305,22 +291,15 @@ total_number = math.pow(2, len(all_elements))
 domain=[(0,1)]*(num_of_els)
 
 best = geneticoptimize(domain,compute_total_cost)
-gained_share = compute_total_cost(best)
+#gained_share = compute_total_cost(best)
 
 print "BEST"
-sys.stdout.flush()
 print best
-sys.stdout.flush()
 print "------------------------"
-sys.stdout.flush()
-print gained_share
-sys.stdout.flush()
+#print gained_share
 print get_set(best)
-sys.stdout.flush()
 print "Remove:"
-sys.stdout.flush()
 print get_removed(best)
-sys.stdout.flush()
 
 session.close()
 
