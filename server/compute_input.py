@@ -72,18 +72,7 @@ def get_removed(sol):
 
     return el_set
 
-def compute_total_cost(sol):
-    #print "--------"
-    #print "vector:"
-    #print sol
-    #pos = get_pos(sol)
-    #print "pos: " + str(pos)
-    
-    #subset = power_set[pos]
-    #print "SUBSET IS"
-    #print subset
-
-    #print "GET SET"
+def compute_share_and_impact(sol):
     subset = get_set(sol)
 
     i = 0
@@ -119,14 +108,12 @@ def compute_total_cost(sol):
         
     lost_browser_share = lost_share
 
+    return lost_browser_share, code_impact
 
-    # print "gained share" + str(initial_lost_browser_share - lost_browser_share)
-    # sys.stdout.flush()
-    # print "code impact" + str(code_impact)
-    # sys.stdout.flush()
+def compute_total_cost(sol):
 
+    lost_browser_share, code_impact = compute_share_and_impact(sol)
     delta_code_impact = initial_code_impact - code_impact
-
     delta = initial_lost_browser_share - lost_browser_share
 
     #print "Delta Browser Share: " + str(delta)
@@ -230,7 +217,7 @@ def geneticoptimize(domain,costf,popsize=10,step=1, mutprob=0.6,elite=0.2,maxite
 
     # print "after iterations: " + str(iterations)
     # sys.stdout.flush()
-    return scores[0][1]
+    return scores
 
 def compute_total_cost_all():
     search_str = "MATCH p=(a:Element)-[r:not_supported_by]->(b:Browser) RETURN a,b LIMIT 2500"
@@ -290,16 +277,34 @@ total_number = math.pow(2, len(all_elements))
 
 domain=[(0,1)]*(num_of_els)
 
-best = geneticoptimize(domain,compute_total_cost)
+
+
+
+
+
+scores = geneticoptimize(domain,compute_total_cost)
 #gained_share = compute_total_cost(best)
 
-print "BEST"
-print best
-print "------------------------"
+row = 10
+a = []
+
+for i in range(row):
+    gained_share, code_impact = compute_share_and_impact(scores[i][1])
+    a[len(a):] = [[initial_lost_browser_share - gained_share, str(get_removed(scores[i][1]))]]
+
+print a
+
+
+
+
+
+
+
+
 #print gained_share
-print get_set(best)
-print "Remove:"
-print get_removed(best)
+# print get_set(best)
+# print "Remove:"
+# print get_removed(best)
 
 session.close()
 

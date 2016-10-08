@@ -5,6 +5,7 @@ module.exports = (browsers) => {
 
 	let unknownBrowsersList = [];
 	let validBrowsersList = [];
+	let botsList = [];
 	let aliases = {
 		"apple mobile safari" : 'ios_saf',
 		"mobile safari" : 'ios_saf',
@@ -29,17 +30,29 @@ module.exports = (browsers) => {
 		"uc browser for android" : "and_uc",
 		"blackberry browser" : "bb"
 	}
+	const bots = ["bot", "spider", "phantomjs", "scraper", "crawler", "scrapy"];
+
+	const isBot = (botArray, browser) => {
+		const name = browser.name.toLowerCase();
+		let i = 0;
+		let isBot = false;
+		while (i < botArray.length && !isBot) {
+			isBot = name.indexOf(botArray[i]) >= 0;
+			i++;			
+		}
+		return isBot;
+	}
 
 	const calculateUsages = (browsers) => {
 
 		let numberOfBrowsers = 0;
 		forEach(browsers, (browser) => {
-			numberOfBrowsers += parseInt(browser.count);
+			numberOfBrowsers += (parseInt(browser.count) || 0);
 		});
 
 		return browsers.map((browser) => {
-			let browserN = browser;
-			browserN.usage = browserN.count / numberOfBrowsers * 100;
+			const browserN = browser;
+			browserN.usage = browser.count / numberOfBrowsers * 100;
 			return browserN;
 		});
 
@@ -146,6 +159,8 @@ module.exports = (browsers) => {
 				usage: browsers[i].usage
 			}
 			validBrowsersList.push(browser);
+		} else if(isBot(bots, browsers[i])) {
+			botsList.push(browsers[i]);
 		} else {
 			unknownBrowsersList.push(browsers[i]);
 		}
@@ -155,7 +170,8 @@ module.exports = (browsers) => {
 
 	let data = {
 		browsers: cleanBrowserList,
-		unknown: sumByNameAndVersion(unknownBrowsersList)
+		unknown: sumByNameAndVersion(unknownBrowsersList),
+		bots: sumByNameAndVersion(botsList)
 	}
 	return data;
 }

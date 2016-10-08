@@ -228,7 +228,7 @@ io.on('connection', function(socket){
 
 						var child = require('child_process');
 						var python = child.spawn('python', [__dirname + '/compute_input.py']),
-							dataString = '';
+							latestData = '';
 
 						python.stdout.on('data', function(data){
 							console.log('Data: ' + data);
@@ -238,13 +238,11 @@ io.on('connection', function(socket){
 								status: "Calculating optimizations..."
 							});
 							progressComplete = progressComplete + ((1 / 20) * 0.4);
-							//dataString += data.toString();
+							console.log(typeof data);
+							latestData = data.toString();
 						});
 						python.stdout.on('end', function(){
-							//console.log('Sum of numbers=',dataString);
-						});
-						python.stderr.on('data', function (data) {
-							console.log('stderr: ' + data);
+							console.log('Result: ', JSON.parse(latestData));
 						});
 						python.on('close', function (code) {
 							console.log('child process exited with code ' + code);
