@@ -38,6 +38,18 @@ export default class Browsers extends React.Component {
 				totalCoverage += newBrowser.completeShare;
 			}
 		}
+		let botShare = 0;
+		let unknownShare = 0;
+		if(scope && this.props.browserscopes[scope]['bots']) {
+			for (var i = 0; i < this.props.browserscopes[scope].bots.length; i++) {
+				botShare += this.props.browserscopes[scope].bots[i].usage;
+			}
+		}
+		if(scope && this.props.browserscopes[scope]['unknown']) {
+			for (var i = 0; i < this.props.browserscopes[scope].unknown.length; i++) {
+				unknownShare += this.props.browserscopes[scope].unknown[i].usage;
+			}
+		}
 		return (
 			<div>
 				<div className="browsers-list">
@@ -70,6 +82,12 @@ export default class Browsers extends React.Component {
 						}
 						) : 
 					<div className="content-container"><p>No data provided</p></div>
+				}
+				{botShare > 0 ? 
+					<div className="content-container"><p>{botShare.toFixed(2)}% usage by Bots / Crawlers / Scrapers.</p></div> : ""
+				}
+				{unknownShare > 0 ? 
+					<div className="content-container"><p>{unknownShare.toFixed(2)}% usage by Browsers not listed in Caniuse-db.</p></div> : ""
 				}
 			</div>
 		);

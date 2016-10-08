@@ -13,7 +13,8 @@ const ProjectSchema = new mongoose.Schema({
 		},
 		fdx: {
 			browsers: [],
-			unknown: []
+			unknown: [],
+			bots: []
 		}
 	}
 });
