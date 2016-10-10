@@ -218,6 +218,9 @@ io.on('connection', function(socket){
 					}
 				}
 
+// console.log(JSON.stringify(elementCountImpact));
+// console.log(JSON.stringify(browserShare));
+// console.log(JSON.stringify(featureBrowser));
 				return [elementCountImpact, browserShare, featureBrowser];
 			})
 			.then(checkResultData => {
@@ -225,7 +228,6 @@ io.on('connection', function(socket){
 				Promise
 					.all(checkResultData.map(saveCSV))
 					.then(csvFiles => {
-
 						var child = require('child_process');
 						var python = child.spawn('python', [__dirname + '/compute_input.py']),
 							latestData = '';
@@ -238,7 +240,6 @@ io.on('connection', function(socket){
 								status: "Calculating optimizations..."
 							});
 							progressComplete = progressComplete + ((1 / 20) * 0.4);
-							console.log(typeof data);
 							latestData = data.toString();
 						});
 						python.stdout.on('end', function(){

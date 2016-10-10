@@ -6,28 +6,28 @@
       "impact":0.25
    },
    "multibackgrounds":{
-      "impact":0.25
+      "impact":1
    },
    "border-image":{
       "impact":0.1
    },
    "background-img-opts":{
-      "impact":0.1
+      "impact":0.25
    },
    "css-gencontent":{
-      "impact":0.1
+      "impact":0.25
    },
    "css-fixed":{
       "impact":1
    },
    "css-sel3":{
-      "impact":1
+      "impact":0.25
    },
    "css-textshadow":{
-      "impact":0.1
+      "impact":0.25
    },
    "css-boxshadow":{
-      "impact":0.1
+      "impact":0.25
    },
    "css3-colors":{
       "impact":0.25
@@ -42,7 +42,7 @@
       "impact":1
    },
    "border-radius":{
-      "impact":0.1
+      "impact":0.25
    },
    "transforms2d":{
       "impact":1
@@ -135,7 +135,7 @@
       "impact":0.25
    },
    "css-filters":{
-      "impact":0.25
+      "impact":0.1
    },
    "getcomputedstyle":{
       "impact":1
