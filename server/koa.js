@@ -195,7 +195,7 @@ io.on('connection', function(socket){
 			.then(lastEvaluationResult => {
 				allEvaluationResults.push(lastEvaluationResult);
 				const send = sumResults(allEvaluationResults, browsers, id, scope);
- 				//saveResults(send);
+ 				saveResults(send);
 
 				const elements = send.elementCollection;
 
@@ -218,9 +218,6 @@ io.on('connection', function(socket){
 					}
 				}
 
-// console.log(JSON.stringify(elementCountImpact));
-// console.log(JSON.stringify(browserShare));
-// console.log(JSON.stringify(featureBrowser));
 				return [elementCountImpact, browserShare, featureBrowser];
 			})
 			.then(checkResultData => {
