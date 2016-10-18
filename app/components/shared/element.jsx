@@ -52,7 +52,7 @@ export default class ElementBox extends React.PureComponent {
 								return browserPiles;
 							})}
 						</li>
-						<li>What if I delete?<br/>
+						{/*<li>What if I delete?<br/>
 							<ul className="mixed-list">
 								<li className="mixed-list-item">
 									<div className="piles">
@@ -72,7 +72,7 @@ export default class ElementBox extends React.PureComponent {
 										invert={true}
 									/>
 								</li>
-								{this.props.element.deletePossibilities.others && this.props.element.deletePossibilities.others.map((item, index) => {
+								{{this.props.element.deletePossibilities.others && this.props.element.deletePossibilities.others.map((item, index) => {
 									let messages = [];
 									const missing = item.missing.toFixed(2);
 									const partial = item.partial.toFixed(2);
@@ -126,9 +126,9 @@ export default class ElementBox extends React.PureComponent {
 											</li>
 										</Tooltip>
 									)
-								})}
+								})}}
 							</ul>
-						</li>
+						</li>*/}
 					</ul>
 				</div>
 			</div>

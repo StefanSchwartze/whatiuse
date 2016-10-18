@@ -186,19 +186,6 @@ io.on('connection', function(socket){
 			.then(evaluationResults => sumData(evaluationResults, browsers))
 			.then(summary => {
 				const { syntaxErrors, elementCollection } = summary;
-
-				for (var k = 0; k < elementCollection.length; k++) {
-					elementCollection[k].deletePossibilities = {
-						self: {
-							partial: 0,					
-							missing: 0
-						},
-						others: [],
-						all: []
-					}
-				}
-
-
 				const missingBrowsers = getMissingBrowserVersions(elementCollection, 'missing');
 				const partialBrowsers = getMissingBrowserVersions(elementCollection, 'partial');
 				const whatIfIUse = getWhatIfIUseElements(elementCollection, getCheckableBrowsers(partialBrowsers, browsers), getCheckableBrowsers(missingBrowsers, browsers)) || [];
