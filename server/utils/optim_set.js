@@ -14,6 +14,15 @@ function isInvalidVector(vector) {
 	const isInvalid = pos === vector.length-1;
 	return isInvalid;
 }
+function getResult(solution) {
+	const result = [];
+	for (var i = 0; i < solution.vector.length; i++) {
+		if(solution.vector[i]) {
+			result.push(data[i]);
+		}
+	}
+	return result;
+}
 
 class Solution {
 	constructor(vector, features) {
@@ -70,8 +79,9 @@ class Solution {
 		newV.push.apply(newV, newV2);
 		if(isInvalidVector(newV)) {
 			this.crossover(parent2);
+		} else {
+			this.vector = newV;
 		}
-		this.vector = newV;
 	}
 }
 
@@ -104,26 +114,14 @@ class Generation {
 	display() {
 		console.log(this);
 	}
-	getResult() {
-		const result = [];
-		const winner = this.population[0];
-		for (var i = 0; i < winner.vector.length; i++) {
-			if(winner.vector[i]) {
-				result.push(data[i]);
-			}
-		}
-		return result;
-	}
 	nextGeneration() {
 
 		const newGeneration = new Generation(data);
-
 		const randomParentIndex1 = randomIntFromInterval(0, this.elite - 1);
-		const randomParent1Mem = this.population[randomParentIndex1];
-		const randomParent1 = JSON.parse(JSON.stringify(randomParent1Mem.vector));
-		
 		const randomParentIndex2 = randomIntFromInterval(0, this.elite - 1, randomParentIndex1);
+		const randomParent1Mem = this.population[randomParentIndex1];
 		const randomParent2Mem = this.population[randomParentIndex2];
+		const randomParent1 = JSON.parse(JSON.stringify(randomParent1Mem.vector));
 		const randomParent2 = JSON.parse(JSON.stringify(randomParent2Mem.vector));
 
 		for (var i = 0; i < this.population.length; i++) {
@@ -132,7 +130,7 @@ class Generation {
 				newGeneration.population.push(this.population[i]);
 			} else {
 				newGeneration.population.push(new Solution(randomParent1));
-				if(Math.random() > 0.6) {
+				if(Math.random() > 0.5) {
 					// mutate
 					newGeneration.population[i].mutate();
 				} else {
@@ -149,21 +147,28 @@ class Generation {
 		newGeneration.generationNumber = this.generationNumber + 1;
 		newGeneration.elite = this.elite;
 		newGeneration.size = this.size;
-newGeneration.display();
 		return newGeneration;
 	}
 
 }
 
 var generation = new Generation(data, 10);
+const result = {};
+const resultArray = [];
 
 for (var i = 0; i < 50; i++) {
 	generation = generation.nextGeneration();
+	for (var j = 0; j < generation.population.length; j++) {
+		result[generation.population[j].cost] = generation.population[j];
+	}
 }
 
-// generation.sort();
 generation.display();
-//generation.generation();
-const result = generation.getResult();
-console.log(result);
-// console.log(generation.population[0])
+	
+for (var k = 0; k < Object.keys(result).length; k++) {
+	const key = Object.keys(result)[k];
+	resultArray.push(result[key]);
+}
+
+console.log(getResult(resultArray.sort((a,b) => a.cost - b.cost)[0]));
+// console.log(resultArray.sort((a,b) => b.cost - a.cost).map(elem => elem.cost));
