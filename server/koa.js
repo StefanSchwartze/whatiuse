@@ -210,23 +210,8 @@ io.on('connection', function(socket){
 					});
 
 				return elementCountImpact;
-// console.log(JSON.stringify(elementCountImpact));
-
-// 				const browserShare = getBrowserVersionShare(send.missingBrowsers);
-
-// 				const featureBrowser = [];
-// 				for (var i = 0; i < elements.length; i++) {
-// 					if(elements[i].missing) {
-// 						featureBrowser.push.apply(featureBrowser, getElementBrowserVersion(elements[i].missing, elements[i].feature));
-// 					}
-// 				}
-
-// 				return [elementCountImpact, browserShare, featureBrowser];
 			})
 			.then(checkResultData => {
-				// console.log(JSON.stringify(checkResultData[0]));
-				// console.log(JSON.stringify(checkResultData[1]));
-				// console.log(JSON.stringify(checkResultData[2]));
 				var child = require('child_process');
 
 				var workerProcess = child.spawn('node', [__dirname + '/utils/optim_set.js', checkResultData]);

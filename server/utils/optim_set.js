@@ -6,27 +6,48 @@ const randomIntFromInterval = function(min,max,except) {
 	const number = Math.floor(Math.random()*(max-min+1)+min);
     return (number === except) ? randomIntFromInterval(min,max,except) : number;
 }
-function isInvalidVector(vector) {
+const isInvalidVector = function(vector) {
 	let pos = 0;
 	while(pos < vector.length-1 && vector[pos] === vector[pos+1] && (vector[pos] === false)) {
 		pos++;
 	}
-	const isInvalid = pos === vector.length-1;
-	return isInvalid;
+	return pos === vector.length-1;
 }
-function getResult(solution) {
+const getResult = function(solution) {
 	const result = [];
 	for (var i = 0; i < solution.vector.length; i++) {
 		if(solution.vector[i]) {
 			result.push(data[i]);
 		}
 	}
-	return result;
+	return {
+		collection: result,
+		gained_share: solution.gained_share,
+		cost: solution.cost
+	};
 }
+const allBrowsers = data.reduce((prev, current, index, array) => {
+	for (var i = 0; i < current.missing.length; i++) {
+		const curr = current.missing[i].nameVersion;
+		if(!prev[curr]) {
+			prev[curr] = {
+				nameVersion: current.missing[i].nameVersion,
+				share: current.missing[i].share,
+				count: 1
+			}
+		} else {
+			prev[curr].count += 1;
+		}
+	}
+	return prev;
+},{});
+
+console.log(allBrowsers);
 
 class Solution {
 	constructor(vector, features) {
 		this.cost = 9999;
+		this.gained_share = 0;
 		if(vector) this.vector = vector;
 	}
 	random(length) {
@@ -41,23 +62,49 @@ class Solution {
 		}
 	}
 	calcCost() {
-		const browsers = [];
 		let impact = 0;
+		// const resultBrowsers = [];
+		const localBrowserCopy = JSON.parse(JSON.stringify(allBrowsers));
+
+
+
 		for (var i = 0; i < this.vector.length; i++) {
 			if(this.vector[i]) {
-				browsers.push.apply(browsers, data[i].missing);
 				impact += ((data[i].impact || 1) * (data[i].count || 1));
+
+				const b = data[i].missing;
+				for (var p = 0; p < b.length; p++) {
+					localBrowserCopy[b[p].nameVersion].count -= 1;
+				}
+
 			}
 		}
-		const allB = browsers.reduce((prev, current) => {
-			if(!(current['nameVersion'] in prev.result)) {
-				prev.result[current['nameVersion']] = current;
-				prev.sum += current.share;
+
+		let sum = 0;
+		for (var k = 0; k < Object.keys(localBrowserCopy).length; k++) {
+			const key = Object.keys(localBrowserCopy)[k];
+			if(localBrowserCopy[key].count < 1) {
+				sum += localBrowserCopy[key].share;
+				// resultBrowsers.push(localBrowserCopy[key]);
 			}
-			return prev;
-		},{result: {}, sum: 0});
-		const ende = impact / allB.sum;
-		this.cost = ende
+		}
+
+
+// console.log(localBrowserCopy);
+
+
+
+
+		// const allB = resultBrowsers.reduce((prev, current) => {
+		// 	if(!(current['nameVersion'] in prev.result)) {
+		// 		prev.result[current['nameVersion']] = current;
+		// 		prev.sum += current.share;
+		// 	}
+		// 	return prev;
+		// },{result: {}, sum: 0});
+
+		this.cost = impact / sum;
+		this.gained_share = sum;
 	}
 	mutate() {
 		if (Math.random() > 0.5) return;
@@ -84,7 +131,6 @@ class Solution {
 		}
 	}
 }
-
 
 class Generation {
 
@@ -121,8 +167,8 @@ class Generation {
 		const randomParentIndex2 = randomIntFromInterval(0, this.elite - 1, randomParentIndex1);
 		const randomParent1Mem = this.population[randomParentIndex1];
 		const randomParent2Mem = this.population[randomParentIndex2];
-		const randomParent1 = JSON.parse(JSON.stringify(randomParent1Mem.vector));
-		const randomParent2 = JSON.parse(JSON.stringify(randomParent2Mem.vector));
+		const randomParent1 = randomParent1Mem.vector;
+		const randomParent2 = randomParent2Mem.vector;
 
 		for (var i = 0; i < this.population.length; i++) {
 
@@ -130,16 +176,12 @@ class Generation {
 				newGeneration.population.push(this.population[i]);
 			} else {
 				newGeneration.population.push(new Solution(randomParent1));
-				if(Math.random() > 0.5) {
-					// mutate
+				if(Math.random() > 0.6) {
 					newGeneration.population[i].mutate();
 				} else {
-					// crossover
 					newGeneration.population[i].crossover(randomParent2);
 				}
-
 				newGeneration.population[i].calcCost();
-
 			}
 		}
 
@@ -156,19 +198,18 @@ var generation = new Generation(data, 10);
 const result = {};
 const resultArray = [];
 
-for (var i = 0; i < 50; i++) {
+for (var i = 0; i < 500; i++) {
 	generation = generation.nextGeneration();
 	for (var j = 0; j < generation.population.length; j++) {
 		result[generation.population[j].cost] = generation.population[j];
 	}
 }
-
-generation.display();
 	
 for (var k = 0; k < Object.keys(result).length; k++) {
 	const key = Object.keys(result)[k];
 	resultArray.push(result[key]);
 }
 
-console.log(getResult(resultArray.sort((a,b) => a.cost - b.cost)[0]));
-// console.log(resultArray.sort((a,b) => b.cost - a.cost).map(elem => elem.cost));
+// console.log(getResult(resultArray.sort((a,b) => a.cost - b.cost)[0]));
+console.log(resultArray.sort((a,b) => b.cost - a.cost).map(el => getResult(el)));
+//console.log(resultArray.sort((a,b) => b.cost - a.cost));
