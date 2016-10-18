@@ -198,62 +198,55 @@ io.on('connection', function(socket){
  				saveResults(send);
 
 				const elements = send.elementCollection;
-
 				const elementCountImpact = elements
 					.filter(element => element.missing)
 					.map((element) => {
 						return {
 							name: element.feature,
 							count: element.count,
-							impact: impacts[element.feature]['impact']
+							impact: impacts[element.feature]['impact'],
+							missing: getBrowserVersionShare(element.missing)
 						}
 					});
 
-				const browserShare = getBrowserVersionShare(send.missingBrowsers);
+				return elementCountImpact;
+// console.log(JSON.stringify(elementCountImpact));
 
-				const featureBrowser = [];
-				for (var i = 0; i < elements.length; i++) {
-					if(elements[i].missing) {
-						featureBrowser.push.apply(featureBrowser, getElementBrowserVersion(elements[i].missing, elements[i].feature));
-					}
-				}
+// 				const browserShare = getBrowserVersionShare(send.missingBrowsers);
 
-				return [elementCountImpact, browserShare, featureBrowser];
+// 				const featureBrowser = [];
+// 				for (var i = 0; i < elements.length; i++) {
+// 					if(elements[i].missing) {
+// 						featureBrowser.push.apply(featureBrowser, getElementBrowserVersion(elements[i].missing, elements[i].feature));
+// 					}
+// 				}
+
+// 				return [elementCountImpact, browserShare, featureBrowser];
 			})
 			.then(checkResultData => {
+				// console.log(JSON.stringify(checkResultData[0]));
+				// console.log(JSON.stringify(checkResultData[1]));
+				// console.log(JSON.stringify(checkResultData[2]));
+				var child = require('child_process');
 
-				Promise
-					.all(checkResultData.map(saveCSV))
-					.then(csvFiles => {
-						var child = require('child_process');
-						var python = child.spawn('python', [__dirname + '/compute_input.py']),
-							latestData = '';
+				var workerProcess = child.spawn('node', [__dirname + '/utils/optim_set.js', checkResultData]);
 
-						python.stdout.on('data', function(data){
-							console.log('Data: ' + data);
-							io.emit('progress', {
-								progress: progressComplete, 
-								pageId: id,
-								status: "Calculating optimizations..."
-							});
-							progressComplete = progressComplete + ((1 / 20) * 0.4);
-							latestData = data.toString();
-						});
-						python.stdout.on('end', function(){
-							console.log('Result: ', JSON.parse(latestData));
-						});
-						python.on('close', function (code) {
-							console.log('child process exited with code ' + code);
-						});
-						python.stdin.write(JSON.stringify(csvFiles.join('/u')));
-						python.stdin.end();
+				workerProcess.stdout.on('data', function (data) {
+					console.log('stdout: ' + data);
+				});
 
-					})
-					.catch((e) => {
-						console.log('very late error');
-						console.log(e);
-					});
+				workerProcess.stderr.on('data', function (data) {
+					console.log('stderr: ' + data);
+				});
 
+				workerProcess.on('close', function (code) {
+					console.log('child process exited with code ' + code);
+				});					
+
+			})
+			.catch((e) => {
+				console.log('very late error');
+				console.log(e);
 			});
 
 		}
