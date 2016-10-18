@@ -302,17 +302,40 @@ var self = module.exports = {
 		}
 		return enrichedElements;
     },
-    sumResults: (data, browserCollection, pageId, scope) => {
+    sumData: (data, browserCollection) => {
 
     	const browsers = browserCollection;
     	let elementCollection = [];
 		let allSyntaxErrors = [];
+
 		for (var i = 0; i < data.length; i++) {
 			elementCollection.push.apply(elementCollection, data[i].elementCollection);
 			allSyntaxErrors.push(data[i].syntaxErrors);
 		}
 		const uniqueSyntaxErrors = uniqBy(flatten(allSyntaxErrors), 'message');
 		const elements = self.enrichElementWithBrowserData(self.sumObjectArrayByProp(elementCollection, 'feature', ['missing', 'partial']), browsers);
+
+    	return {
+    		syntaxErrors: uniqueSyntaxErrors,
+    		elementCollection: elements
+    	}
+    },
+    sumResults: (data, browserCollection, pageId, scope) => {
+
+    	const browsers = browserCollection;
+    	let elementCollection = [];
+		let allSyntaxErrors = [];
+
+
+
+		for (var i = 0; i < data.length; i++) {
+			elementCollection.push.apply(elementCollection, data[i].elementCollection);
+			allSyntaxErrors.push(data[i].syntaxErrors);
+		}
+		const uniqueSyntaxErrors = uniqBy(flatten(allSyntaxErrors), 'message');
+		const elements = self.enrichElementWithBrowserData(self.sumObjectArrayByProp(elementCollection, 'feature', ['missing', 'partial']), browsers);
+
+
 
 		for (var k = 0; k < elements.length; k++) {
 			elements[k].deletePossibilities = {
@@ -329,16 +352,18 @@ var self = module.exports = {
 		const partialBrowsers = self.getMissingBrowserVersions(elements, 'partial');
 		const restPartialBrowsers = self.getCheckableBrowsers(partialBrowsers, browsers);
 		const restMissingBrowsers = self.getCheckableBrowsers(missingBrowsers, browsers);
-
 		const whatIfIUse = self.getWhatIfIUseElements(elements, restPartialBrowsers, restMissingBrowsers) || [];
-
 		const missingSupport = self.getPercentage(missingBrowsers, browsers);
-		let partialSupport = 0;
 
+		let partialSupport = 0;
 		const partialRest = differenceWith(self.getShortBrowsersWithUsage(partialBrowsers), self.getShortBrowsersWithUsage(missingBrowsers), isEqual);
 		for (var i = 0; i < partialRest.length; i++) {
 			partialSupport += partialRest[i].usage;
 		}
+
+
+
+
 
 		let send = {
 			elementCollection: elements,

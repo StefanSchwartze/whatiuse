@@ -23,7 +23,8 @@ const getResult = function(solution) {
 	return {
 		collection: result,
 		gained_share: solution.gained_share,
-		cost: solution.cost
+		cost: solution.cost,
+		kicked_browsers: solution.kicked_browsers
 	};
 }
 const allBrowsers = data.reduce((prev, current, index, array) => {
@@ -33,16 +34,16 @@ const allBrowsers = data.reduce((prev, current, index, array) => {
 			prev[curr] = {
 				nameVersion: current.missing[i].nameVersion,
 				share: current.missing[i].share,
-				count: 1
+				unsupportedCount: 1
 			}
 		} else {
-			prev[curr].count += 1;
+			prev[curr].unsupportedCount += 1;
 		}
 	}
 	return prev;
 },{});
 
-console.log(allBrowsers);
+//console.log(allBrowsers);
 
 class Solution {
 	constructor(vector, features) {
@@ -63,48 +64,31 @@ class Solution {
 	}
 	calcCost() {
 		let impact = 0;
-		// const resultBrowsers = [];
+		let sum = 0;
+		const kicked_browsers = [];
 		const localBrowserCopy = JSON.parse(JSON.stringify(allBrowsers));
-
-
 
 		for (var i = 0; i < this.vector.length; i++) {
 			if(this.vector[i]) {
 				impact += ((data[i].impact || 1) * (data[i].count || 1));
-
 				const b = data[i].missing;
 				for (var p = 0; p < b.length; p++) {
-					localBrowserCopy[b[p].nameVersion].count -= 1;
+					localBrowserCopy[b[p].nameVersion].unsupportedCount -= 1;
 				}
-
 			}
 		}
 
-		let sum = 0;
 		for (var k = 0; k < Object.keys(localBrowserCopy).length; k++) {
 			const key = Object.keys(localBrowserCopy)[k];
-			if(localBrowserCopy[key].count < 1) {
+			if(localBrowserCopy[key].unsupportedCount < 1) {
 				sum += localBrowserCopy[key].share;
-				// resultBrowsers.push(localBrowserCopy[key]);
+				kicked_browsers.push(localBrowserCopy[key]);
 			}
 		}
-
-
-// console.log(localBrowserCopy);
-
-
-
-
-		// const allB = resultBrowsers.reduce((prev, current) => {
-		// 	if(!(current['nameVersion'] in prev.result)) {
-		// 		prev.result[current['nameVersion']] = current;
-		// 		prev.sum += current.share;
-		// 	}
-		// 	return prev;
-		// },{result: {}, sum: 0});
 
 		this.cost = impact / sum;
 		this.gained_share = sum;
+		this.kicked_browsers = kicked_browsers;
 	}
 	mutate() {
 		if (Math.random() > 0.5) return;
@@ -211,5 +195,5 @@ for (var k = 0; k < Object.keys(result).length; k++) {
 }
 
 // console.log(getResult(resultArray.sort((a,b) => a.cost - b.cost)[0]));
-console.log(resultArray.sort((a,b) => b.cost - a.cost).map(el => getResult(el)));
+// console.log(resultArray.sort((a,b) => b.cost - a.cost).map(el => getResult(el)));
 //console.log(resultArray.sort((a,b) => b.cost - a.cost));

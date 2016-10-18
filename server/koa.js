@@ -19,7 +19,7 @@ import config from "./config/init";
 
 import axios from "axios";
 import { flatten, flattenDeep, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
-import { evaluate, sumResults, getBrowserVersionShare, getElementBrowserVersion, saveCSV } from "./utils/features";
+import { evaluate, sumResults, sumData, getBrowserVersionShare, getElementBrowserVersion, saveCSV, getMissingBrowserVersions, getWhatIfIUseElements, getCheckableBrowsers,getPercentage, getShortBrowsersWithUsage } from "./utils/features";
 import impacts from "./utils/feature-impact";
 
 import Page from "./models/page";
@@ -182,23 +182,49 @@ io.on('connection', function(socket){
 				});
 			}
 
-			const p = Promise.resolve();
-			const allEvaluationResults = [];
-			browserNames.reduce((p, browser, index, array) => {
-				return p.then(result => { 
-					if(result) {
-						allEvaluationResults.push(result);	
-					}
-					return evaluateForFeatures(browser, index, array); 
-				});
-			}, p)
-			.then(lastEvaluationResult => {
-				allEvaluationResults.push(lastEvaluationResult);
-				const send = sumResults(allEvaluationResults, browsers, id, scope);
- 				saveResults(send);
+			browserNames.reduce((promise, browser, index, array) => promise.then(args => Promise.all([...args, evaluateForFeatures(browser, index, array)])), Promise.all([]))
+			.then(evaluationResults => sumData(evaluationResults, browsers))
+			.then(summary => {
+				const { syntaxErrors, elementCollection } = summary;
 
-				const elements = send.elementCollection;
-				const elementCountImpact = elements
+				for (var k = 0; k < elementCollection.length; k++) {
+					elementCollection[k].deletePossibilities = {
+						self: {
+							partial: 0,					
+							missing: 0
+						},
+						others: [],
+						all: []
+					}
+				}
+
+
+				const missingBrowsers = getMissingBrowserVersions(elementCollection, 'missing');
+				const partialBrowsers = getMissingBrowserVersions(elementCollection, 'partial');
+				const whatIfIUse = getWhatIfIUseElements(elementCollection, getCheckableBrowsers(partialBrowsers, browsers), getCheckableBrowsers(missingBrowsers, browsers)) || [];
+				const missingSupport = getPercentage(missingBrowsers, browsers);
+
+				let partialSupport = 0;
+				const partialRest = differenceWith(getShortBrowsersWithUsage(partialBrowsers), getShortBrowsersWithUsage(missingBrowsers), isEqual);
+				for (var i = 0; i < partialRest.length; i++) {
+					partialSupport += partialRest[i].usage;
+				}
+				let send = {
+					pageSupport: (100 - missingSupport).toFixed(2),
+					browserCollection: browsers,
+					elementCollection,
+					syntaxErrors,
+					pageId: id,
+					scope,
+					whatIfIUse,
+					missingSupport,
+					partialSupport,
+					missingBrowsers,
+					partialBrowsers
+				}
+				saveResults(send);
+
+				const elementCountImpact = elementCollection
 					.filter(element => element.missing)
 					.map((element) => {
 						return {
@@ -213,11 +239,12 @@ io.on('connection', function(socket){
 			})
 			.then(checkResultData => {
 				var child = require('child_process');
-
 				var workerProcess = child.spawn('node', [__dirname + '/utils/optim_set.js', checkResultData]);
+				let latestData;
 
 				workerProcess.stdout.on('data', function (data) {
 					console.log('stdout: ' + data);
+					latestData = data;
 				});
 
 				workerProcess.stderr.on('data', function (data) {
@@ -227,7 +254,6 @@ io.on('connection', function(socket){
 				workerProcess.on('close', function (code) {
 					console.log('child process exited with code ' + code);
 				});					
-
 			})
 			.catch((e) => {
 				console.log('very late error');
@@ -236,22 +262,7 @@ io.on('connection', function(socket){
 
 		}
 		
-
 		getUnsupportedFeaturesByBrowsers(browserNames);
-
-		// Promise
-		// 	.all(browserNames.map(evaluateForFeatures))
-		// 	.then(results => {
-
-		// 		const send = sumResults(results, browsers, id, scope);
-		// 		saveResults(send);
-
-		// 	})
-		// 	.catch((e) => {
-		// 		console.log('very late error');
-		// 		console.log(e);
-		// 		io.emit('triggerComplete', { pageId: id, error: e });
-		// 	});
 
 	});
 
