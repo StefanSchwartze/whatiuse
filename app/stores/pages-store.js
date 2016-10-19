@@ -50,8 +50,10 @@ class PagesStore {
 		page.status = data.info;
 		assign(findItemById(this.pages, data.pageId), page);
 	}
-	onCheckComplete(item) {
-		assign(findItemById(this.pages, item._id), item);
+	onCheckComplete(page) {
+		page.progress = 0;
+		page.status = '';
+		assign(findItemById(this.pages, page._id), page);
 	}
 }
 
