@@ -103,17 +103,19 @@ io.on('connection', function(socket){
 		const url = data.url;
 		const id = data.id;
 		const scope = data.scope;
-		let page = data.page;
+		const page = data.page;
 		const browsers = data.browsers;
 		let browserNames = [];
 		for (var i = 0; i < browsers.length; i++) {
 			const browserAlias = browsers[i].alias;
 			const browserName = browsers[i].browser;
 			const versions = browsers[i].version_usage;
-			browserNames = browserNames.concat(versions.map((version) => {return { 
-				short: browserAlias + ' ' + version.version,
-				full: browserName + ' ' + version.version,
-			}}));
+			browserNames = browserNames.concat(versions.map((version) => {
+				return { 
+					short: browserAlias + ' ' + version.version,
+					full: browserName + ' ' + version.version,
+				}
+			}));
 		}
 		let progressComplete = 0;
 		let progressCheck = 0;
@@ -149,108 +151,102 @@ io.on('connection', function(socket){
 				});					
 		}
 
-		const getUnsupportedFeaturesByBrowsers = (browserNames) => {
-
-			const evaluateForFeatures = (browser, index, that) => {
-				return new Promise((resolve, reject) => {
-					evaluate({ url : url, browser: browser.short })
-						.then(function(results) {
-							io.emit('progress', {
-								progress: progressComplete, 
-								pageId: id,
-								status: "Checking " + browser.full + "..."
-							});
-							progressComplete = progressComplete + ((1 / that.length) * 0.6);
-							resolve(results);
-						})
-						.catch(e => {
-							console.log(e);
-							console.log('Caused by: ' + browser);
-							io.emit('progress', {
-								progress: progressComplete, 
-								pageId: id,
-								status: "Checking " + browser.full + "..."
-							});
-							progressComplete = progressComplete + ((1 / that.length) * 0.6);
-							resolve([
-								{ 
-									elementCollection: [],
-									syntaxErrors: []
-								}
-							]);
-						});
-				});
-			}
-
-			browserNames.reduce((promise, browser, index, array) => promise.then(args => Promise.all([...args, evaluateForFeatures(browser, index, array)])), Promise.all([]))
-			.then(evaluationResults => sumData(evaluationResults, browsers))
-			.then(summary => {
-				const { syntaxErrors, elementCollection } = summary;
-				const missingBrowsers = getMissingBrowserVersions(elementCollection, 'missing');
-				const partialBrowsers = getMissingBrowserVersions(elementCollection, 'partial');
-				const whatIfIUse = getWhatIfIUseElements(elementCollection, getCheckableBrowsers(partialBrowsers, browsers), getCheckableBrowsers(missingBrowsers, browsers)) || [];
-				const missingSupport = getPercentage(missingBrowsers, browsers);
-
-				let partialSupport = 0;
-				const partialRest = differenceWith(getShortBrowsersWithUsage(partialBrowsers), getShortBrowsersWithUsage(missingBrowsers), isEqual);
-				for (var i = 0; i < partialRest.length; i++) {
-					partialSupport += partialRest[i].usage;
-				}
-				let send = {
-					pageSupport: (100 - missingSupport).toFixed(2),
-					browserCollection: browsers,
-					elementCollection,
-					syntaxErrors,
-					pageId: id,
-					scope,
-					whatIfIUse,
-					missingSupport,
-					partialSupport,
-					missingBrowsers,
-					partialBrowsers
-				}
-				saveResults(send);
-
-				const elementCountImpact = elementCollection
-					.filter(element => element.missing)
-					.map((element) => {
-						return {
-							name: element.feature,
-							count: element.count,
-							impact: impacts[element.feature]['impact'],
-							missing: getBrowserVersionShare(element.missing)
-						}
+		const evaluateForFeatures = (browser, index, that) => {
+			return new Promise((resolve, reject) => {
+				evaluate({ url : url, browser: browser.short })
+				.then(results => {
+					io.emit('progress', {
+						progress: progressComplete, 
+						pageId: id,
+						status: "Checking " + browser.full + "..."
 					});
-
-				return elementCountImpact;
-			})
-			.then(checkResultData => {
-				var child = require('child_process');
-				var workerProcess = child.spawn('node', [__dirname + '/utils/optim_set.js', checkResultData]);
-				let latestData;
-
-				workerProcess.stdout.on('data', function (data) {
-					console.log('stdout: ' + data);
-					latestData = data;
+					progressComplete = progressComplete + (1 / that.length);
+					resolve(results);
+				})
+				.catch(error => {
+					console.log(error);
+					io.emit('progress', {
+						progress: progressComplete, 
+						pageId: id,
+						status: "Checking " + browser.full + "..."
+					});
+					progressComplete = progressComplete + (1 / that.length);
+					resolve([
+						{ 
+							elementCollection: [],
+							syntaxErrors: [error]
+						}
+					]);
 				});
-
-				workerProcess.stderr.on('data', function (data) {
-					console.log('stderr: ' + data);
-				});
-
-				workerProcess.on('close', function (code) {
-					console.log('child process exited with code ' + code);
-				});					
-			})
-			.catch((e) => {
-				console.log('very late error');
-				console.log(e);
 			});
-
 		}
-		
-		getUnsupportedFeaturesByBrowsers(browserNames);
 
+		browserNames
+		.reduce((promise, browser, index, array) => promise.then(args => Promise.all([...args, evaluateForFeatures(browser, index, array)])), Promise.all([]))
+		.then(evaluationResults => sumData(evaluationResults, browsers))
+		.then(summary => {
+			const { syntaxErrors, elementCollection } = summary;
+			const missingBrowsers = getMissingBrowserVersions(elementCollection, 'missing');
+			const partialBrowsers = getMissingBrowserVersions(elementCollection, 'partial');
+			const whatIfIUse = getWhatIfIUseElements(elementCollection, getCheckableBrowsers(partialBrowsers, browsers), getCheckableBrowsers(missingBrowsers, browsers)) || [];
+			const missingSupport = getPercentage(missingBrowsers, browsers);
+
+			let partialSupport = 0;
+			const partialRest = differenceWith(getShortBrowsersWithUsage(partialBrowsers), getShortBrowsersWithUsage(missingBrowsers), isEqual);
+			for (var i = 0; i < partialRest.length; i++) {
+				partialSupport += partialRest[i].usage;
+			}
+			const sendData = {
+				pageSupport: (100 - missingSupport).toFixed(2),
+				browserCollection: browsers,
+				elementCollection,
+				syntaxErrors,
+				pageId: id,
+				scope,
+				whatIfIUse,
+				missingSupport,
+				partialSupport,
+				missingBrowsers,
+				partialBrowsers
+			}
+			return sendData;
+		})
+		.then(checkResultData => new Promise((resolve, reject) => {
+			const saveData = checkResultData;
+			const checkableFeatures = saveData.elementCollection
+				.filter(element => element.missing)
+				.map(element => {
+					return {
+						name: element.feature,
+						count: element.count,
+						impact: impacts[element.feature]['impact'],
+						missing: getBrowserVersionShare(element.missing)
+					}
+				});
+			const child = require('child_process');
+			const workerProcess = child.spawn('node', [__dirname + '/utils/optim_set.js']);
+			let latestData = '';
+
+			workerProcess.stdout.on('data', data => latestData += data);
+			workerProcess.stderr.on('data', (error) => {
+				console.log('stderr: ' + error);
+				reject(error);
+			});
+			workerProcess.on('close', code => {
+				console.log('child process exited with code ' + code);
+				saveData.whatIfIDelete = JSON.parse(latestData);
+				resolve(saveData);
+			});
+			workerProcess.stdin.setEncoding('utf-8');
+			workerProcess.stdin.write(JSON.stringify(checkableFeatures));
+			workerProcess.stdin.end();
+		}))
+		.then(saveData => {
+			saveResults(saveData);
+		})
+		.catch(e => {
+			console.log(e);
+		});
 	});
 
 });
