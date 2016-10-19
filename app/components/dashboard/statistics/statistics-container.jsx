@@ -50,6 +50,7 @@ export default class StatisticsContainer extends React.Component {
 				const whatifiuse = lastSnapshot.whatIfIUse;
 				let partialSupportElem;
 				let missingSupportElem;
+				let whatIfIDeleteElem;
 				let fullSupport = 100;
 
 				if(snapshots.length > 1) {
@@ -119,6 +120,15 @@ export default class StatisticsContainer extends React.Component {
 							</div>
 						</Tooltip>
 				}
+				if(lastSnapshot.whatIfIDelete) {
+					const recommendations = lastSnapshot.whatIfIDelete;
+					whatIfIDeleteElem = 
+						<div className="box box--element">
+							<div className="box-head">
+								<h3>{recommendations.length} Recommendations</h3>
+							</div>
+						</div>
+				}
 
 				pageElem = 	<div>
 								<div className="content-container content timeline-container">
@@ -141,6 +151,8 @@ export default class StatisticsContainer extends React.Component {
 												<h3>Fully supported</h3>
 											</div>
 										</div>
+
+										{whatIfIDeleteElem}
 									</div>
 									<div className="description">
 										<button 
