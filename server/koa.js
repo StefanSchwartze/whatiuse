@@ -228,7 +228,7 @@ io.on('connection', function(socket){
 			let latestData = '';
 
 			workerProcess.stdout.on('data', data => latestData += data);
-			workerProcess.stderr.on('data', (error) => {
+			workerProcess.stderr.on('data', error => {
 				console.log('stderr: ' + error);
 				reject(error);
 			});

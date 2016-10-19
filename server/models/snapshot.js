@@ -16,6 +16,7 @@ const SnapshotSchema = new mongoose.Schema({
 	elementCollection: [],
 	syntaxErrors: [],
 	whatIfIUse: [],
+	whatIfIDelete: [],
 	scope: String,
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
