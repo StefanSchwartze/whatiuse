@@ -320,67 +320,6 @@ var self = module.exports = {
     		elementCollection: elements
     	}
     },
-    sumResults: (data, browserCollection, pageId, scope) => {
-
-    	const browsers = browserCollection;
-    	let elementCollection = [];
-		let allSyntaxErrors = [];
-
-
-
-		for (var i = 0; i < data.length; i++) {
-			elementCollection.push.apply(elementCollection, data[i].elementCollection);
-			allSyntaxErrors.push(data[i].syntaxErrors);
-		}
-		const uniqueSyntaxErrors = uniqBy(flatten(allSyntaxErrors), 'message');
-		const elements = self.enrichElementWithBrowserData(self.sumObjectArrayByProp(elementCollection, 'feature', ['missing', 'partial']), browsers);
-
-
-
-		for (var k = 0; k < elements.length; k++) {
-			elements[k].deletePossibilities = {
-				self: {
-					partial: 0,					
-					missing: 0
-				},
-				others: [],
-				all: []
-			}
-		}
-
-		const missingBrowsers = self.getMissingBrowserVersions(elements, 'missing');
-		const partialBrowsers = self.getMissingBrowserVersions(elements, 'partial');
-		const restPartialBrowsers = self.getCheckableBrowsers(partialBrowsers, browsers);
-		const restMissingBrowsers = self.getCheckableBrowsers(missingBrowsers, browsers);
-		const whatIfIUse = self.getWhatIfIUseElements(elements, restPartialBrowsers, restMissingBrowsers) || [];
-		const missingSupport = self.getPercentage(missingBrowsers, browsers);
-
-		let partialSupport = 0;
-		const partialRest = differenceWith(self.getShortBrowsersWithUsage(partialBrowsers), self.getShortBrowsersWithUsage(missingBrowsers), isEqual);
-		for (var i = 0; i < partialRest.length; i++) {
-			partialSupport += partialRest[i].usage;
-		}
-
-
-
-
-
-		let send = {
-			elementCollection: elements,
-			pageSupport: (100 - missingSupport).toFixed(2),
-			syntaxErrors: uniqueSyntaxErrors,
-			browserCollection,
-			pageId,
-			scope,
-			whatIfIUse,
-			missingSupport,
-			partialSupport,
-			missingBrowsers,
-			partialBrowsers
-		}
-
-    	return send;
-    },
     getWhatIfIUseElements: (elements, partialBrowsers, missingBrowsers) => {
     	let whatIfIUseElements = [];
 		const keys = Object.keys(caniuseData);
@@ -481,35 +420,5 @@ var self = module.exports = {
 			}
 		}
 		return shortBrowsers;
-	},
-	getElementBrowserVersion: (collection, elemname) => {
-		let shortBrowsers = [];
-		for (var i = 0; i < collection.length; i++) {
-			const browser = collection[i];
-			for (var j = 0; j < browser.version_usage.length; j++) {
-				const currVersion = browser.version_usage[j];
-				shortBrowsers.push({
-					"name": elemname,
-					"browserVersion": browser.alias+currVersion.version,
-				});
-			}
-		}
-		return shortBrowsers;
-	},
-	saveCSV: (item, index, that) => {
-		return new Promise((resolve, reject) => {
-			try {
-				var options = {
-					data: item,
-					quotes: "",
-					hasCSVColumnTitle: false
-				}
-				var result = json2csv(options);
-				resolve(result);	
-			} catch (err) {
-				console.error(err);
-				reject(err);
-			}
-		});
 	}
 }

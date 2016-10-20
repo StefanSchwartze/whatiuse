@@ -17,9 +17,8 @@ import routes from "./routes";
 import restify from './rest-api';
 import config from "./config/init";
 
-import axios from "axios";
-import { flatten, flattenDeep, intersectionWith, isEqual, find, mergeWith, drop, values, isArray, uniqWith, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
-import { evaluate, sumResults, sumData, getBrowserVersionShare, getElementBrowserVersion, saveCSV, getMissingBrowserVersions, getWhatIfIUseElements, getCheckableBrowsers,getPercentage, getShortBrowsersWithUsage } from "./utils/features";
+import { isEqual, differenceWith } from "lodash";
+import { evaluate, sumData, getBrowserVersionShare, getMissingBrowserVersions, getWhatIfIUseElements, getCheckableBrowsers,getPercentage, getShortBrowsersWithUsage } from "./utils/features";
 import impacts from "./utils/feature-impact";
 
 import Page from "./models/page";
@@ -153,6 +152,7 @@ io.on('connection', function(socket){
 
 		const evaluateForFeatures = (browser, index, that) => {
 			return new Promise((resolve, reject) => {
+
 				evaluate({ url : url, browser: browser.short })
 				.then(results => {
 					io.emit('progress', {
@@ -182,7 +182,14 @@ io.on('connection', function(socket){
 		}
 
 		browserNames
-		.reduce((promise, browser, index, array) => promise.then(args => Promise.all([...args, evaluateForFeatures(browser, index, array)])), Promise.all([]))
+		.reduce((promise, browser, index, array) => 
+			promise.then(args => 
+				Promise.all(
+					[...args, evaluateForFeatures(browser, index, array)]
+				)
+			), 
+			Promise.all([])
+		)
 		.then(evaluationResults => sumData(evaluationResults, browsers))
 		.then(summary => {
 			const { syntaxErrors, elementCollection } = summary;
