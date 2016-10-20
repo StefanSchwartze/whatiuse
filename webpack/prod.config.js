@@ -116,6 +116,12 @@ module.exports = {
         comments: false
       }
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      children: true,
+      minChunks: 2,
+      async: true,
+    }),
 
     // write webpack stats
     function () { this.plugin('done', writeStats); }

@@ -152,32 +152,26 @@ io.on('connection', function(socket){
 
 		const evaluateForFeatures = (browser, index, that) => {
 			return new Promise((resolve, reject) => {
+				let latestData = '';
+				const child = require('child_process');
+				const workerProcess = child.spawn('node', [__dirname + '/utils/evaluate.js']);
 
-				evaluate({ url : url, browser: browser.short })
-				.then(results => {
+				workerProcess.stdout.on('data', data => latestData += data);
+				workerProcess.stderr.on('data', error => console.log('stderr: ' + error));
+				workerProcess.on('close', code => {
+					console.log('child process exited with code ' + code);
 					io.emit('progress', {
 						progress: progressComplete, 
 						pageId: id,
 						status: "Checking " + browser.full + "..."
 					});
 					progressComplete = progressComplete + (1 / that.length);
-					resolve(results);
-				})
-				.catch(error => {
-					console.log(error);
-					io.emit('progress', {
-						progress: progressComplete, 
-						pageId: id,
-						status: "Checking " + browser.full + "..."
-					});
-					progressComplete = progressComplete + (1 / that.length);
-					resolve([
-						{ 
-							elementCollection: [],
-							syntaxErrors: [error]
-						}
-					]);
+
+					resolve(JSON.parse(latestData));
 				});
+				workerProcess.stdin.setEncoding('utf-8');
+				workerProcess.stdin.write(JSON.stringify({ browser, url}));
+				workerProcess.stdin.end();
 			});
 		}
 

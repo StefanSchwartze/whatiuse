@@ -1,16 +1,19 @@
-import prune from './prune';
-import getCss from 'get-css';
-import unique from './unique';
-import next from 'next-stream';
-import json2csv from "json2csv";
-import limitstream from './limit';
-import doiuse from 'doiuse/stream';
-import JSONStream from 'JSONStream';
-import {agents} from './user-agents';
-import fromString from 'from2-string';
-import { pipe, through, concat } from 'mississippi';
-import { data as caniuseData } from "caniuse-db/fulldata-json/data-1.0";
-import { values, flatten, findKey, uniq, uniqWith, forEach, find, isEqual, intersectionWith, mergeWith, drop, isArray, uniqBy, xorWith, differenceBy, differenceWith, difference, findIndex } from "lodash";
+const prune = require('./prune');
+const getCss = require('get-css');
+const unique = require('./unique');
+const next = require('next-stream');
+const limitstream = require('./limit');
+const doiuse = require('doiuse/stream');
+const JSONStream = require('JSONStream');
+const agents = require('./user-agents').agents;
+const fromString = require('from2-string');
+const pipe = require('mississippi').pipe;
+const concat = require('mississippi').concat;
+const through = require('mississippi').through;
+const caniuseData = require('caniuse-db/fulldata-json/data-1.0').data;
+
+var _ = require('lodash');
+// import { values, _.flatten, _.findKey, _.uniq, _.uniqWith, _.find, _.isEqual, _.uniqBy, _.differenceBy, _.findIndex } from "lodash";
 
 var self = module.exports = {
 
@@ -97,14 +100,14 @@ var self = module.exports = {
 
 				            for (var i = 0; i < features.length; i++) {
 				            	if(features[i].missing) {
-						            features[i].missing = flatten(features[i].missing).reduce((prev, current, index, array) => {
+						            features[i].missing = _.flatten(features[i].missing).reduce((prev, current, index, array) => {
 						                let nextVersions = typeof current.versions === 'string' ? current.versions.replace(/[()]/g, '').replace(/,\s*$/, "").split(',') : current.versions;
 						                if(!(current.browser in prev.keys)) {
 						                    prev.keys[current.browser] = index;
 						                    prev.result.push({
 						                        browser: current.browser.trim(),
 						                        versions: nextVersions,
-						                        alias: findKey(agents, (o) => { return o.browser === current.browser.trim(); })
+						                        alias: _.findKey(agents, (o) => { return o.browser === current.browser.trim(); })
 						                    });
 						                } 
 						               else {
@@ -118,14 +121,14 @@ var self = module.exports = {
 					            }
 
 					            if(features[i].partial) {
-						            features[i].partial = flatten(features[i].partial).reduce((prev, current, index, array) => {
+						            features[i].partial = _.flatten(features[i].partial).reduce((prev, current, index, array) => {
 						                let nextVersions = typeof current.versions === 'string' ? current.versions.replace(/[()]/g, '').replace(/,\s*$/, "").split(',') : current.versions;
 						                if(!(current.browser in prev.keys)) {
 						                    prev.keys[current.browser] = index;
 						                    prev.result.push({
 						                        browser: current.browser.trim(),
 						                        versions: nextVersions,
-						                        alias: findKey(agents, (o) => { return o.browser === current.browser.trim(); })
+						                        alias: _.findKey(agents, (o) => { return o.browser === current.browser.trim(); })
 						                    });
 						                } 
 						               else {
@@ -178,7 +181,7 @@ var self = module.exports = {
 	},
 	sumObjectArrayByProp: (array, reduceProp, unifyingProps) => { 
 
-		return values(array.reduce((prev, current, index, array) => {
+		return _.values(array.reduce((prev, current, index, array) => {
 			if(!(current[reduceProp] in prev.result)) {
                 prev.result[current[reduceProp]] = current;
             }
@@ -218,29 +221,29 @@ var self = module.exports = {
 
         for (var i = 0; i < features.length; i++) {
         	if(features[i][type]) {
-                browsers.push.apply(browsers, flatten(features[i][type]));
+                browsers.push.apply(browsers, _.flatten(features[i][type]));
         	}
         }
-        return values(browsers.reduce((prev, current, index, array) => {
+        return _.values(browsers.reduce((prev, current, index, array) => {
             if(!(current.alias in prev.result)) {
                 prev.result[current.alias] = current;
             } 
            else if(prev.result[current.alias]) {
-                prev.result[current.alias].versions = uniq(prev.result[current.alias].versions.concat(current.versions));
-                prev.result[current.alias].version_usage = uniqWith(flatten([prev.result[current.alias].version_usage, current.version_usage]), isEqual);
+                prev.result[current.alias].versions = _.uniq(prev.result[current.alias].versions.concat(current.versions));
+                prev.result[current.alias].version_usage = _.uniqWith(_.flatten([prev.result[current.alias].version_usage, current.version_usage]), _.isEqual);
             }
            return prev;
         },{result: {}}).result);
     },
     getPercentage: (browserset, browsersWithPercentages) => {
         let sum = 0;
-        forEach(browserset, (browser, key) => {
-            forEach(browser.versions, (value, key) => {
-                let obje = find(browsersWithPercentages, (o) => {
+        browserset.forEach((browser, key) => {
+            browser.versions.forEach((value, key) => {
+                let obje = _.find(browsersWithPercentages, (o) => {
                     return (o.alias === browser.alias); 
                 });
                 if(obje) {
-                	let val = find(obje.version_usage, (o) => {
+                	let val = _.find(obje.version_usage, (o) => {
 	                    return (o.version === value); 
 	                });
                 	sum += parseFloat(val.usage);	
@@ -252,12 +255,12 @@ var self = module.exports = {
     },
     addVersionUsage: (browsers, browsersWithPercentages) => {
     	return browsers.map((browser) => {
-    		let percBrowser = find(browsersWithPercentages, (item) => {
+    		let percBrowser = _.find(browsersWithPercentages, (item) => {
                 return item.alias === browser.alias; 
             });
             let version_usage = [];
             for (var i = 0; i < browser.versions.length; i++) {
-            	const version = find(percBrowser.version_usage, (item) => {
+            	const version = _.find(percBrowser.version_usage, (item) => {
                     return item.version === browser.versions[i]; 
                 });
             	version_usage.push({ version: version.version, usage: version.usage});
@@ -270,9 +273,9 @@ var self = module.exports = {
     		}
     	})
     },
-    getPercentageSum: (browser) => {
+    getPercentageSum: (browsers) => {
         let sum = 0;
-        forEach(browser, (browser, key) => {
+        browsers.forEach((browser, key) => {
             sum += browser.version_usage.reduce((prev, current, index) => {
             	return prev + browser.version_usage[index].usage;
             }, 0);
@@ -312,7 +315,7 @@ var self = module.exports = {
 			elementCollection.push.apply(elementCollection, data[i].elementCollection);
 			allSyntaxErrors.push(data[i].syntaxErrors);
 		}
-		const uniqueSyntaxErrors = uniqBy(flatten(allSyntaxErrors), 'message');
+		const uniqueSyntaxErrors = _.uniqBy(_.flatten(allSyntaxErrors), 'message');
 		const elements = self.enrichElementWithBrowserData(self.sumObjectArrayByProp(elementCollection, 'feature', ['missing', 'partial']), browsers);
 
     	return {
@@ -326,7 +329,7 @@ var self = module.exports = {
 		for (var i = 0; i < keys.length; i++) {
 			if((caniuseData[keys[i]].categories.indexOf('CSS') >= 0 || 
 				caniuseData[keys[i]].categories.indexOf('CSS3') >= 0) &&
-				findIndex(elements, (element) => { return element.title === caniuseData[keys[i]].title}) < 0) {
+				_.findIndex(elements, (element) => { return element.title === caniuseData[keys[i]].title}) < 0) {
 				const pushableElement = self.whatIfIUse(caniuseData[keys[i]], partialBrowsers, missingBrowsers);
 				whatIfIUseElements.push(pushableElement);
 			}
@@ -373,13 +376,13 @@ var self = module.exports = {
 		}
 	},
 	getCheckableBrowsers: (alreadyCheckedBrowsers, allBrowsers) => {
-		return values(allBrowsers.reduce( (prev, current, index, array) => {
+		return _.values(allBrowsers.reduce( (prev, current, index, array) => {
 			const browsersWithSameName = alreadyCheckedBrowsers.filter(browser => browser.alias === current.alias);
 			if(browsersWithSameName.length > 0) {
 				const allVersionUsage = browsersWithSameName.length > 1 ?
-					flatten([browsersWithSameName[0].version_usage, browsersWithSameName[1].version_usage]) :
+					_.flatten([browsersWithSameName[0].version_usage, browsersWithSameName[1].version_usage]) :
 					browsersWithSameName[0].version_usage;
-				const version_usage = differenceBy(current.version_usage, allVersionUsage, 'version');
+				const version_usage = _.differenceBy(current.version_usage, allVersionUsage, 'version');
 				if(version_usage.length > 0) {
 					prev.result[current.alias] = {
 						browser: current.browser,
