@@ -122,6 +122,9 @@
    "pointer-events":{
       "impact":0.1
    },
+   "pointer":{
+      "impact":0.1
+   },
    "css-regions":{
       "impact":1
    },

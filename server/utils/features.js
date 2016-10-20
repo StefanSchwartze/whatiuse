@@ -171,8 +171,8 @@ var self = module.exports = {
 					});
 				    
 				})
-			  	.catch((error) => {
-			  		console.log('ERRRRROORR!!!');
+			  	.catch(error => {
+			  		//console.log('ERRRRROORR!!!');
 			    	console.error(error);
 			    	reject(error);
 			    });
