@@ -52,10 +52,6 @@ export default class DetailTimeline extends React.PureComponent {
 
 		return (
 			<div className="history-container">
-				<div className="description">
-					<span>Timeline</span>
-					<span className="align-right">Last check: {lastCheck}</span>
-				</div>
 				<HistoryTooltip/>
 				<div className="chart chart--extended">
 					<ResponsiveContainer>

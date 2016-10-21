@@ -264,7 +264,17 @@ h1, h2 {
 		}
 	}
 }
-
+/*
+*	Statusbar component
+*/
+.statusbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .button {
+    	margin-right: $spacing-large;
+    }
+}
 /*
 *	Project-list component
 */

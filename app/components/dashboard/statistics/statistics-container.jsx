@@ -9,8 +9,7 @@ import FilterList from '../../shared/filterable-list';
 import ElementsList from '../../shared/elements-list';
 import BrowsersList from '../../shared/browsers-list';
 import ElementsChart from '../../shared/elements-chart';
-import ProgressBar from '../../shared/progressbar';
-
+import Statusbar from '../../shared/statusbar';
 
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
@@ -31,20 +30,16 @@ export default class StatisticsContainer extends React.Component {
 	render() {
 		let pageElem;
 		let timeline;
-		let progressbar;
 		if(Object.keys(this.props.page).length > 0) {
-			
-			if(this.props.page.isChecking) {
-				progressbar = 	<ProgressBar 
-									progress={this.props.page.progress || 0} 
-									status={this.props.page.status} 
-								/>;
-			}
 
-			if(this.props.snapshots && this.props.snapshots.length > 0) {
+			let results = '';
+
+			const page = this.props.page;
+			const snapshots = this.props.snapshots || [];
+			let status = '';
+
+			if(this.props.snapshots.length > 0) {
 			
-				const page = this.props.page;
-				const snapshots = this.props.snapshots || [];
 				const lastSnapshot = snapshots[snapshots.length - 1];
 				const elements = lastSnapshot.elementCollection || [];
 				const whatifiuse = lastSnapshot.whatIfIUse;
@@ -52,13 +47,16 @@ export default class StatisticsContainer extends React.Component {
 				let missingSupportElem;
 				let whatIfIDeleteElem;
 				let fullSupport = 100;
+				status = lastSnapshot.captured;
 
 				if(snapshots.length > 1) {
-					timeline = <DetailTimeline
-									snapshots={snapshots}
-									isChecking={page.isChecking || false}
-									length={snapshots.length}
-								/>
+					timeline = 	<div className="content-container content timeline-container">
+									<DetailTimeline
+										snapshots={snapshots}
+										isChecking={page.isChecking || false}
+										length={snapshots.length}
+									/>
+								</div>
 				}
 				if(lastSnapshot.partialSupport) {
 					const partialSupport = parseFloat(lastSnapshot.partialSupport.toFixed(2)) || 0;
@@ -130,11 +128,7 @@ export default class StatisticsContainer extends React.Component {
 						</div>
 				}
 
-				pageElem = 	<div>
-								<div className="content-container content timeline-container">
-									{progressbar}
-									{timeline}
-								</div>
+				results = 	<div>
 								<div className="content-container content statistics-container">
 									<div className="description">
 										<h1 className="big">Latest result:</h1>
@@ -210,12 +204,20 @@ export default class StatisticsContainer extends React.Component {
 									<FilterList elements={whatifiuse} />
 								</div>
 							</div>;
-			} else {
-				pageElem = <div className="content-container content statistics-container">
-								{progressbar}
-								<span>Not investigated yet.</span>
-							</div>
 			}
+			pageElem = <div>
+							<div className="content-container content timeline-container">
+								<Statusbar
+									isChecking={page.isChecking}
+									page={this.props.page}
+									lastUpdate={status}
+								/>
+							</div>
+							{timeline}
+							<div className="content-container content statistics-container">
+								{results}
+							</div>
+						</div>
 		} else {
 			pageElem = <div className="content-container content statistics-container">
 							<span>No page selected…</span>
