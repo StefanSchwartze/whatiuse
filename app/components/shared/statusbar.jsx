@@ -26,7 +26,7 @@ export default class Statusbar extends React.Component {
 		const status = isChecking ?
 						<ProgressBar 
 							progress={progress || 0} 
-							status={'this.props.page.status'} 
+							status={this.props.page.status} 
 						/> : 
 						<p>Last check:
 							<strong>{

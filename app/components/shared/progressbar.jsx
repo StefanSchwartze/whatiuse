@@ -16,7 +16,7 @@ export default class Progressbar extends React.PureComponent {
 				<span 
 					className="progress"
 					style={{width: progress * 100 + '%'}}>
-					{status}
+					<span>{status}</span>
 				</span>
 			</div>
 		);

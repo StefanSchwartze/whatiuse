@@ -81,7 +81,6 @@ h1, h2 {
 }
 .button {
 	font-family: 'Lato';
-	font-weight: bold;
 	text-transform: uppercase;
 	letter-spacing: 1px;
 	appearance: none;
@@ -273,6 +272,9 @@ h1, h2 {
     justify-content: space-between;
     .button {
     	margin-right: $spacing-large;
+    }
+    p {
+    	margin: 0;
     }
 }
 /*
@@ -763,10 +765,12 @@ h1, h2 {
 		transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,
 		transparent 75%, transparent);            
 		animation: animate-stripes 3s linear infinite; 
-		padding: 0 .5rem;
 		line-height: 1.5rem;
 		color: white;
 		white-space: nowrap;
+		> span {
+			padding: 0 .5rem;
+		}
 	}
 	@keyframes animate-stripes {
 		0% {

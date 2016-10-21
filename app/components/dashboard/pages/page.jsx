@@ -77,12 +77,12 @@ export default class Page extends React.Component {
 								<Link
 									onClick={this.setActive.bind(this, this.props.page._id, this.props.scope)}
 									to={'/projects/' + this.props.page.projectId + '/' + this.props.scope + '/pages/' + this.props.page._id + ''} 
-									className="button button--wide button--strong button--accent"
+									className="button button--wide button--accent"
 								>Open</Link> : ""
 						}
 						{
 							!this.props.isChecking ? 
-								<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >CHECK</button> : ""
+								<button onClick={this.checkUrl.bind(this)} className="button button--wide button--red" >CHECK</button> : ""
 						}
 						
 					</div>
