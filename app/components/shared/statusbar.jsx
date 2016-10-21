@@ -7,7 +7,7 @@ import PagesActions from 'actions/pages-actions';
 export default class Statusbar extends React.Component {
 	static propTypes = {
 		lastUpdate: React.PropTypes.string.isRequired,
-		page: React.PropTypes.string.isRequired,
+		page: React.PropTypes.object.isRequired,
 		isChecking: React.PropTypes.bool.isRequired
 	}
 	constructor(props) {

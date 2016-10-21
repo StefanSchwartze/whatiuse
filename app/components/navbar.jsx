@@ -272,7 +272,7 @@ export default class Navbar extends React.Component {
 		}*/
 		// Prerender busy on server as not to lose markup state on client
 		if (this.props.status.busy || !process.env.BROWSER) {
-			busyComponent = <i className="fa fa-refresh fa-spin"></i>;
+			busyComponent = <span className="icon icon-sync animate rotate"></span>;
 		}
 		return (
 			<header className="header">
@@ -356,6 +356,9 @@ export default class Navbar extends React.Component {
 											</TabPanel>
 										</Tabs>
 							</Modal>
+							<li className="nav-list-item loading">
+								{busyComponent}
+							</li>
 							<li 
 								className={classnames('options', 'nav-list-item', this.state.showModal ? 'active' : '')} 
 								onClick={this.showModal.bind(this)}
@@ -366,7 +369,6 @@ export default class Navbar extends React.Component {
 								<a href="#" className="link"><span className="icon-enter"></span>Logout</a>
 							</li>
 						</ul>
-						{busyComponent}
 					</nav>
 					<nav className="navigation navigation--second">
 						<ul className="nav-list">
@@ -387,7 +389,6 @@ export default class Navbar extends React.Component {
 								</Link>
 							</li>
 						</ul>
-						{busyComponent}
 					</nav>
 				</div>
 				{errorComponent}

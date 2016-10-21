@@ -208,7 +208,7 @@ export default class StatisticsContainer extends React.Component {
 			pageElem = <div>
 							<div className="content-container content timeline-container">
 								<Statusbar
-									isChecking={page.isChecking}
+									isChecking={page.isChecking || false}
 									page={this.props.page}
 									lastUpdate={status}
 								/>
