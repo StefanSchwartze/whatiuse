@@ -18,7 +18,7 @@ if(!process.env.BROWSER) {
 
 class PagesActions {
     constructor() {
-        this.generateActions('removeCurrent', 'selectPage', 'checking', 'checked', 'progress');
+        this.generateActions('removeCurrent', 'selectPage', 'checking', 'checked', 'progress', 'fetching');
     }
     fetch(params) {
         return async (dispatch) => {

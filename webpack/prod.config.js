@@ -68,11 +68,12 @@ module.exports = {
         loader: 'babel'
       },
       {
-        test: /\.scss?/, 
-        loaders: ['style', 'css', 'postcss', 'sass']
+        test: /\.scss?/,
+        loader: ExtractTextPlugin.extract('style', `css!postcss!sass`)
       },
+      // {
       { test: /\.css$/,
-        loader: "style-loader!css-loader"
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader")
       }
     ]
   },

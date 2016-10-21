@@ -214,12 +214,12 @@ export default class StatisticsContainer extends React.Component {
 				pageElem = <div className="content-container content statistics-container">
 								{progressbar}
 								<span>Not investigated yet.</span>
-							</div>;
+							</div>
 			}
 		} else {
 			pageElem = <div className="content-container content statistics-container">
-							<span>No page selected…</span>;
-						</div>;
+							<span>No page selected…</span>
+						</div>
 		}
 		return <div>{pageElem}</div>;
 	}

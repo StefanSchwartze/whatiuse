@@ -86,7 +86,7 @@ const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoUrl);
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
 
 // connect rest-API and routes
 restify(app);
@@ -120,7 +120,6 @@ io.on('connection', function(socket){
 		}
 		let progressComplete = 0;
 		let progressCheck = 0;
-		let progressReco = 0;
 
 		const evaluateForFeatures = (browser, index, that) => {
 			return new Promise((resolve, reject) => {
