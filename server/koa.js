@@ -84,7 +84,9 @@ app.use(bodyParser({jsonLimit: '50mb'}));
 // connect database
 const mongoUrl = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "127.0.0.1:27017/whatiuse";
 const mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
 mongoose.connect(mongoUrl);
+mongoose.set('debug', true);
 
 // connect rest-API and routes
 restify(app);
@@ -119,36 +121,6 @@ io.on('connection', function(socket){
 		let progressComplete = 0;
 		let progressCheck = 0;
 		let progressReco = 0;
-
-		const saveResults = (send) => {
-			page[scope + 'Support'] = send.pageSupport;
-			function updatePage(page) {
-				return new Promise((resolve, reject) => {
-					Page.findOneAndUpdate({id: page._id}, page, (err, result) => {
-						if(err) reject(err);
-						resolve(result);
-					});
-				});
-			}
-			function saveSnapshot(data) {
-				return new Promise((resolve, reject) => {
-					var snapshot = new Snapshot(data);
-					snapshot.save((err, result) => {
-						if(err) reject(err);
-						resolve(result);
-					});
-				});
-			}
-			Promise
-				.all([updatePage(page), saveSnapshot(send)])
-				.then(result => {
-					io.emit('triggerComplete', { data: result[1] });
-				})
-				.catch(e => {
-					console.log('Error on saving entity to DB');
-					console.log(e);
-				});					
-		}
 
 		const evaluateForFeatures = (browser, index, that) => {
 			return new Promise((resolve, reject) => {
@@ -243,11 +215,13 @@ io.on('connection', function(socket){
 			workerProcess.stdin.end();
 		}))
 		.then(saveData => {
-			saveResults(saveData);
+			page[scope + 'Support'] = saveData.pageSupport;
+			Promise
+				.all([Page.findOneAndUpdate({_id: page._id}, page), new Snapshot(saveData).save()])
+				.then(result => io.emit('triggerComplete', { data: result[1] }))
+				.catch(error => console.log(`Error on saving entity to DB: ${error}`));
 		})
-		.catch(e => {
-			console.log(e);
-		});
+		.catch(error => console.log(error));
 	});
 
 });
