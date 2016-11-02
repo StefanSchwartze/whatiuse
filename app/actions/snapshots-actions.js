@@ -10,19 +10,19 @@ class SnapshotsActions {
     }
     fetch(params) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.snapshots.getAll, params);
+            networkAction('Snapshots', dispatch, this, api.snapshots.getAll, params);
         }
     }
     get(id) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.snapshots.get, id);
+            networkAction('Snapshots', dispatch, this, api.snapshots.get, id);
         }
     }
     add(data) {
         const browsers = constructBrowserArray(clone(data.browserCollection));
         data.browserCollection = browsers;
         return async (dispatch) => {
-            networkAction(dispatch, this, api.snapshots.post, clone(data));
+            networkAction('Snapshots', dispatch, this, api.snapshots.post, clone(data));
         }
     }
 }

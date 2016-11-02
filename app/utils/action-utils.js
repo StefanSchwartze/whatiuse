@@ -6,14 +6,13 @@ import StatusActions from 'actions/status-actions';
 import LoginActions from 'actions/login-actions';
 
 export default {
-  networkAction: async (dispatch, context, method, ...params) => {
+  networkAction: async (resource = "", dispatch, context, method, ...params) => {
     try {
-      StatusActions.started();
+      StatusActions.started(resource);
       const response = await method.apply(context, params);
       const data = isFunction(response) ? response().data : response.data;
       dispatch(data);
-      StatusActions.done();
-
+      StatusActions.done(resource);
     } catch (err) {
       if (err.status === 401 && process.env.BROWSER) {
         LoginActions.logout();

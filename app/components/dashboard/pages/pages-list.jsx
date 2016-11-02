@@ -11,7 +11,8 @@ export default class PagesList extends React.Component {
 		pages: React.PropTypes.array.isRequired,
 		currentPageId: React.PropTypes.string.isRequired,
 		completeSupport: React.PropTypes.string.isRequired,
-		currentScope: React.PropTypes.string.isRequired
+		currentScope: React.PropTypes.string.isRequired,
+		isLoading: React.PropTypes.bool.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -50,6 +51,8 @@ export default class PagesList extends React.Component {
 							</div>
 						</div>
 			}*/
+		} else if(this.props.isLoading) {
+			globalTile = <h2 className="hint--empty">Loading...</h2>
 		} else {
 			globalTile = <h2 className="hint--empty">No pages added yet.</h2>
 		}

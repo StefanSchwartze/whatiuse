@@ -22,28 +22,28 @@ class PagesActions {
     }
     fetch(params) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.pages.getAll, params);
+            networkAction('Pages', dispatch, this, api.pages.getAll, params);
         }
     }
     get(id) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.pages.get, id);
+            networkAction('Pages', dispatch, this, api.pages.get, id);
         }
     }
     add(data) {
         return async (dispatch) => {
             this.createBackground(data.url, data.title);
-            networkAction(dispatch, this, api.pages.post, clone(data));
+            networkAction('Pages', dispatch, this, api.pages.post, clone(data));
         }
     }
     update(id, data) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.pages.put, id, clone(data));
+            networkAction('Pages', dispatch, this, api.pages.put, id, clone(data));
         }
     }
     delete(id) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.pages.delete, id);
+            networkAction('Pages', dispatch, this, api.pages.delete, id);
         }
     }
     createBackground(url, title) {

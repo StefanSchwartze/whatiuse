@@ -9,27 +9,27 @@ class ProjectsActions {
     }
     fetch() {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.getAll);
+            networkAction('Projects', dispatch, this, api.projects.getAll);
         }
     }
     get(id) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.get, id);
+            networkAction('Projects', dispatch, this, api.projects.get, id);
         }
     }
     add(data) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.post, clone(data));
+            networkAction('Projects', dispatch, this, api.projects.post, clone(data));
         }
     }
     update(id, data) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.put, id, clone(data));
+            networkAction('Projects', dispatch, this, api.projects.put, id, clone(data));
         }
     }
     delete(id) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.delete, id);
+            networkAction('Projects', dispatch, this, api.projects.delete, id);
         }
     }
 }

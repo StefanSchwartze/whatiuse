@@ -18,7 +18,7 @@ class BrowsersActions {
         var browserset = browserCollection;
         return async (dispatch) => {
             const browsers = clone(browserset);
-            networkAction(dispatch, this, api.browsers.post, {browsers: browsers});
+            networkAction('Browsers', dispatch, this, api.browsers.post, {browsers: browsers});
         }
     }
     fetch(scope, projectId) {
@@ -38,17 +38,17 @@ class BrowsersActions {
     }
     fetchGlobal() {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.browsers.getAll);
+            networkAction('Browsers', dispatch, this, api.browsers.getAll);
         }
     }
     fetchCustom(id) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.get, id);
+            networkAction('Browsers', dispatch, this, api.projects.get, id);
         }
     }
     fetchFdx(id) {
         return async (dispatch) => {
-            networkAction(dispatch, this, api.projects.get, id);
+            networkAction('Browsers', dispatch, this, api.projects.get, id);
         }
     }
     selectScope(scope) {

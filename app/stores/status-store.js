@@ -9,12 +9,19 @@ class StatusStore {
     this.bindActions(StatusActions);
     this.busy = false;
     this.error = false;
+    this.queue = [];
   }
-  onStarted() {
+  onStarted(resource) {
+    if(resource && this.queue.indexOf(resource) < 0) {
+      this.queue.push(resource);
+    }
     this.busy = true;
     this.error = false;
   }
-  onDone() {
+  onDone(resource) {
+    if(resource) {
+      this.queue.splice(this.queue.indexOf(resource), 1);
+    }
     this.busy = false;
     this.error = false;
   }

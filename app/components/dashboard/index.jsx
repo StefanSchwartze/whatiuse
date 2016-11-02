@@ -6,6 +6,8 @@ import PagesActions from 'actions/pages-actions';
 import SnapshotsStore from 'stores/snapshots-store';
 import SnapshotsActions from 'actions/snapshots-actions';
 
+import StatusStore from 'stores/status-store';
+
 import StatisticsContainer from './statistics/statistics-container';
 
 import {findItemById} from 'utils/store-utils';
@@ -16,12 +18,13 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 @connectToStores
 export default class Dashboard extends React.Component {
 	static getStores(props) {
-		return [PagesStore, SnapshotsStore];
+		return [PagesStore, SnapshotsStore, StatusStore];
 	}
 	static getPropsFromStores(props) {
 		return {
 			pages: PagesStore.getState().pages,
-			snapshots: SnapshotsStore.getState().snapshots
+			snapshots: SnapshotsStore.getState().snapshots,
+			queue: StatusStore.getState().queue
 		}
 	}
 	constructor(props) {
@@ -131,7 +134,8 @@ export default class Dashboard extends React.Component {
 					pages={pages}
 					currentPageId={currentPageId}
 					currentProjectId={currentProjectId}
-					currentScope={scope} />
+					currentScope={scope}
+					isLoading={this.props.queue.indexOf('Pages') > -1} />
 				{statistics}
 			</div>
 		);
