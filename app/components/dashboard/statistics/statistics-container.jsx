@@ -50,13 +50,13 @@ export default class StatisticsContainer extends React.Component {
 				status = lastSnapshot.captured;
 
 				if(snapshots.length > 1) {
-					timeline = 	<div className="content-container content timeline-container">
+					timeline = 	<div>{/*<div className="content-container content timeline-container">
 									<DetailTimeline
 										snapshots={snapshots}
 										isChecking={page.isChecking || false}
 										length={snapshots.length}
 									/>
-								</div>
+								</div>*/}</div>
 				}
 				if(lastSnapshot.partialSupport) {
 					const partialSupport = parseFloat(lastSnapshot.partialSupport.toFixed(2)) || 0;
@@ -128,82 +128,80 @@ export default class StatisticsContainer extends React.Component {
 						</div>
 				}
 
-				results = 	<div>
-								<div className="content-container content statistics-container">
-									<div className="description">
-										<h1 className="big">Latest result:</h1>
-										
-										{missingSupportElem}
-										{partialSupportElem}
+				results = 	<div className="">
+								<div className="description">
+									<h1 className="big">Latest result:</h1>
+									
+									{missingSupportElem}
+									{partialSupportElem}
 
-										<div className="box box--element">
-											<div className="box-head">
-												<PercentagePie 
-													value={parseFloat(fullSupport.toFixed(2))} 
-													color="rgb(71, 191, 109)"
-												/>
-												<h3>Fully supported</h3>
-											</div>
+									<div className="box box--element">
+										<div className="box-head">
+											<PercentagePie 
+												value={parseFloat(fullSupport.toFixed(2))} 
+												color="rgb(71, 191, 109)"
+											/>
+											<h3>Fully supported</h3>
 										</div>
+									</div>
 
-										{whatIfIDeleteElem}
-									</div>
-									<div className="description">
-										<button 
-											className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
-											onClick={() => this.setState({ showDetailed: true })} 
-										/>								
-										<button 
-											className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
-											onClick={() => this.setState({ showDetailed: false })} 
-										/>								
-									</div>
-									<div className="dyn-columns">
-										<div className="col2">
-											<div className="description">
-												<p>Features with missing support:</p>
-											</div>
-											<ElementsList 
-												currentProjectId={this.props.currentProjectId}
-												currentScope={this.props.currentScope}
-												currentElementId={this.props.currentElementId}
-												layout={this.state.showDetailed ? 'detail' : 'pile'} 
-												elements={elements} 
-												orderProp="impactMissing"
-												unit="%"
-												showMax={4}
-												excerpt={!this.state.showMoreMissing}
-												handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
-											/>
-										</div>
-										<div className="col2">
-											<div className="description">
-												<p>Features with partial support:</p>
-											</div>
-											<ElementsList
-												currentProjectId={this.props.currentProjectId}
-												currentScope={this.props.currentScope}
-												currentElementId={this.props.currentElementId}
-												layout={this.state.showDetailed ? 'detail' : 'pile'} 
-												elements={elements} 
-												orderProp="impactPartial"
-												unit="%"
-												showMax={4}
-												excerpt={!this.state.showMorePartial}
-												handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
-											/>
-										</div>
-									</div>
-									<div className="description">
-										<p>Frequency of the affected Features:</p>
-									</div>
-									<ElementsChart 
-										elements={elements}
-										orderProp="count"
-									/>
-									<FilterList elements={whatifiuse} />
+									{whatIfIDeleteElem}
 								</div>
-							</div>;
+								<div className="description">
+									<button 
+										className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
+										onClick={() => this.setState({ showDetailed: true })} 
+									/>								
+									<button 
+										className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
+										onClick={() => this.setState({ showDetailed: false })} 
+									/>								
+								</div>
+								<div className="dyn-columns">
+									<div className="col2">
+										<div className="description">
+											<p>Features with missing support:</p>
+										</div>
+										<ElementsList 
+											currentProjectId={this.props.currentProjectId}
+											currentScope={this.props.currentScope}
+											currentElementId={this.props.currentElementId}
+											layout={this.state.showDetailed ? 'detail' : 'pile'} 
+											elements={elements} 
+											orderProp="impactMissing"
+											unit="%"
+											showMax={4}
+											excerpt={!this.state.showMoreMissing}
+											handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
+										/>
+									</div>
+									<div className="col2">
+										<div className="description">
+											<p>Features with partial support:</p>
+										</div>
+										<ElementsList
+											currentProjectId={this.props.currentProjectId}
+											currentScope={this.props.currentScope}
+											currentElementId={this.props.currentElementId}
+											layout={this.state.showDetailed ? 'detail' : 'pile'} 
+											elements={elements} 
+											orderProp="impactPartial"
+											unit="%"
+											showMax={4}
+											excerpt={!this.state.showMorePartial}
+											handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
+										/>
+									</div>
+								</div>
+								<div className="description">
+									<p>Frequency of the affected Features:</p>
+								</div>
+								<ElementsChart 
+									elements={elements}
+									orderProp="count"
+								/>
+								<FilterList elements={whatifiuse} />
+							</div>
 			}
 			pageElem = <div>
 							<div className="content-container content timeline-container">

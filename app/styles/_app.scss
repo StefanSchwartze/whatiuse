@@ -760,24 +760,23 @@ h1, h2 {
 		background: $accent-20;
 		display: inline-block;
 		transition: width 1s;
-		background-size: 30px 30px;
-		background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,
-		transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,
-		transparent 75%, transparent);            
-		animation: animate-stripes 3s linear infinite; 
+		background-size: 350px 30px;
+		background-image: linear-gradient(90deg, $accent-20, $accent-30, $accent-20);            
+		animation: animate-stripes 2s linear infinite; 
 		line-height: 1.5rem;
 		color: white;
 		white-space: nowrap;
+		background-repeat: no-repeat;
 		> span {
 			padding: 0 .5rem;
 		}
 	}
 	@keyframes animate-stripes {
 		0% {
-			background-position: 0 0;
+			background-position: -350px 0;
 		} 
 		100% {
-			background-position: 60px 0;
+			background-position: calc(100% + 350px) 0;
 		}
 	}
 }
