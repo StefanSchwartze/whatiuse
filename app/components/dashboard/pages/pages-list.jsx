@@ -57,7 +57,7 @@ export default class PagesList extends React.Component {
 			globalTile = <h2 className="hint--empty">No pages added yet.</h2>
 		}
 		return (
-			<div className="content-container edged content slider-container">
+			<div className="content-container edged slider-container">
 				<div className="page-slider">
 					<Modal 
 						transitionSpeed={250}

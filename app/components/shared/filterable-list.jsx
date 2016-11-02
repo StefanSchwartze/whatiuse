@@ -68,7 +68,7 @@ export default class FilterList extends React.PureComponent {
 							>
 								<div className="box box--tiny">
 									<span className="title">{element.name}</span>
-									<div className="content">
+									<div className="">
 										<Changes 
 											value={missing}
 											type={'missing'}

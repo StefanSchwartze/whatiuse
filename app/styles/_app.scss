@@ -251,7 +251,7 @@ h1, h2 {
 	.box {
 		min-width: 100%;
 	}
-	@media only screen and (min-width: 781px) {
+	/*@media only screen and (min-width: 781px) {
 		flex-wrap: nowrap;
 		.big {
 			width: auto;
@@ -261,7 +261,7 @@ h1, h2 {
 			margin-left: $spacing-medium;
 			min-width: auto;
 		}
-	}
+	}*/
 }
 /*
 *	Statusbar component
@@ -276,6 +276,20 @@ h1, h2 {
     p {
     	margin: 0;
     }
+}
+/*
+*	Sidebar component
+*/
+.sidebar {
+    width: 300px;
+    position: absolute;
+}
+/*
+*	Content component
+*/
+.content {
+    width: calc(100% - 300px - 2rem);
+    margin-left: calc(300px + 2rem);
 }
 /*
 *	Project-list component
@@ -747,7 +761,7 @@ h1, h2 {
 }
 
 /*
-*	Component: Historycontainer
+*	Component: Progresscontainer
 */
 .progress-container {
 	width: 100%;

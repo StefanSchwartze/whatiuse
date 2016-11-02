@@ -14,7 +14,7 @@ export default class App extends React.Component {
       navbar = <Navbar {...this.props}/>;
     }
     return (
-      <div className="content">
+      <div className="">
         {navbar}
         {this.props.children}
       </div>

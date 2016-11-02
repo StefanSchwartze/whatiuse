@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
+import { StickyContainer, Sticky } from 'react-sticky';
 import Timeline from './timeline';
 import DetailTimeline from './detailtimeline';
 import classnames from 'classnames';
@@ -37,16 +38,18 @@ export default class StatisticsContainer extends React.Component {
 			const page = this.props.page;
 			const snapshots = this.props.snapshots || [];
 			let status = '';
+			let partialSupportElem;
+			let missingSupportElem;
+			let whatIfIDeleteElem;
+			let fullSupport = 100;
+			let elements;
+			let whatifiuse;
 
 			if(this.props.snapshots.length > 0) {
 			
 				const lastSnapshot = snapshots[snapshots.length - 1];
-				const elements = lastSnapshot.elementCollection || [];
-				const whatifiuse = lastSnapshot.whatIfIUse;
-				let partialSupportElem;
-				let missingSupportElem;
-				let whatIfIDeleteElem;
-				let fullSupport = 100;
+				elements = lastSnapshot.elementCollection || [];
+				whatifiuse = lastSnapshot.whatIfIUse;
 				status = lastSnapshot.captured;
 
 				if(snapshots.length > 1) {
@@ -127,93 +130,101 @@ export default class StatisticsContainer extends React.Component {
 							</div>
 						</div>
 				}
-
-				results = 	<div className="">
-								<div className="description">
-									<h1 className="big">Latest result:</h1>
-									
-									{missingSupportElem}
-									{partialSupportElem}
-
-									<div className="box box--element">
-										<div className="box-head">
-											<PercentagePie 
-												value={parseFloat(fullSupport.toFixed(2))} 
-												color="rgb(71, 191, 109)"
-											/>
-											<h3>Fully supported</h3>
-										</div>
-									</div>
-
-									{whatIfIDeleteElem}
-								</div>
-								<div className="description">
-									<button 
-										className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
-										onClick={() => this.setState({ showDetailed: true })} 
-									/>								
-									<button 
-										className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
-										onClick={() => this.setState({ showDetailed: false })} 
-									/>								
-								</div>
-								<div className="dyn-columns">
-									<div className="col2">
-										<div className="description">
-											<p>Features with missing support:</p>
-										</div>
-										<ElementsList 
-											currentProjectId={this.props.currentProjectId}
-											currentScope={this.props.currentScope}
-											currentElementId={this.props.currentElementId}
-											layout={this.state.showDetailed ? 'detail' : 'pile'} 
-											elements={elements} 
-											orderProp="impactMissing"
-											unit="%"
-											showMax={4}
-											excerpt={!this.state.showMoreMissing}
-											handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
-										/>
-									</div>
-									<div className="col2">
-										<div className="description">
-											<p>Features with partial support:</p>
-										</div>
-										<ElementsList
-											currentProjectId={this.props.currentProjectId}
-											currentScope={this.props.currentScope}
-											currentElementId={this.props.currentElementId}
-											layout={this.state.showDetailed ? 'detail' : 'pile'} 
-											elements={elements} 
-											orderProp="impactPartial"
-											unit="%"
-											showMax={4}
-											excerpt={!this.state.showMorePartial}
-											handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
-										/>
-									</div>
-								</div>
-								<div className="description">
-									<p>Frequency of the affected Features:</p>
-								</div>
-								<ElementsChart 
-									elements={elements}
-									orderProp="count"
-								/>
-								<FilterList elements={whatifiuse} />
-							</div>
 			}
 			pageElem = <div>
-							<div className="content-container content timeline-container">
-								<Statusbar
-									isChecking={page.isChecking || false}
-									page={this.props.page}
-									lastUpdate={status}
-								/>
-							</div>
-							{timeline}
-							<div className="content-container content statistics-container">
-								{results}
+							<Sticky>
+								<div className="content-container timeline-container">
+									<Statusbar
+										isChecking={page.isChecking || false}
+										page={this.props.page}
+										lastUpdate={status}
+									/>
+								</div>
+								{timeline}
+							</Sticky>
+							<div className="content-container statistics-container">
+								<Sticky 
+									topOffset={-80}
+									stickyStyle={{marginTop: '80px'}}
+								>
+									<div className="sidebar">
+										<div className="description">
+											<h1 className="big">Latest result:</h1>
+											
+											{missingSupportElem}
+											{partialSupportElem}
+
+											<div className="box box--element">
+												<div className="box-head">
+													<PercentagePie 
+														value={parseFloat(fullSupport.toFixed(2))} 
+														color="rgb(71, 191, 109)"
+													/>
+													<h3>Fully supported</h3>
+												</div>
+											</div>
+
+											{whatIfIDeleteElem}
+										</div>
+									</div>
+								</Sticky>
+								
+								<div className="content">
+									<div className="description">
+										<button 
+											className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
+											onClick={() => this.setState({ showDetailed: true })} 
+										/>								
+										<button 
+											className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
+											onClick={() => this.setState({ showDetailed: false })} 
+										/>								
+									</div>
+									<div className="dyn-columns">
+										<div className="col2">
+											<div className="description">
+												<p>Features with missing support:</p>
+											</div>
+											<ElementsList 
+												currentProjectId={this.props.currentProjectId}
+												currentScope={this.props.currentScope}
+												currentElementId={this.props.currentElementId}
+												layout={this.state.showDetailed ? 'detail' : 'pile'} 
+												elements={elements} 
+												orderProp="impactMissing"
+												unit="%"
+												showMax={4}
+												excerpt={!this.state.showMoreMissing}
+												handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
+											/>
+										</div>
+										<div className="col2">
+											<div className="description">
+												<p>Features with partial support:</p>
+											</div>
+											<ElementsList
+												currentProjectId={this.props.currentProjectId}
+												currentScope={this.props.currentScope}
+												currentElementId={this.props.currentElementId}
+												layout={this.state.showDetailed ? 'detail' : 'pile'} 
+												elements={elements} 
+												orderProp="impactPartial"
+												unit="%"
+												showMax={4}
+												excerpt={!this.state.showMorePartial}
+												handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
+											/>
+										</div>
+									</div>
+									<div className="description">
+										<p>Frequency of the affected Features:</p>
+									</div>
+									<ElementsChart 
+										elements={elements}
+										orderProp="count"
+									/>
+									<FilterList elements={whatifiuse} />
+								</div>
 							</div>
 						</div>
 		} else {
@@ -221,7 +232,9 @@ export default class StatisticsContainer extends React.Component {
 							<span>No page selected…</span>
 						</div>
 		}
-		return <div>{pageElem}</div>;
+		return <StickyContainer>
+					{pageElem}
+				</StickyContainer>;
 	}
 }
 
