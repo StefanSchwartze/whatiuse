@@ -279,14 +279,16 @@ export default class StatisticsContainer extends React.Component {
 			}
 			pageElem = <div>
 							<Sticky className="statistics-head">
-								<div className="content-container timeline-container">
-									<Statusbar
-										isChecking={page.isChecking || false}
-										page={this.props.page}
-										lastUpdate={status}
-									/>
+								<div className="timeline-container content-container edged">
+									<div className="content-container">
+										<Statusbar
+											isChecking={page.isChecking || false}
+											page={this.props.page}
+											lastUpdate={status}
+										/>
+									</div>
+									{timeline}
 								</div>
-								{timeline}
 							</Sticky>
 							{content}
 						</div>
