@@ -23,7 +23,6 @@ export default class ElementsChart extends React.PureComponent {
 							}>
 							<XAxis dataKey="name"/>
 							<YAxis/>
-							<CartesianGrid />
 							<Tooltip/>
 							<Bar dataKey="count" fill="#25bcca" />
 						</BarChart>

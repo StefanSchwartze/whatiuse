@@ -36,9 +36,7 @@ export default class FilterList extends React.PureComponent {
 				</div>
 				{
 					elements && elements
-					.filter((element) => {
-						return element.name.search(filter) > -1;
-					})
+					.filter(element => element.name.search(filter) > -1)
 					.map((element, index) => {
 						let messages = [];
 						const missing = element.missing.toFixed(2);

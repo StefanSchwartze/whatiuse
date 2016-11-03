@@ -59,6 +59,7 @@ export default class StatisticsContainer extends React.Component {
 			let fullSupport = 100;
 			let elements;
 			let whatifiuse;
+			let whatifidelete;
 			let content;
 
 			if(this.props.snapshots.length > 0) {
@@ -154,18 +155,18 @@ export default class StatisticsContainer extends React.Component {
 						</Tooltip>
 				}
 				if(lastSnapshot.whatIfIDelete) {
-					const recommendations = lastSnapshot.whatIfIDelete;
+					whatifidelete = lastSnapshot.whatIfIDelete;
 					whatIfIDeleteElem = 
 						<Link 
 								activeClass="open" 
 								className="box box--element" 
-								to="test1" 
+								to="whatIfIDeleteElem" 
 								spy={true} 
 								smooth={true} 
 								duration={500}
 							>
 							<div className="box-head">
-								<h3>{recommendations.length} Delete recommendations</h3>
+								<h3>{whatifidelete.length} Delete recommendations</h3>
 							</div>
 						</Link>
 				}
@@ -195,9 +196,6 @@ export default class StatisticsContainer extends React.Component {
 										<div className="description">
 											<h1 className="big">Latest result:</h1>
 											
-											{missingSupportElem}
-											{partialSupportElem}
-
 											<div className="box box--element">
 												<div className="box-head">
 													<PercentagePie 
@@ -207,7 +205,8 @@ export default class StatisticsContainer extends React.Component {
 													<h3>Fully supported</h3>
 												</div>
 											</div>
-
+											{partialSupportElem}
+											{missingSupportElem}
 											{whatIfIDeleteElem}
 											{whatIfIUseElem}
 										</div>
@@ -225,44 +224,72 @@ export default class StatisticsContainer extends React.Component {
 											onClick={() => this.setState({ showDetailed: false })} 
 										/>								
 									</div>
-											<Element 
-												name="notSupportedElements">
-												<div className="description">
-													<p>Features with missing support:</p>
-												</div>
-												<ElementsList 
-													currentProjectId={this.props.currentProjectId}
-													currentScope={this.props.currentScope}
-													currentElementId={this.props.currentElementId}
-													layout={this.state.showDetailed ? 'detail' : 'pile'} 
-													elements={elements || []} 
-													orderProp="impactMissing"
-													unit="%"
-													showMax={4}
-													excerpt={!this.state.showMoreMissing}
-													handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
-												/>
-											</Element>
-
-											<Element 
-												name="partiallySupportedElements">
-												<div className="description">
-													<p>Features with partial support:</p>
-												</div>
-												<ElementsList
-													currentProjectId={this.props.currentProjectId}
-													currentScope={this.props.currentScope}
-													currentElementId={this.props.currentElementId}
-													layout={this.state.showDetailed ? 'detail' : 'pile'} 
-													elements={elements || []} 
-													orderProp="impactPartial"
-													unit="%"
-													showMax={4}
-													excerpt={!this.state.showMorePartial}
-													handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
-												/>
-											</Element>
-
+									<Element 
+										name="partiallySupportedElements">
+										<div className="description">
+											<p>Features with partial support:</p>
+										</div>
+										<ElementsList
+											currentProjectId={this.props.currentProjectId}
+											currentScope={this.props.currentScope}
+											currentElementId={this.props.currentElementId}
+											layout={this.state.showDetailed ? 'detail' : 'pile'} 
+											elements={elements || []} 
+											orderProp="impactPartial"
+											unit="%"
+											showMax={4}
+											excerpt={!this.state.showMorePartial}
+											handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
+										/>
+									</Element>
+									<Element 
+										name="notSupportedElements">
+										<div className="description">
+											<p>Features with missing support:</p>
+										</div>
+										<ElementsList 
+											currentProjectId={this.props.currentProjectId}
+											currentScope={this.props.currentScope}
+											currentElementId={this.props.currentElementId}
+											layout={this.state.showDetailed ? 'detail' : 'pile'} 
+											elements={elements || []} 
+											orderProp="impactMissing"
+											unit="%"
+											showMax={4}
+											excerpt={!this.state.showMoreMissing}
+											handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
+										/>
+									</Element>
+									<Element 
+										name="whatIfIDeleteElem">
+										<div className="description">
+											<p>What if I delete?:</p>
+										</div>
+										{
+											whatifidelete && whatifidelete
+											.sort((a, b) => (a.cost > b.cost ? 1 : (a.cost < b.cost ? -1 : 0)))
+											.map((result, index) => {
+												return (
+													<div 
+														key={index}
+														className="box box--element"
+													>
+														<div className="box-head">
+															<PercentagePie 
+																value={parseFloat(result.gained_share.toFixed(2))} 
+																color="rgb(71, 191, 109)"
+															/>
+															<h3>{result.collection.map(el => el.name).join(', ')}</h3>
+														</div>
+													</div>
+												)
+											})
+										}
+									</Element>
+									<Element 
+										name="whatIfIUseElem">
+										<FilterList elements={whatifiuse || []} />
+									</Element>
 									<div className="description">
 										<p>Frequency of the affected Features:</p>
 									</div>
@@ -270,10 +297,6 @@ export default class StatisticsContainer extends React.Component {
 										elements={elements || []}
 										orderProp="count"
 									/>
-									<Element 
-										name="whatIfIUseElem">
-										<FilterList elements={whatifiuse || []} />
-									</Element>
 								</div>
 							</div>
 			}
