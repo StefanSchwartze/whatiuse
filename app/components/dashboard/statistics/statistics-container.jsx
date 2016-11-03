@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Tooltip from 'rc-tooltip';
 import { StickyContainer, Sticky } from 'react-sticky';
+import { Link, Element, Events, scroll, scrollSpy } from 'react-scroll';
 import Timeline from './timeline';
 import DetailTimeline from './detailtimeline';
 import classnames from 'classnames';
@@ -28,6 +29,19 @@ export default class StatisticsContainer extends React.Component {
 			showMorePartial: false
 		}
 	}
+	componentDidMount() {
+		Events.scrollEvent.register('begin', function(to, element) {
+			console.log("begin", arguments);
+		});
+		Events.scrollEvent.register('end', function(to, element) {
+			console.log("end", arguments);
+		});
+		scrollSpy.update();
+	}
+	componentWillUnmount() {
+		Events.scrollEvent.remove('begin');
+		Events.scrollEvent.remove('end');
+	}
 	render() {
 		let pageElem;
 		let timeline;
@@ -41,9 +55,11 @@ export default class StatisticsContainer extends React.Component {
 			let partialSupportElem;
 			let missingSupportElem;
 			let whatIfIDeleteElem;
+			let whatIfIUseElem;
 			let fullSupport = 100;
 			let elements;
 			let whatifiuse;
+			let content;
 
 			if(this.props.snapshots.length > 0) {
 			
@@ -83,7 +99,15 @@ export default class StatisticsContainer extends React.Component {
 								</div>
 							}
 						>
-							<div className="box box--element">
+							<Link 
+								activeClass="open" 
+								className="box box--element" 
+								to="partiallySupportedElements" 
+								spy={true} 
+								smooth={true} 
+								duration={500}
+								offset={-80}
+							>
 								<div className="box-head">
 									<PercentagePie 
 										value={partialSupport} 
@@ -91,7 +115,7 @@ export default class StatisticsContainer extends React.Component {
 									/>
 									<h3>Partially supported</h3>
 								</div>
-							</div>
+							</Link>
 						</Tooltip> 
 				}
 				if(lastSnapshot.missingSupport) {
@@ -110,7 +134,15 @@ export default class StatisticsContainer extends React.Component {
 								</div>
 							}
 						>
-							<div className="box box--element">
+							<Link 
+								activeClass="open" 
+								className="box box--element" 
+								to="notSupportedElements" 
+								spy={true} 
+								smooth={true} 
+								duration={500}
+								offset={-80}
+							>
 								<div className="box-head">
 									<PercentagePie 
 										value={missingSupport} 
@@ -118,31 +150,43 @@ export default class StatisticsContainer extends React.Component {
 									/>
 									<h3>Not supported</h3>
 								</div>
-							</div>
+							</Link>
 						</Tooltip>
 				}
 				if(lastSnapshot.whatIfIDelete) {
 					const recommendations = lastSnapshot.whatIfIDelete;
 					whatIfIDeleteElem = 
-						<div className="box box--element">
+						<Link 
+								activeClass="open" 
+								className="box box--element" 
+								to="test1" 
+								spy={true} 
+								smooth={true} 
+								duration={500}
+							>
 							<div className="box-head">
-								<h3>{recommendations.length} Recommendations</h3>
+								<h3>{recommendations.length} Delete recommendations</h3>
 							</div>
-						</div>
+						</Link>
 				}
-			}
-			pageElem = <div>
-							<Sticky>
-								<div className="content-container timeline-container">
-									<Statusbar
-										isChecking={page.isChecking || false}
-										page={this.props.page}
-										lastUpdate={status}
-									/>
-								</div>
-								{timeline}
-							</Sticky>
-							<div className="content-container statistics-container">
+				if(lastSnapshot.whatIfIUse) {
+					const recommendations = lastSnapshot.whatIfIUse;
+					whatIfIUseElem = 
+						<Link 
+								activeClass="open" 
+								className="box box--element" 
+								to="whatIfIUseElem" 
+								spy={true} 
+								smooth={true} 
+								duration={500}
+								offset={-80}
+							>
+							<div className="box-head">
+								<h3>{whatifiuse.length} Future consequences</h3>
+							</div>
+						</Link>
+				}
+				content = <div className="content-container statistics-container">
 								<Sticky 
 									topOffset={-80}
 									stickyStyle={{marginTop: '80px'}}
@@ -165,6 +209,7 @@ export default class StatisticsContainer extends React.Component {
 											</div>
 
 											{whatIfIDeleteElem}
+											{whatIfIUseElem}
 										</div>
 									</div>
 								</Sticky>
@@ -180,52 +225,70 @@ export default class StatisticsContainer extends React.Component {
 											onClick={() => this.setState({ showDetailed: false })} 
 										/>								
 									</div>
-									<div className="dyn-columns">
-										<div className="col2">
-											<div className="description">
-												<p>Features with missing support:</p>
-											</div>
-											<ElementsList 
-												currentProjectId={this.props.currentProjectId}
-												currentScope={this.props.currentScope}
-												currentElementId={this.props.currentElementId}
-												layout={this.state.showDetailed ? 'detail' : 'pile'} 
-												elements={elements} 
-												orderProp="impactMissing"
-												unit="%"
-												showMax={4}
-												excerpt={!this.state.showMoreMissing}
-												handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
-											/>
-										</div>
-										<div className="col2">
-											<div className="description">
-												<p>Features with partial support:</p>
-											</div>
-											<ElementsList
-												currentProjectId={this.props.currentProjectId}
-												currentScope={this.props.currentScope}
-												currentElementId={this.props.currentElementId}
-												layout={this.state.showDetailed ? 'detail' : 'pile'} 
-												elements={elements} 
-												orderProp="impactPartial"
-												unit="%"
-												showMax={4}
-												excerpt={!this.state.showMorePartial}
-												handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
-											/>
-										</div>
-									</div>
+											<Element 
+												name="notSupportedElements">
+												<div className="description">
+													<p>Features with missing support:</p>
+												</div>
+												<ElementsList 
+													currentProjectId={this.props.currentProjectId}
+													currentScope={this.props.currentScope}
+													currentElementId={this.props.currentElementId}
+													layout={this.state.showDetailed ? 'detail' : 'pile'} 
+													elements={elements || []} 
+													orderProp="impactMissing"
+													unit="%"
+													showMax={4}
+													excerpt={!this.state.showMoreMissing}
+													handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
+												/>
+											</Element>
+
+											<Element 
+												name="partiallySupportedElements">
+												<div className="description">
+													<p>Features with partial support:</p>
+												</div>
+												<ElementsList
+													currentProjectId={this.props.currentProjectId}
+													currentScope={this.props.currentScope}
+													currentElementId={this.props.currentElementId}
+													layout={this.state.showDetailed ? 'detail' : 'pile'} 
+													elements={elements || []} 
+													orderProp="impactPartial"
+													unit="%"
+													showMax={4}
+													excerpt={!this.state.showMorePartial}
+													handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
+												/>
+											</Element>
+
 									<div className="description">
 										<p>Frequency of the affected Features:</p>
 									</div>
 									<ElementsChart 
-										elements={elements}
+										elements={elements || []}
 										orderProp="count"
 									/>
-									<FilterList elements={whatifiuse} />
+									<Element 
+										name="whatIfIUseElem">
+										<FilterList elements={whatifiuse || []} />
+									</Element>
 								</div>
 							</div>
+			}
+			pageElem = <div>
+							<Sticky className="statistics-head">
+								<div className="content-container timeline-container">
+									<Statusbar
+										isChecking={page.isChecking || false}
+										page={this.props.page}
+										lastUpdate={status}
+									/>
+								</div>
+								{timeline}
+							</Sticky>
+							{content}
 						</div>
 		} else {
 			pageElem = <div className="content-container content statistics-container">

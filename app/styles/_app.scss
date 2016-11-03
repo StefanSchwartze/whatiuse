@@ -263,6 +263,12 @@ h1, h2 {
 		}
 	}*/
 }
+.statistics-head {
+	&.sticky {
+		z-index: 1;
+		box-shadow: 0 0px 8px -3px rgba(165, 165, 165, 0.56);;
+	}
+}
 /*
 *	Statusbar component
 */
