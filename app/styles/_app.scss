@@ -660,9 +660,11 @@ h1, h2 {
 /*
 *	Component: ElementsList
 */
-.elements-list.hideLast {
-	.box:nth-last-child(2) {
-		opacity: .35;
+.elements-list {
+	&.hideLast {
+		.box:nth-last-child(2) {
+			opacity: .35;
+		}
 	}
 }
 .pile {
@@ -1085,7 +1087,7 @@ h1, h2 {
 	filter: drop-shadow(4px 10px 15px rgba(0,0,0,.25));
 	margin-top: -20px;
 	z-index: 2;
-	position: absolute;
+	position: fixed;
 	.rc-tooltip-inner {
 		background: white;
 		color: $black-ninety;
@@ -1119,7 +1121,7 @@ h1, h2 {
 	}
 }
 .rc-tooltip {
-  position: absolute;
+  position: fixed;
   z-index: 1;
   display: block;
   visibility: visible;
