@@ -98,8 +98,13 @@ app.use(router);
 var server = http.createServer(app.callback());
 var io = require('socket.io')(server);
 
+const cancelJobs = {};
+
 io.on('connection', function(socket){
 
+	socket.on('cancelCheck', function (data) {
+		cancelJobs[data.id] = true;
+	});
 	socket.on('triggerURL', function (data) {
 		const url = data.url;
 		const id = data.id;
@@ -107,6 +112,7 @@ io.on('connection', function(socket){
 		const page = data.page;
 		const browsers = data.browsers;
 		let browserNames = [];
+		cancelJobs[id] = false;
 		for (var i = 0; i < browsers.length; i++) {
 			const browserAlias = browsers[i].alias;
 			const browserName = browsers[i].browser;
@@ -146,12 +152,23 @@ io.on('connection', function(socket){
 			});
 		}
 
+		const cancelable = data => new Promise((resolve, reject) => {
+			if(cancelJobs[id]) {
+				reject({
+					id: id,
+					message: 'Check canceled'
+				});
+				return;
+			}
+			resolve(data);
+		})
+
 		browserNames
 		.reduce((promise, browser, index, array) => 
 			promise.then(args => 
-				Promise.all(
+				cancelable().then(() => Promise.all(
 					[...args, evaluateForFeatures(browser, index, array)]
-				)
+				))
 			), 
 			Promise.all([])
 		)
@@ -183,6 +200,7 @@ io.on('connection', function(socket){
 			}
 			return sendData;
 		})
+		.then(cancelable)
 		.then(checkResultData => new Promise((resolve, reject) => {
 			const saveData = checkResultData;
 			const checkableFeatures = saveData.elementCollection
@@ -220,7 +238,13 @@ io.on('connection', function(socket){
 				.then(result => io.emit('triggerComplete', { data: result[1] }))
 				.catch(error => console.log(`Error on saving entity to DB: ${error}`));
 		})
-		.catch(error => console.log(error));
+		.catch(error => {
+			if(error.id) {
+				io.emit('cancelComplete', { id: error.id });
+				return;
+			}
+			console.log(error);
+		});
 	});
 
 });

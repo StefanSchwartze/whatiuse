@@ -75,19 +75,25 @@ class PagesActions {
             );
         }
     }
+    cancelCheck(id) {
+        socket.emit('cancelCheck', { id: id });
+        return id;
+    }
     checkComplete(snapshot) {
         const store = BrowsersStore.getState();
         const scope = store.currentScope;
         snapshot.scope = scope || 'global';
         SnapshotsActions.save(snapshot);
+        StatusActions.done();
         this.checked(snapshot.pageId);
         let page = findItemById(alt.stores.PagesStore.state.pages, snapshot.pageId);
         page[scope + 'Support'] = snapshot.pageSupport;
         return page;
     }
-    checkFailed(data) {
-        this.checked(data.pageId);
-        console.log(data.error);
+    checkFailed(id) {
+        this.checked(id);
+        StatusActions.done();
+        return id;
     }
 }
 

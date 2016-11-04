@@ -16,6 +16,9 @@ export default class Statusbar extends React.Component {
 	checkUrl() {
 		PagesActions.triggerURLCheck(this.props.page);
 	}
+	cancelCheck() {
+		PagesActions.cancelCheck(this.props.page._id);
+	}
 	render() {
 		const lastUpdate = this.props.lastUpdate;
 		const isChecking = this.props.isChecking;
@@ -23,7 +26,7 @@ export default class Statusbar extends React.Component {
 		const title = this.props.page.title;
 		const imagePath = this.props.page.imgSrc;
 		const button = isChecking ? 
-						<button onClick={this.checkUrl.bind(this)} className="button button--wide button--strong button--red" >Abort</button> :
+						<button onClick={this.cancelCheck.bind(this)} className="button button--wide button--strong button--red" >Abort</button> :
 						<button onClick={this.checkUrl.bind(this)} className="button button--wide button--accent button--accent-bright" >CHECK</button>
 		const status = isChecking ?
 						<ProgressBar 

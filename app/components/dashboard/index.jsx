@@ -49,6 +49,9 @@ export default class Dashboard extends React.Component {
 			socket.on('progress', function(data) {
 				PagesActions.checking(data.pageId);
 				PagesActions.progress({ progress: data.progress, pageId: data.pageId, info: data.status});
+			});
+			socket.on('cancelComplete', function(data) {
+				PagesActions.checkFailed(data.id);
 			}); 
 			socket.on('triggerComplete', function(data) {
 				if(data.error) {

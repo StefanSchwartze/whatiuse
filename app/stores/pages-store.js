@@ -55,6 +55,13 @@ class PagesStore {
 		page.status = '';
 		assign(findItemById(this.pages, page._id), page);
 	}
+	onCancelCheck(id) {
+		if(id) {
+			let page = findItemById(this.pages, id);
+			page.status = 'Aborting check...';
+			assign(findItemById(this.pages, id), page);
+		}
+	}
 }
 
 module.exports = (alt.createStore(PagesStore));
