@@ -47,7 +47,7 @@ export default class ProjectForm extends React.Component {
 						validations="isUrl"
 						validationError={'Must be a valid URL'} />
 				</Form>
-				<button disabled={!this.state.canSubmit} className="button button--full button--accent" onClick={this.send.bind(this)}>Add project</button>
+				<button disabled={!this.state.canSubmit} className="button button--full button--accent button--accent-bright" onClick={this.send.bind(this)}>Add project</button>
 			</div>
 		);
 	}

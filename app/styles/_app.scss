@@ -81,23 +81,16 @@ h1, h2 {
 }
 .button {
 	font-family: 'Lato';
-	//text-transform: uppercase;
 	letter-spacing: 1px;
 	appearance: none;
 	border: none;
 	padding: $spacing-small $spacing-medium;
 	border-radius: $border-radius-large;
 	font-size: $font-size-medium;
-	//margin-bottom: $spacing-medium;
 	outline: none;
 	cursor: pointer;
 	transition: all .15s;
 	background: transparent;
-
-
-
-
-	
 	&--wide {
 		padding: $spacing-small $spacing-large;
 	}
@@ -109,8 +102,6 @@ h1, h2 {
 		text-transform: uppercase;
 		font-weight: bold;
 	}
-
-
 	&--accent {
 		box-shadow: 0 0px 0px 1px $accent-15;
 		color: $accent-15;
@@ -159,8 +150,6 @@ h1, h2 {
 			color: white;
 		}
 	}
-
-
 	&--close, &--delete, &--icon {
 		font-size: $font-size-large;
 		color: $grey-light;
@@ -306,8 +295,10 @@ h1, h2 {
 	&.sticky {
 		z-index: 1;
 		box-shadow: 0 0px 8px -3px rgba(165, 165, 165, 0.56);
-		.statusbar-container .highlight-label {
-			display: block;
+		.statusbar-container {
+			.detail {
+				display: inline-flex;
+			}
 		}
 	}
 }
@@ -318,18 +309,28 @@ h1, h2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .highlight-label {
+    .detail {
     	min-width: 300px;
-    	display: none;
     	margin-right: $spacing-large;
-		border: solid 1px $accent-50;
-		border-radius: 5px;
+    	display: none;
+    }
+    .page-thumb-mini {
+		min-width: 35px;
+		height: 35px;
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		margin-right: $spacing-medium;
+		border-radius: $border-radius-small;
+    }
+    .highlight-label {
 		padding: $spacing-small;
-		text-align: center;
-		letter-spacing: 1px;
-		text-transform: uppercase;
 		font-family: Lato;
 		color: $accent-50;
+		background: $grey;
+		width: 100%;
+		color: $grey-light;
+		border-radius: $border-radius-small;
     }
     .button {
     	margin-right: $spacing-large;
