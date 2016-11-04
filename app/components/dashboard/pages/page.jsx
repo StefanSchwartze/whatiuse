@@ -82,7 +82,7 @@ export default class Page extends React.Component {
 						}
 						{
 							!this.props.isChecking ? 
-								<button onClick={this.checkUrl.bind(this)} className="button button--wide button--red" >CHECK</button> : ""
+								<button onClick={this.checkUrl.bind(this)} className="button button--wide button--accent button--accent-bright" >CHECK</button> : ""
 						}
 						
 					</div>

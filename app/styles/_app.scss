@@ -81,18 +81,23 @@ h1, h2 {
 }
 .button {
 	font-family: 'Lato';
-	text-transform: uppercase;
+	//text-transform: uppercase;
 	letter-spacing: 1px;
 	appearance: none;
 	border: none;
 	padding: $spacing-small $spacing-medium;
-	background-color: transparent;
 	border-radius: $border-radius-large;
 	font-size: $font-size-medium;
 	//margin-bottom: $spacing-medium;
 	outline: none;
 	cursor: pointer;
 	transition: all .15s;
+	background: transparent;
+
+
+
+
+	
 	&--wide {
 		padding: $spacing-small $spacing-large;
 	}
@@ -104,25 +109,58 @@ h1, h2 {
 		text-transform: uppercase;
 		font-weight: bold;
 	}
+
+
 	&--accent {
-		background-color: $accent-15;
-		color: white;
-		/*&:focus {
-			box-shadow: 0 0 0 2px $yellow-dark;
-		}*/
+		box-shadow: 0 0px 0px 1px $accent-15;
+		color: $accent-15;
+		background-color: transparent;
+		&:hover {
+			background-color: $accent-15;
+			color: white;
+		}
+		&:focus {
+			box-shadow: 0 0px 0px 2px $accent-15;
+		}
+		&-bright {
+			background-color: rgba($accent-15, .8);
+			color: white;
+		}
 	}
 	&--yellow {
-		background-color: $yellow;
+		box-shadow: 0 0px 0px 1px $yellow;
+		color: $yellow;
+		background-color: transparent;
+		&:hover {
+			background-color: $yellow;
+			color: white;
+		}
 		&:focus {
-			box-shadow: 0 0 0 2px $yellow-dark;
+			box-shadow: 0 0px 0px 2px $yellow;
+		}
+		&-bright {
+			background-color: rgba($yellow, .8);
+			color: white;
 		}
 	}
 	&--red {
-		background-color: $red;
+		box-shadow: 0 0px 0px 1px $red;
+		color: $red;
+		background-color: transparent;
+		&:hover {
+			background-color: $red;
+			color: white;
+		}
 		&:focus {
-			box-shadow: 0 0 0 2px $red-dark;
+			box-shadow: 0 0px 0px 2px $red;
+		}
+		&-bright {
+			background-color: rgba($red, .8);
+			color: white;
 		}
 	}
+
+
 	&--close, &--delete, &--icon {
 		font-size: $font-size-large;
 		color: $grey-light;
@@ -267,7 +305,10 @@ h1, h2 {
 .statistics-head {
 	&.sticky {
 		z-index: 1;
-		box-shadow: 0 0px 8px -3px rgba(165, 165, 165, 0.56);;
+		box-shadow: 0 0px 8px -3px rgba(165, 165, 165, 0.56);
+		.statusbar-container .highlight-label {
+			display: block;
+		}
 	}
 }
 /*
@@ -277,11 +318,25 @@ h1, h2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .highlight-label {
+    	min-width: 300px;
+    	display: none;
+    	margin-right: $spacing-large;
+		border: solid 1px $accent-50;
+		border-radius: 5px;
+		padding: $spacing-small;
+		text-align: center;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		font-family: Lato;
+		color: $accent-50;
+    }
     .button {
     	margin-right: $spacing-large;
     }
     p {
     	margin: 0;
+    	margin-left: auto;
     }
 }
 /*
