@@ -279,9 +279,15 @@ export default class Navbar extends React.Component {
 				<div className="header-content content-container edged">
 					<nav className="navigation navigation--first">
 						<ul className="nav-list">
-							<li className="nav-list-item button button--accent">
-								{currentProject.title}
-								<Link to='/' className="link"><span className="icon-menu"></span></Link>
+							<li className="nav-list-item title">
+								<img 
+									src={require('images/code_impact.png')}
+									className="navbar-logo"
+								/>
+								<div className="navbar-title">
+									<span>CODE IMPACT</span>
+									<span>{currentProject.title}<Link to='/' className="link"><span className="icon-menu"></span></Link></span>
+								</div>
 							</li>
 							<li className="nav-list-item" onClick={this.addGlobalBrowserset.bind(this)}>
 								<span className="icon-add"></span>

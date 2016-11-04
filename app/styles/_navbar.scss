@@ -11,7 +11,7 @@
 		padding: $spacing-medium $spacing-medium 0 $spacing-medium;
 	}
 	&--second {
-		margin-top: $spacing-medium;
+		//margin-top: $spacing-medium;
 		.nav-list-item {
 			flex-grow: 1;
 			text-align: center;
@@ -72,6 +72,12 @@
 			width: 20px;
 			height: 20px;
 		}
+		&.title {
+			display: flex;
+		}
+		[class^="icon-"] {
+			margin-right: .5rem;
+		}
 	}
 }
 .toggle {
@@ -119,7 +125,21 @@
 	> * {
 		color: white;
 	}
-	[class^="icon-"] {
-		margin-right: .5rem;
+}
+.navbar-logo {
+	height: 40px;
+	margin-right: $spacing-medium;
+}
+.navbar-title {
+	display: inline-flex;
+	flex-direction: column;
+	span:first-child {
+		font-size: .75rem;
 	}
+	span:last-child {
+		font-size: 1.25rem;
+	}
+}
+.icon-menu {
+	margin-left: .5rem;
 }
