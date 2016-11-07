@@ -10,7 +10,6 @@ export default class PagesList extends React.Component {
 		currentProjectId: React.PropTypes.string.isRequired,
 		pages: React.PropTypes.array.isRequired,
 		currentPageId: React.PropTypes.string.isRequired,
-		completeSupport: React.PropTypes.string.isRequired,
 		currentScope: React.PropTypes.string.isRequired,
 		isLoading: React.PropTypes.bool.isRequired
 	}
@@ -36,21 +35,6 @@ export default class PagesList extends React.Component {
 	render() {
 		let globalTile;
 		if(this.props.pages.length > 0) {
-			/*if(this.props.pages.length > 1) {
-				globalTile = <div className={classnames('page', 'all', this.props.currentPageId === 'all' ? 'active' : '')} >
-							<div className="page-overlay">
-								<div className="percentage">
-									<span>{this.props.completeSupport || '- '}%</span>
-								</div>
-								<div className="open">
-									<button onClick={this.setCurrentPageId.bind(this)} className="button button--wide button--strong button--accent">Open</button>
-								</div>
-								<div className="title">
-									<span>All</span>
-								</div>
-							</div>
-						</div>
-			}*/
 		} else if(this.props.isLoading) {
 			globalTile = <h2 className="hint--empty">Loading...</h2>
 		} else {
