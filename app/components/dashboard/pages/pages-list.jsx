@@ -68,9 +68,16 @@ export default class PagesList extends React.Component {
 						onClose={this.closeModal.bind(this)} >
 						<div className="modal-head">
 							<span>Add new page</span>
-							<button className="icon-close button button--close" onClick={this.closeModal.bind(this)}></button>
+							<button 
+								className="icon-close button button--close" 
+								onClick={this.closeModal.bind(this)}
+							>
+							</button>
 						</div>
-						<PageForm projectId={this.props.currentProjectId} onSend={this.closeModal.bind(this)} />
+						<PageForm 
+							projectId={this.props.currentProjectId} 
+							onSend={this.closeModal.bind(this)} 
+						/>
 					</Modal>
 					<div className="pages-head">
 						<div className="count">{this.props.pages.length} page{this.props.pages.length === 1 ? '' : 's'}</div>
@@ -90,8 +97,13 @@ export default class PagesList extends React.Component {
 									return pageA[this.props.currentScope + 'Support'] > pageB[this.props.currentScope + 'Support'] ? 1 : -1; 
 								}
 							})
-							.map((item, index) =>
-								<Page key={index} scope={this.props.currentScope} page={item} isActive={this.props.currentPageId === item._id} />
+							.map((page, index) =>
+								<Page 
+									key={index} 
+									scope={this.props.currentScope} 
+									page={page} 
+									isActive={this.props.currentPageId === page._id} 
+								/>
 							)
 						}
 					</div>

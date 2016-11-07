@@ -58,6 +58,11 @@ class PagesActions {
         return async (dispatch) => {
             StatusActions.started();
             this.checking(page._id);
+            this.progress({
+                pageId: page._id,
+                progress: 0,
+                status: 'Checking..'
+            });
 
             const store = BrowsersStore.getState();
             const scope = store.currentScope;
