@@ -29,16 +29,29 @@ export default class PagesList extends React.Component {
 	closeModal(){
 		this.setState({showModal: false})
 	}
-	setCurrentPageId() {
-		PagesActions.selectPage('all');
-	}
 	render() {
-		let globalTile;
+		let content;
 		if(this.props.pages.length > 0) {
+			content = this.props.pages
+				.sort((pageA, pageB) => {
+					if(this.state.rtl) {
+						return pageA[this.props.currentScope + 'Support'] < pageB[this.props.currentScope + 'Support'] ? 1 : -1; 
+					} else {
+						return pageA[this.props.currentScope + 'Support'] > pageB[this.props.currentScope + 'Support'] ? 1 : -1; 
+					}
+				})
+				.map((page, index) =>
+					<Page 
+						key={index} 
+						scope={this.props.currentScope} 
+						page={page} 
+						isActive={this.props.currentPageId === page._id} 
+					/>
+				);
 		} else if(this.props.isLoading) {
-			globalTile = <h2 className="hint--empty">Loading...</h2>
+			content = <div className="hinty"><h2 className="hint--empty">Loading...</h2></div>
 		} else {
-			globalTile = <h2 className="hint--empty">No pages added yet.</h2>
+			content = <div className="hinty"><h2 className="hint--empty">No pages added yet.</h2></div>
 		}
 		return (
 			<div className="content-container edged slider-container">
@@ -72,24 +85,7 @@ export default class PagesList extends React.Component {
 						<button className="button button--accent" onClick={this.showModal.bind(this)}>Add page</button>
 					</div>
 					<div className="slider">
-						{globalTile}
-						{this.props.pages && this.props.pages
-							.sort((pageA, pageB) => {
-								if(this.state.rtl) {
-									return pageA[this.props.currentScope + 'Support'] < pageB[this.props.currentScope + 'Support'] ? 1 : -1; 
-								} else {
-									return pageA[this.props.currentScope + 'Support'] > pageB[this.props.currentScope + 'Support'] ? 1 : -1; 
-								}
-							})
-							.map((page, index) =>
-								<Page 
-									key={index} 
-									scope={this.props.currentScope} 
-									page={page} 
-									isActive={this.props.currentPageId === page._id} 
-								/>
-							)
-						}
+						{content}
 					</div>
 				</div>
 			</div>
