@@ -173,6 +173,7 @@ io.on('connection', function(socket){
 			Promise.all([])
 		)
 		.then(evaluationResults => sumData(evaluationResults, browsers))
+		.then(cancelable)
 		.then(summary => {
 			const { syntaxErrors, elementCollection } = summary;
 			const missingBrowsers = getMissingBrowserVersions(elementCollection, 'missing');
@@ -231,7 +232,9 @@ io.on('connection', function(socket){
 			workerProcess.stdin.write(JSON.stringify(checkableFeatures));
 			workerProcess.stdin.end();
 		}))
+		.then(cancelable)
 		.then(saveData => {
+			delete cancelJobs[page._id];
 			page[scope + 'Support'] = saveData.pageSupport;
 			Promise
 				.all([Page.findOneAndUpdate({_id: page._id}, page), new Snapshot(saveData).save()])
