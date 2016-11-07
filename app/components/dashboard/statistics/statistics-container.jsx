@@ -102,7 +102,7 @@ export default class StatisticsContainer extends React.Component {
 						>
 							<Link 
 								activeClass="open" 
-								className="box box--element" 
+								className="box box--element nav-box" 
 								to="partiallySupportedElements" 
 								spy={true} 
 								smooth={true} 
@@ -137,7 +137,7 @@ export default class StatisticsContainer extends React.Component {
 						>
 							<Link 
 								activeClass="open" 
-								className="box box--element" 
+								className="box box--element nav-box" 
 								to="notSupportedElements" 
 								spy={true} 
 								smooth={true} 
@@ -159,14 +159,15 @@ export default class StatisticsContainer extends React.Component {
 					whatIfIDeleteElem = 
 						<Link 
 								activeClass="open" 
-								className="box box--element" 
+								className="box box--element nav-box" 
 								to="whatIfIDeleteElem" 
 								spy={true} 
 								smooth={true} 
 								duration={500}
 							>
 							<div className="box-head">
-								<h3>{whatifidelete.length} Delete recommendations</h3>
+								<span>{whatifidelete.length}</span>
+								<h3>Delete recommendations</h3>
 							</div>
 						</Link>
 				}
@@ -175,7 +176,7 @@ export default class StatisticsContainer extends React.Component {
 					whatIfIUseElem = 
 						<Link 
 								activeClass="open" 
-								className="box box--element" 
+								className="box box--element nav-box" 
 								to="whatIfIUseElem" 
 								spy={true} 
 								smooth={true} 
@@ -183,7 +184,8 @@ export default class StatisticsContainer extends React.Component {
 								offset={-80}
 							>
 							<div className="box-head">
-								<h3>{whatifiuse.length} Future consequences</h3>
+								<span>{whatifiuse.length}</span>
+								<h3>Future consequences</h3>
 							</div>
 						</Link>
 				}

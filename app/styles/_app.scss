@@ -409,8 +409,8 @@ h1, h2 {
 		color: $grey-light;
 	    top: 0;
 	    left: 0;
-	    width: 30px;
-	    height: 30px;
+	    width: 32px;
+	    height: 32px;
 	    margin: 13px;
 	    display: block;
 	    background: white;
@@ -966,7 +966,7 @@ h1, h2 {
 			display: inline-flex;
 			flex-grow: 1;
 			align-items: center;
-			color: $black-ninety;
+			//color: $black-ninety;
 			span {
 				margin-right: .5rem;
 			}
@@ -981,6 +981,10 @@ h1, h2 {
 		}
 		> :last-child {
 			border: none;
+		}
+		> :first-child {
+			min-width: 3.5rem;
+			text-align: center;
 		}
 	}
 	.box-body {
@@ -1001,6 +1005,10 @@ h1, h2 {
 		.content > * {
 			margin-left: $spacing-small;
 		}
+	}
+	&.nav-box.open {
+		background: $accent-20;
+		color: white !important;
 	}
 }
 .browser-container {
