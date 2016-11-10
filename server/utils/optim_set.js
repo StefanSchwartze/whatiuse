@@ -27,6 +27,7 @@ process.stdin.on('end', (chunk) => {
 		}
 		return {
 			collection: result,
+			name: result.map(feature => feature.name).join(', '),
 			gained_share: solution.gained_share,
 			cost: solution.cost,
 			kicked_browsers: solution.kicked_browsers

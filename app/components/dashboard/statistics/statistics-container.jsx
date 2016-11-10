@@ -8,6 +8,7 @@ import DetailTimeline from './detailtimeline';
 import classnames from 'classnames';
 import PercentagePie from '../../shared/percentagepie';
 import FilterList from '../../shared/filterable-list';
+import SearchField from '../../shared/form-elements/search-field';
 import ElementsList from '../../shared/elements-list';
 import BrowsersList from '../../shared/browsers-list';
 import ElementsChart from '../../shared/elements-chart';
@@ -26,7 +27,10 @@ export default class StatisticsContainer extends React.Component {
 		this.state = {
 			showDetailed: true,
 			showMoreMissing: false,
-			showMorePartial: false
+			showMorePartial: false,
+			showMoreDelete: false,
+			showMoreUse: false,
+			filter: ''
 		}
 	}
 	componentDidMount() {
@@ -217,6 +221,10 @@ export default class StatisticsContainer extends React.Component {
 								
 								<div className="content">
 									<div className="description">
+										<SearchField
+											texttt={this.state.filter}
+											handleSearch={(filter) => this.setState({ filter })}
+										/>
 										<button 
 											className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
 											onClick={() => this.setState({ showDetailed: true })} 
@@ -232,9 +240,7 @@ export default class StatisticsContainer extends React.Component {
 											<p>Features with partial support:</p>
 										</div>
 										<ElementsList
-											currentProjectId={this.props.currentProjectId}
-											currentScope={this.props.currentScope}
-											currentElementId={this.props.currentElementId}
+											type="FEATURE"
 											layout={this.state.showDetailed ? 'detail' : 'pile'} 
 											elements={elements || []} 
 											orderProp="impactPartial"
@@ -242,6 +248,8 @@ export default class StatisticsContainer extends React.Component {
 											showMax={4}
 											excerpt={!this.state.showMorePartial}
 											handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
+											filter={this.state.filter}
+											filterProp="title"
 										/>
 									</Element>
 									<Element 
@@ -249,10 +257,8 @@ export default class StatisticsContainer extends React.Component {
 										<div className="description">
 											<p>Features with missing support:</p>
 										</div>
-										<ElementsList 
-											currentProjectId={this.props.currentProjectId}
-											currentScope={this.props.currentScope}
-											currentElementId={this.props.currentElementId}
+										<ElementsList
+											type="FEATURE"
 											layout={this.state.showDetailed ? 'detail' : 'pile'} 
 											elements={elements || []} 
 											orderProp="impactMissing"
@@ -260,6 +266,8 @@ export default class StatisticsContainer extends React.Component {
 											showMax={4}
 											excerpt={!this.state.showMoreMissing}
 											handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
+											filter={this.state.filter}
+											filterProp="title"
 										/>
 									</Element>
 									<Element 
@@ -267,30 +275,33 @@ export default class StatisticsContainer extends React.Component {
 										<div className="description">
 											<p>What if I delete?:</p>
 										</div>
-										{
-											whatifidelete && whatifidelete
-											.sort((a, b) => (a.cost > b.cost ? 1 : (a.cost < b.cost ? -1 : 0)))
-											.map((result, index) => {
-												return (
-													<div 
-														key={index}
-														className="box box--element"
-													>
-														<div className="box-head">
-															<PercentagePie 
-																value={parseFloat(result.gained_share.toFixed(2))} 
-																color="rgb(71, 191, 109)"
-															/>
-															<h3>{result.collection.map(el => el.name).join(', ')}</h3>
-														</div>
-													</div>
-												)
-											})
-										}
+										<ElementsList
+											type="RECOMMENDATION"
+											layout={'detail'} 
+											elements={whatifidelete || []} 
+											orderProp="cost"
+											showMax={4}
+											excerpt={!this.state.showMoreDelete}
+											handleClick={() => this.setState({ showMoreDelete: !this.state.showMoreDelete })} 
+											filter={this.state.filter}
+											filterProp="name"
+										/>
 									</Element>
 									<Element 
 										name="whatIfIUseElem">
-										<FilterList elements={whatifiuse || []} />
+										<div className="description">
+											<p>What if I use?:</p>
+										</div>
+										<ElementsList
+											type="CONSEQUENCE"
+											layout={'detail'} 
+											elements={whatifiuse || []} 
+											orderProp="name"
+											showMax={4}
+											excerpt={!this.state.showMoreUse}
+											handleClick={() => this.setState({ showMoreUse: !this.state.showMoreUse })} 
+											filter={this.state.filter}
+										/>
 									</Element>
 									<div className="description">
 										<p>Frequency of the affected Features:</p>
