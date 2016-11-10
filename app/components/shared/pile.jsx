@@ -6,8 +6,9 @@ import classnames from 'classnames';
 
 export default class Pile extends React.PureComponent {
 	static propTypes = {
-		value: React.PropTypes.string,
 		title: React.PropTypes.string.isRequired,
+		unit: React.PropTypes.string,
+		value: React.PropTypes.string,
 		message: React.PropTypes.string,
 		size: React.PropTypes.string
 	}
@@ -18,7 +19,7 @@ export default class Pile extends React.PureComponent {
 		const message = this.props.message || '';
 		const title = this.props.title;
 		const content = (<span>
-							<span>{this.props.value}</span>
+							<span>{this.props.value}{this.props.unit ? this.props.unit : ''}</span>
 							{this.props.value ? <span>|</span> : ''}
 							<span>{title}</span>
 						</span>);
@@ -33,7 +34,7 @@ export default class Pile extends React.PureComponent {
 						mouseLeaveDelay={0}
 						destroyTooltipOnHide={true}
 						overlay={
-							<div style={{maxWidth: 320}}>
+							<div style={{maxWidth: 300}}>
 								{message}
 							</div>
 						}

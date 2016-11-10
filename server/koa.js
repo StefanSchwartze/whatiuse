@@ -208,6 +208,7 @@ io.on('connection', function(socket){
 				.filter(element => element.missing)
 				.map(element => {
 					return {
+						title: element.title,
 						name: element.feature,
 						count: element.count,
 						impact: impacts[element.feature]['impact'],

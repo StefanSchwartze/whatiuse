@@ -1,5 +1,4 @@
 "use strict";
-// const data = require('./algo_complete_data');
 let inputData = '';
 
 process.stdin.on('data', chunk => inputData += chunk);
@@ -26,8 +25,8 @@ process.stdin.on('end', (chunk) => {
 			}
 		}
 		return {
+			title: result.map(feature => feature.title).join(', '),
 			collection: result,
-			name: result.map(feature => feature.name).join(', '),
 			gained_share: solution.gained_share,
 			cost: solution.cost,
 			kicked_browsers: solution.kicked_browsers

@@ -17,8 +17,8 @@ export default class ElementsList extends React.PureComponent {
 		elements: React.PropTypes.array.isRequired,
 		type: React.PropTypes.oneOf(['FEATURE', 'RECOMMENDATION', 'CONSEQUENCE']).isRequired,
 		orderProp: React.PropTypes.string.isRequired,
+		orderDesc: React.PropTypes.bool,
 		filterProp: React.PropTypes.string,
-		unit: React.PropTypes.string,
 		layout: React.PropTypes.string,
 		showMax: React.PropTypes.number,
 		excerpt: React.PropTypes.bool,
@@ -35,6 +35,7 @@ export default class ElementsList extends React.PureComponent {
 		}
 	}
 	render() {
+		const orderDesc = this.props.orderDesc || false;
 		const filter = this.props.filter || '';
 		const orderProp = this.props.orderProp;
 		const filterProp = this.props.filterProp || orderProp;
@@ -77,7 +78,7 @@ export default class ElementsList extends React.PureComponent {
 				<div className={classnames('elements-list', excerpt ? 'hideLast' : '')}>
 					{
 						elements
-							.sort((a, b) => b[orderProp] - a[orderProp])
+							.sort((a, b) => orderDesc ? b[orderProp] - a[orderProp] : a[orderProp] - b[orderProp])
 							.splice(0, maxElems)
 							.map((item, index) =>
 								{
@@ -85,7 +86,8 @@ export default class ElementsList extends React.PureComponent {
 									if(layout !== 'detail') {
 										elem = <Pile 
 													key={index}
-													value={item[orderProp]+this.props.unit}
+													unit="%"
+													value={item[orderProp]}
 													title={item.name}
 													message={item.message}
 												/>;
@@ -110,7 +112,7 @@ export default class ElementsList extends React.PureComponent {
 																	value={parseFloat(item.gained_share.toFixed(2))} 
 																	color="rgb(71, 191, 109)"
 																/>
-																<h3>{item.name}</h3>
+																<h3>{item.title}</h3>
 															</div>
 														</div>;
 												break;

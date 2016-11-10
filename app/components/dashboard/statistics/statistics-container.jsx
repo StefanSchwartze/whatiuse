@@ -222,7 +222,7 @@ export default class StatisticsContainer extends React.Component {
 								<div className="content">
 									<div className="description">
 										<SearchField
-											texttt={this.state.filter}
+											text={this.state.filter}
 											handleSearch={(filter) => this.setState({ filter })}
 										/>
 										<button 
@@ -242,10 +242,10 @@ export default class StatisticsContainer extends React.Component {
 										<ElementsList
 											type="FEATURE"
 											layout={this.state.showDetailed ? 'detail' : 'pile'} 
-											elements={elements || []} 
+											elements={elements} 
 											orderProp="impactPartial"
-											unit="%"
-											showMax={4}
+											orderDesc={true}
+											showMax={3}
 											excerpt={!this.state.showMorePartial}
 											handleClick={() => this.setState({ showMorePartial: !this.state.showMorePartial })} 
 											filter={this.state.filter}
@@ -260,10 +260,10 @@ export default class StatisticsContainer extends React.Component {
 										<ElementsList
 											type="FEATURE"
 											layout={this.state.showDetailed ? 'detail' : 'pile'} 
-											elements={elements || []} 
+											elements={elements} 
 											orderProp="impactMissing"
-											unit="%"
-											showMax={4}
+											orderDesc={true}
+											showMax={3}
 											excerpt={!this.state.showMoreMissing}
 											handleClick={() => this.setState({ showMoreMissing: !this.state.showMoreMissing })} 
 											filter={this.state.filter}
@@ -278,13 +278,13 @@ export default class StatisticsContainer extends React.Component {
 										<ElementsList
 											type="RECOMMENDATION"
 											layout={'detail'} 
-											elements={whatifidelete || []} 
+											elements={whatifidelete} 
 											orderProp="cost"
-											showMax={4}
+											showMax={3}
 											excerpt={!this.state.showMoreDelete}
 											handleClick={() => this.setState({ showMoreDelete: !this.state.showMoreDelete })} 
 											filter={this.state.filter}
-											filterProp="name"
+											filterProp="title"
 										/>
 									</Element>
 									<Element 
@@ -295,9 +295,9 @@ export default class StatisticsContainer extends React.Component {
 										<ElementsList
 											type="CONSEQUENCE"
 											layout={'detail'} 
-											elements={whatifiuse || []} 
+											elements={whatifiuse} 
 											orderProp="name"
-											showMax={4}
+											showMax={3}
 											excerpt={!this.state.showMoreUse}
 											handleClick={() => this.setState({ showMoreUse: !this.state.showMoreUse })} 
 											filter={this.state.filter}
