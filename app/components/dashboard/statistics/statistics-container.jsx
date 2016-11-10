@@ -307,7 +307,7 @@ export default class StatisticsContainer extends React.Component {
 										<p>Frequency of the affected Features:</p>
 									</div>
 									<ElementsChart 
-										elements={elements || []}
+										elements={elements}
 										orderProp="count"
 									/>
 								</div>
