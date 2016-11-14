@@ -238,6 +238,8 @@ h1, h2 {
 	&.timeline-container {
 		max-width: 100%;
 		background: white;
+		padding: 0;
+		margin-top: $spacing-medium;
 	}
 	&.login {
 		.input {
@@ -339,6 +341,16 @@ h1, h2 {
     	margin: 0;
     	margin-left: auto;
     }
+	.icon-history{
+		margin-left: $spacing-medium;
+		font-size: $font-size-large;
+		color: $grey-light;
+		display: block;
+		cursor: pointer;
+		&.active {
+			color: $accent-15;
+		}
+	}
 }
 /*
 *	Sidebar component
@@ -876,13 +888,11 @@ h1, h2 {
 */
 .history-container {
 	width: 100%;
-	display: flex;
-	align-items: flex-start;
-	flex-direction: column;
+	position: relative;
 	.chart {
 		width: 100%;
 		height: 60px;
-		padding: $spacing-small;
+		//padding: $spacing-small;
 		border-radius: $border-radius-small;
 		&--extended {
 			height: 150px;

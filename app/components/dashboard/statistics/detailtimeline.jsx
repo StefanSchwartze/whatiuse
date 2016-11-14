@@ -9,9 +9,7 @@ import {orderBy} from 'lodash';
 
 export default class DetailTimeline extends React.PureComponent {
 	static propTypes = {
-		isChecking: React.PropTypes.bool.isRequired,
-		snapshots: React.PropTypes.array.isRequired,
-		length: React.PropTypes.number.isRequired
+		snapshots: React.PropTypes.array.isRequired
 	}
 	constructor(props) {
 		super(props);
@@ -46,30 +44,22 @@ export default class DetailTimeline extends React.PureComponent {
 				captured: moment(item.captured).calendar()
 			}
 		});
-		const lastCheck = this.props.isChecking ? 
-			(<span><i className="icon icon-spinner8 animate rotate"></i>Currently checking…</span>) : 
-			(<span>{snapshots[snapshots.length - 1].captured}</span>);
 
 		return (
 			<div className="history-container">
 				<HistoryTooltip/>
-				<div className="chart chart--extended">
+				<div className="chart">
 					<ResponsiveContainer>
-
-						<AreaChart width={1000} height={150} data={snapshots}
-							margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-							<XAxis dataKey="captured" />
-							<YAxis />
-							{/*<Tooltip content={renderTooltipContent}/>*/}
+						<AreaChart width={1280} height={80} data={snapshots}
+							margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+							{/*<XAxis dataKey="captured" />*/}
+							{/*<YAxis />*/}
+							<Tooltip content={renderTooltipContent}/>
 							<CartesianGrid strokeDasharray="3 3"/>
 							<Area type='monotone' dataKey='fullSupport' stackId="1" stroke='#82ca9d' fill='#82ca9d' />
 							<Area type='monotone' dataKey='partialSupport' stackId="1" stroke='#ffc658' fill='#ffc658' />
 							<Area type='monotone' dataKey='missingSupport' stackId="1" stroke='#f36666' fill='#f36666' />
 						</AreaChart>
-
-
-
-
 					</ResponsiveContainer>
 				</div>
 			</div>

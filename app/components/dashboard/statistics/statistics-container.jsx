@@ -4,7 +4,6 @@ import Tooltip from 'rc-tooltip';
 import { StickyContainer, Sticky } from 'react-sticky';
 import { Link, Element, Events, scroll, scrollSpy } from 'react-scroll';
 import Timeline from './timeline';
-import DetailTimeline from './detailtimeline';
 import classnames from 'classnames';
 import PercentagePie from '../../shared/percentagepie';
 import FilterList from '../../shared/filterable-list';
@@ -12,7 +11,7 @@ import SearchField from '../../shared/form-elements/search-field';
 import ElementsList from '../../shared/elements-list';
 import BrowsersList from '../../shared/browsers-list';
 import ElementsChart from '../../shared/elements-chart';
-import Statusbar from '../../shared/statusbar';
+import Statusbar from './statusbar';
 
 export default class StatisticsContainer extends React.Component {
 	static propTypes = {
@@ -30,6 +29,7 @@ export default class StatisticsContainer extends React.Component {
 			showMorePartial: false,
 			showMoreDelete: false,
 			showMoreUse: false,
+			showTimeline: false,
 			filter: ''
 		}
 	}
@@ -66,22 +66,18 @@ export default class StatisticsContainer extends React.Component {
 			let whatifidelete;
 			let content;
 
-			if(this.props.snapshots.length > 0) {
+			if(snapshots.length > 0) {
 			
 				const lastSnapshot = snapshots[snapshots.length - 1];
 				elements = lastSnapshot.elementCollection || [];
 				whatifiuse = lastSnapshot.whatIfIUse;
 				status = lastSnapshot.captured;
 
-				if(snapshots.length > 1) {
-					timeline = 	<div>{/*<div className="content-container content timeline-container">
-									<DetailTimeline
-										snapshots={snapshots}
-										isChecking={page.isChecking || false}
-										length={snapshots.length}
-									/>
-								</div>*/}</div>
-				}
+				// if(snapshots.length > 1) {
+				// 	timeline = 	<DetailTimeline
+				// 					snapshots={snapshots}
+				// 				/>
+				// }
 				if(lastSnapshot.partialSupport) {
 					const partialSupport = parseFloat(lastSnapshot.partialSupport.toFixed(2)) || 0;
 					fullSupport -= partialSupport;
@@ -321,9 +317,11 @@ export default class StatisticsContainer extends React.Component {
 											isChecking={page.isChecking || false}
 											page={this.props.page}
 											lastUpdate={status}
+											snapshots={snapshots}
+											showTimeline={this.state.showTimeline}
+											onShowTimelineClick={() => this.setState({ showTimeline: !this.state.showTimeline })} 
 										/>
 									</div>
-									{timeline}
 								</div>
 							</Sticky>
 							{content}
