@@ -79,52 +79,55 @@ export default class Page extends React.Component {
 					classnames(
 						'page', 
 						isChecking ? 'isChecking' : '', 
-						isActive ? 'active' : '', isLoading ? 'isLoading' : ''
+						isActive ? 'active' : '', 
+						isLoading ? 'isLoading' : ''
 					)
 				}
 			>
-				<div 
-					className="page-overlay" 
-					style={
-						{
-							backgroundColor: support >= 0 ? colorpalette(support, 0, 120, 28, .5) : 'rgba(0,0,0,.5)'
+				<div className="contents">
+					<div 
+						className="page-overlay" 
+						style={
+							{
+								backgroundColor: support >= 0 ? colorpalette(support, 0, 120, 28, .5) : 'rgba(0,0,0,.5)'
+							}
 						}
-					}
-				>
-					<div className="percentage">{state}</div>
-					<div className="open">
-						{
-							!isActive ? 
-								<Link
-									onClick={this.setActive.bind(this, this.props.page._id, scope)}
-									to={'/projects/' + this.props.page.projectId + '/' + scope + '/pages/' + this.props.page._id + ''} 
-									className="button button--wide button--accent"
-								>
-									Open
-								</Link> : ""
-						}
-						{
-							!isChecking ? 
-								<button 
-									onClick={this.checkUrl.bind(this)} 
-									className="button button--wide button--accent button--accent-bright"
-								>
-									CHECK
-								</button> : 
-								<button 
-									onClick={this.cancelCheck.bind(this)} 
-									className="button button--wide button--strong button--red"
-								>
-									Abort
-								</button>
-						}	
+					>
+						<div className="percentage">{state}</div>
+						<div className="open">
+							{
+								!isActive ? 
+									<Link
+										onClick={this.setActive.bind(this, this.props.page._id, scope)}
+										to={'/projects/' + this.props.page.projectId + '/' + scope + '/pages/' + this.props.page._id + ''} 
+										className="button button--wide button--accent"
+									>
+										Open
+									</Link> : ""
+							}
+							{
+								!isChecking ? 
+									<button 
+										onClick={this.checkUrl.bind(this)} 
+										className="button button--wide button--accent button--accent-bright"
+									>
+										CHECK
+									</button> : 
+									<button 
+										onClick={this.cancelCheck.bind(this)} 
+										className="button button--wide button--strong button--red"
+									>
+										Abort
+									</button>
+							}	
+						</div>
+						<div className="title">
+							<span>{title}</span>
+						</div>
 					</div>
-					<div className="title">
-						<span>{title}</span>
+					<div className="page-preview">
+						{preview}
 					</div>
-				</div>
-				<div className="page-preview">
-					{preview}
 				</div>
 			</div>
 		);

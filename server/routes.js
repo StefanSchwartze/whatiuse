@@ -65,7 +65,7 @@ export default (app) => {
 				"ignore-ssl-errors": "true"
 			},
 			renderDelay: 3000,
-			quality: 50
+			quality: 25
 		}
 
 		yield new Promise((resolve, reject) => {

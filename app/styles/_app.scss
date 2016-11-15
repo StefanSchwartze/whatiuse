@@ -609,12 +609,18 @@ h1, h2 {
     display: inline-block;
     cursor: pointer;
     position: relative;
-	width: 240px;
-	height: 140px;
-	margin: 0 $spacing-medium 0 0;
-	box-shadow: 0 5px 20px -5px $grey-dark;
-	direction: ltr;
-	will-change: contents;
+	.contents {
+    	transition: all .25s;
+		width: 240px;
+		margin: 0 $spacing-small 0 0;
+		height: 140px;
+		box-shadow: 0 5px 20px -5px $grey-dark;
+		will-change: contents;
+		overflow: hidden;
+		border-radius: $border-radius-large;
+		position: relative;
+		transform: scale(.93);
+	}
 	&.isLoading {
 		.page-overlay {
 			background: black;
@@ -642,7 +648,7 @@ h1, h2 {
 		border-bottom-color: white;
 		border-width: 20px;
 		margin-left: -20px;
-		transition: margin .25s;
+		//transition: margin .25s;
 		z-index: 2;
 		left: 50%;
 		top: 160px;
@@ -652,8 +658,11 @@ h1, h2 {
 		&:after {
 			margin-top: -24px;
 		}
+		.contents {
+			transform: scale(1);
+		}
 		.page-overlay {
-			border: solid 5px;
+			//border: solid 3px;
 		}
 	}
 	&-preview {
@@ -674,7 +683,8 @@ h1, h2 {
 		background-color: rgba(0, 0, 0, 0.6);
 		color: white;
 		padding: 1.5rem 0 3rem 0;
-		transition: all .2s;
+		transition: all .25s;
+		border-radius: $border-radius-large;
 		.percentage {
 			transition: all .2s;
 			border-bottom: solid 1px white;
@@ -694,7 +704,7 @@ h1, h2 {
 			}
 		}
 		.title {
-			transition: all .2s;
+			//transition: all .2s;
 			border-top: solid 1px white;
 			width: 75%;
 			height: 50%;
@@ -702,7 +712,7 @@ h1, h2 {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			transform: translate3d(0, 0, 0);
+			//transform: translate3d(0, 0, 0);
 		}
 		.open {
 			height: 0;
@@ -719,7 +729,7 @@ h1, h2 {
 				padding: 0 .5rem;
 			}
 			.open {
-				transition: all .2s .2s;
+				transition: all .25s .25s;
 				opacity: 1;
 			}
 		}
