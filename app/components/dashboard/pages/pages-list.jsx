@@ -54,39 +54,37 @@ export default class PagesList extends React.Component {
 			content = <div className="hinty"><h2 className="hint--empty">No pages added yet.</h2></div>
 		}
 		return (
-			<div className="content-container edged slider-container">
+			<div className="slider-container">
+				<Modal 
+					transitionSpeed={250}
+					className="modal"
+					containerClassName={classnames('animate', 'modal-container', 'checked')}
+					closeOnOuterClick={true}
+					show={this.state.showModal}
+					onClose={this.closeModal.bind(this)} >
+					<div className="modal-head">
+						<span>Add new page</span>
+						<button 
+							className="icon-close button button--close" 
+							onClick={this.closeModal.bind(this)}
+						>
+						</button>
+					</div>
+					<PageForm 
+						projectId={this.props.currentProjectId} 
+						onSend={this.closeModal.bind(this)} 
+					/>
+				</Modal>
+				<div className="pages-head content-container">
+					<div className="count">{this.props.pages.length} page{this.props.pages.length === 1 ? '' : 's'}</div>
+					<div className="order-switch">
+						<span onClick={this.toggleOrder.bind(this, false)} className="icon-keyboard_arrow_down"></span>
+						<span onClick={this.toggleOrder.bind(this, true)} className="icon-keyboard_arrow_up"></span>
+					</div>
+					<button className="button button--accent" onClick={this.showModal.bind(this)}>Add page</button>
+				</div>
 				<div className="page-slider">
-					<Modal 
-						transitionSpeed={250}
-						className="modal"
-						containerClassName={classnames('animate', 'modal-container', 'checked')}
-						closeOnOuterClick={true}
-						show={this.state.showModal}
-						onClose={this.closeModal.bind(this)} >
-						<div className="modal-head">
-							<span>Add new page</span>
-							<button 
-								className="icon-close button button--close" 
-								onClick={this.closeModal.bind(this)}
-							>
-							</button>
-						</div>
-						<PageForm 
-							projectId={this.props.currentProjectId} 
-							onSend={this.closeModal.bind(this)} 
-						/>
-					</Modal>
-					<div className="pages-head">
-						<div className="count">{this.props.pages.length} page{this.props.pages.length === 1 ? '' : 's'}</div>
-						<div className="order-switch">
-							<span onClick={this.toggleOrder.bind(this, false)} className="icon-keyboard_arrow_down"></span>
-							<span onClick={this.toggleOrder.bind(this, true)} className="icon-keyboard_arrow_up"></span>
-						</div>
-						<button className="button button--accent" onClick={this.showModal.bind(this)}>Add page</button>
-					</div>
-					<div className="slider">
-						{content}
-					</div>
+					{content}
 				</div>
 			</div>
 		);

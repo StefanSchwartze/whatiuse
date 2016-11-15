@@ -54,33 +54,35 @@ export default class Statusbar extends React.Component {
 		return (
 			<div >
 				<div className="statusbar-container">
-					<div className="detail">
-						<div 
-							className="page-thumb-mini"
-							style={{
-								backgroundImage: 'url(/' + imagePath + ')'
-							}}
-						>
+					<div className="statusbar content-container">
+						<div className="detail">
+							<div 
+								className="page-thumb-mini"
+								style={{
+									backgroundImage: 'url(/' + imagePath + ')'
+								}}
+							>
+							</div>
+							<label className="highlight-label">{title}</label>
 						</div>
-						<label className="highlight-label">{title}</label>
+						{button}
+						{status}
+						{
+							this.props.snapshots.length > 1 &&
+							<span 
+								className={classnames('icon-history', this.props.showTimeline ? 'active' : '') }
+								onClick={this.handleClick.bind(this)}
+							>
+							</span>
+						}
 					</div>
-					{button}
-					{status}
-					{
-						this.props.snapshots.length > 1 &&
-						<span 
-							className={classnames('icon-history', this.props.showTimeline ? 'active' : '') }
-							onClick={this.handleClick.bind(this)}
-						>
-						</span>
-					}
 				</div>
+				<div className={classnames('timeline-container', this.props.showTimeline ? '' : 'hide') }>
 				{
 					this.props.snapshots.length > 1 && this.props.showTimeline && 
-					<div className="content-container timeline-container">
 						<DetailTimeline snapshots={this.props.snapshots} />
-					</div>
 				}
+				</div>
 			</div>
 		);
 	}

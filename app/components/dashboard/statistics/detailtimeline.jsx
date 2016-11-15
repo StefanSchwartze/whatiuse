@@ -46,7 +46,7 @@ export default class DetailTimeline extends React.PureComponent {
 		});
 
 		return (
-			<div className="history-container">
+			<div className="history-container content-container">
 				<HistoryTooltip/>
 				<div className="chart">
 					<ResponsiveContainer>
