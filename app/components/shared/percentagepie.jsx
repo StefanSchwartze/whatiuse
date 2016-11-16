@@ -29,6 +29,7 @@ export default class PercentagePie extends React.PureComponent {
 			<div className="percentagepie">
 				<PieChart width={42} height={42}>
 					<Pie 
+						isAnimationActive={false}
 						data={data} 
 						innerRadius={15} 
 						outerRadius={20}
