@@ -60,6 +60,7 @@ export default class StatisticsContainer extends React.Component {
 			let missingSupportElem;
 			let whatIfIDeleteElem;
 			let whatIfIUseElem;
+			let resultElem;
 			let fullSupport = 100;
 			let elements;
 			let whatifiuse;
@@ -73,13 +74,11 @@ export default class StatisticsContainer extends React.Component {
 				whatifiuse = lastSnapshot.whatIfIUse;
 				status = lastSnapshot.captured;
 
-				// if(snapshots.length > 1) {
-				// 	timeline = 	<DetailTimeline
-				// 					snapshots={snapshots}
-				// 				/>
-				// }
+				let partialSupport = 0;
+				let missingSupport = 0;
+
 				if(lastSnapshot.partialSupport) {
-					const partialSupport = parseFloat(lastSnapshot.partialSupport.toFixed(2)) || 0;
+					partialSupport = parseFloat(lastSnapshot.partialSupport.toFixed(2)) || 0;
 					fullSupport -= partialSupport;
 					partialSupportElem = 
 						<Tooltip
@@ -120,7 +119,7 @@ export default class StatisticsContainer extends React.Component {
 						</Tooltip> 
 				}
 				if(lastSnapshot.missingSupport) {
-					const missingSupport = parseFloat(lastSnapshot.missingSupport.toFixed(2)) || 0;
+					missingSupport = parseFloat(lastSnapshot.missingSupport.toFixed(2)) || 0;
 					fullSupport -= missingSupport;
 					missingSupportElem = 
 						<Tooltip
@@ -216,20 +215,6 @@ export default class StatisticsContainer extends React.Component {
 								</Sticky>
 								
 								<div className="content">
-									<div className="description">
-										<SearchField
-											text={this.state.filter}
-											handleSearch={(filter) => this.setState({ filter })}
-										/>
-										<button 
-											className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
-											onClick={() => this.setState({ showDetailed: true })} 
-										/>								
-										<button 
-											className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
-											onClick={() => this.setState({ showDetailed: false })} 
-										/>								
-									</div>
 									<Element 
 										name="partiallySupportedElements">
 										<div className="description">
@@ -308,6 +293,60 @@ export default class StatisticsContainer extends React.Component {
 									/>
 								</div>
 							</div>
+				resultElem = 	<div className="description content-container">
+									<div className="health">
+										<PercentagePie 
+											value={fullSupport} 
+											color="#e0cd28"
+										/>
+										<div className="percentagebox">
+											<div className="percentagebox-content">
+												<div 
+													className="browser-version"
+													style={{
+														width: fullSupport + '%',
+														background: "rgb(71, 191, 109)"
+													}}>
+													<span>S</span>
+												</div>
+												{
+													partialSupport && partialSupport > 0 ?
+													<div 
+														className="browser-version"
+														style={{
+															width: partialSupport + '%',
+															background: "#e0cd28"
+														}}>
+														<span>P</span>
+													</div> : null
+												}
+												{
+													missingSupport && missingSupport > 0 ?
+													<div 
+														className="browser-version"
+														style={{
+															width: missingSupport + '%',
+															background: "#bd1010"
+														}}>
+														<span>N</span>
+													</div> : null
+												}
+											</div>
+										</div>
+									</div>
+									<SearchField
+										text={this.state.filter}
+										handleSearch={(filter) => this.setState({ filter })}
+									/>
+									<button 
+										className={classnames('button rounded box-shadow button--toggle icon-list align-right', this.state.showDetailed ? 'active' : '')}
+										onClick={() => this.setState({ showDetailed: true })} 
+									/>								
+									<button 
+										className={classnames('button rounded box-shadow button--toggle icon-piles', this.state.showDetailed ? '' : 'active')}
+										onClick={() => this.setState({ showDetailed: false })} 
+									/>								
+								</div>
 			}
 			pageElem = <div>
 							<Sticky className="statistics-head">
@@ -319,6 +358,7 @@ export default class StatisticsContainer extends React.Component {
 									showTimeline={this.state.showTimeline}
 									onShowTimelineClick={() => this.setState({ showTimeline: !this.state.showTimeline })} 
 								/>
+								{resultElem}
 							</Sticky>
 							{content}
 						</div>
@@ -327,9 +367,7 @@ export default class StatisticsContainer extends React.Component {
 							<span>No page selected…</span>
 						</div>
 		}
-		return <StickyContainer>
-					{pageElem}
-				</StickyContainer>;
+		return <StickyContainer>{pageElem}</StickyContainer>;
 	}
 }
 

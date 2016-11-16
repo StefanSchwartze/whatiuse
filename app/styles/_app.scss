@@ -303,12 +303,12 @@ h1, h2 {
 }
 .description {
 	color: $grey-dark;
-	margin: 0 0 $spacing-small 0;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
 	width: 100%;
 	align-items: center;
+	padding: .5rem 1rem;
 	.big {
 		font-size: $font-size-large;
 		width: 100%;
@@ -333,10 +333,10 @@ h1, h2 {
 	}*/
 }
 .statistics-head {
-	background: white;
 	&.sticky {
 		z-index: 1;
 		box-shadow: 0 0px 8px -3px rgba(165, 165, 165, 0.56);
+		background: white;
 		// .timeline-container {
 		// 	height: 0;
 		// 	transition: none;
@@ -345,6 +345,19 @@ h1, h2 {
 			.detail {
 				display: inline-flex;
 			}
+		}
+	}
+}
+.health {
+	width: 300px;
+	margin-right: 2rem;
+	display: inline-flex;
+	align-items: center;
+	padding-right: .5rem;
+	.percentagepie {
+		padding: 0;
+		.value {
+			display: none;
 		}
 	}
 }
@@ -1105,35 +1118,34 @@ h1, h2 {
 		border-radius: 5px;
 		box-shadow: 0 0 10px #eeeeee;
 	}
-	.percentagebox {
-		flex-grow: 10;
-		margin-left: 1rem;
-		border-radius: $border-radius-small;
-		overflow: hidden;
-		.percentagebox-content {
-
-			.browser-version {
-				height: 1.5rem;
-				background-color: #25bcca;
-				float: left;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: white;
-				&:last-child {
-					border: none;
-					border-radius: 0 $border-radius-small $border-radius-small 0;
-				}
-			}
-		}
-	}
 	&:hover, &.open {
 		.box {
 			box-shadow: 0 4px 10px rgba(165, 165, 165, 0.56);
 			transform: scale(1.05);
 		}
+	}	
+}
+.percentagebox {
+	flex-grow: 10;
+	margin-left: 1rem;
+	border-radius: $border-radius-small;
+	overflow: hidden;
+	.percentagebox-content {
+
+		.browser-version {
+			height: 1.5rem;
+			background-color: #25bcca;
+			float: left;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			&:last-child {
+				border: none;
+				border-radius: 0 $border-radius-small $border-radius-small 0;
+			}
+		}
 	}
-	
 }
 .browser-detail {
 	max-height: 0;
