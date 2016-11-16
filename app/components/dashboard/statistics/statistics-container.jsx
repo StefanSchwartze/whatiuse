@@ -195,7 +195,7 @@ export default class StatisticsContainer extends React.Component {
 								>
 									<div className="sidebar">
 										<div className="description">
-											<h1 className="big">Latest result:</h1>
+											{/*<h1 className="big">Latest result:</h1>
 											
 											<div className="box box--element">
 												<div className="box-head">
@@ -205,7 +205,7 @@ export default class StatisticsContainer extends React.Component {
 													/>
 													<h3>Fully supported</h3>
 												</div>
-											</div>
+											</div>*/}
 											{partialSupportElem}
 											{missingSupportElem}
 											{whatIfIDeleteElem}
